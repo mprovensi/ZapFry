@@ -1,8 +1,10 @@
-# Zap & Fry — protótipo 0.17.0
+# Zap & Fry — protótipo 0.17.1
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
 
-**0.17.0 instalada no S20 FE:** atualização/código 27 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria do APK aprovados. Conferência manual dos encontros e efeitos em [docs/ROTEIRO_ENCONTROS_017.md](docs/ROTEIRO_ENCONTROS_017.md).
+**Revisão 0.17.1:** dois balões por encontro — Executor e condenado —, 24 conversas reescritas, cores próprias por personagem e texto 33% maior. A apresentação mantém Pular, pausa e bloqueio da matriz. Detalhes em [docs/ENCONTROS_017.md](docs/ENCONTROS_017.md).
+
+**0.17.1 instalada no S20 FE:** atualização/código 28 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria do APK aprovados. Conferência manual dos encontros e efeitos em [docs/ROTEIRO_ENCONTROS_017.md](docs/ROTEIRO_ENCONTROS_017.md).
 
 Puzzle de rotação de fios com humor macabro e visual em Cartoon 2D com sprites substituíveis.
 Desenvolvido em **Godot 4.7.2 estável, GDScript e renderer Compatibility**.

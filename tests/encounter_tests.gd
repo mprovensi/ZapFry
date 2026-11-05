@@ -5,17 +5,21 @@ const Roster = preload("res://scripts/character_roster.gd")
 const Profile = preload("res://scripts/player_profile.gd")
 const Portrait = preload("res://scripts/character_portrait.gd")
 const Session = preload("res://scripts/game_session.gd")
+const DialogueView = preload("res://scripts/dialogue_view.gd")
 
 
 func run(check: Callable) -> void:
 	check.call(Stories.CASES.size() == 24, "Catálogo tem 24 micro-histórias")
 	for story in Stories.CASES:
-		check.call(story.size() == 3, "História tem acusação, defesa e encerramento")
+		check.call(story.size() == 2, "História tem somente uma fala do Executor e uma do condenado")
 		for line in story:
 			check.call(line is String and not line.is_empty(), "Falas são textos locais não vazios")
 	var roster := Roster.new(1700)
 	var combinations: Dictionary = {}
+	var speaker_colors := {DialogueView.EXECUTOR_COLOR: true}
 	for template in Roster.TEMPLATES:
+		check.call(not speaker_colors.has(template.dialogue_color), "Cada personagem possui uma cor de balão distinta, incluindo o Executor")
+		speaker_colors[template.dialogue_color] = true
 		for name in template.aliases:
 			for palette in range(4):
 				var selected := roster.select(0, {"level": 0, "id": template.character_id, "name": name, "palette": palette, "story": 0, "intro_seen": true})
@@ -51,12 +55,18 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	var cells: Array = app.session.board.cells.duplicate(true)
 	var snapshot: Dictionary = app.profile.appearance.duplicate()
 	check.call(app.dialogue.active and app.dialogue.visible and not app.board_view.interactive, "Conversa abre antes do puzzle e bloqueia a grade")
+	check.call(app.dialogue.speaker.text == "Executor" and app.dialogue.counter.text == "1 / 2", "Primeiro balão identifica o Executor e as duas falas")
+	check.call(app.dialogue.body.get_theme_font_size("font_size") == 40, "Falas usam fonte maior de 40 unidades")
+	var executor_style: StyleBoxFlat = app.dialogue.bubble.get_theme_stylebox("panel")
+	var executor_color := executor_style.bg_color
 	app._on_cell_pressed(1)
 	app.use_free_hint()
 	app._process(60)
 	check.call(app.session.state == Session.State.READY and app.session.moves == 0 and app.session.hints_used == 0 and app.session.remaining == remaining and app.session.board.cells == cells, "Conversa não consome tempo, gira fios nem usa dicas")
 	await _click(tree, app.dialogue.advance_button.get_global_rect().get_center())
 	check.call(app.dialogue.step == 1 and app.dialogue.speaker.text == app.execution_character.display_name, "Resposta mostra o nome do condenado")
+	var subject_style: StyleBoxFlat = app.dialogue.bubble.get_theme_stylebox("panel")
+	check.call(subject_style.bg_color != executor_color and subject_style.border_color == app.execution_character.dialogue_color and app.dialogue.counter.text == "2 / 2", "Resposta usa a cor do condenado e é o segundo e último balão")
 	await _click(tree, app.buttons["pause"].get_global_rect().get_center())
 	check.call(app.session.state == Session.State.PAUSED and app.dialogue.active and not app.dialogue.visible, "Pausa do cabeçalho funciona durante a conversa")
 	app.show_settings()
@@ -65,10 +75,8 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	app.close_settings()
 	app.resume_game()
 	check.call(app.dialogue.visible and app.dialogue.step == 1 and app.profile.appearance == snapshot and app.session.remaining == remaining, "Ajustes e segundo plano preservam fala, encontro e relógio")
-	await _tap(tree, app.dialogue.body.get_global_rect().get_center())
-	check.call(app.dialogue.step == 2, "Toque nativo no balão avança uma fala")
 	await _tap(tree, app.dialogue.advance_button.get_global_rect().get_center())
-	check.call(not app.dialogue.active and app.profile.appearance["intro_seen"] and app.session.moves == 0 and app.board_view.interactive, "Começar fecha a introdução sem vazar um giro")
+	check.call(not app.dialogue.active and app.profile.appearance["intro_seen"] and app.session.moves == 0 and app.board_view.interactive, "Começar no segundo balão fecha a introdução sem terceira fala nem giro")
 	var released := InputEventMouseButton.new()
 	released.device = -1
 	released.button_index = MOUSE_BUTTON_LEFT
@@ -103,12 +111,30 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	check.call(app.session.state == Session.State.PAUSED and app.dialogue.active, "Escape abre a pausa sem pular a conversa")
 	app.resume_game()
 	await _click(tree, app.dialogue.skip_button.get_global_rect().get_center())
+	app.level_index = 6
+	app.start_game()
+	await _tap(tree, app.dialogue.body.get_global_rect().get_center())
+	check.call(app.dialogue.step == 1 and app.dialogue.active, "Toque nativo avança da fala do Executor para a resposta")
+	await _tap(tree, app.dialogue.body.get_global_rect().get_center())
+	check.call(not app.dialogue.active and app.session.moves == 0, "Segundo toque no balão inicia a fase sem terceira fala nem giro")
+	for template in Roster.TEMPLATES:
+		app.profile.appearance = {"level": app.level_index, "id": template.character_id, "name": template.display_name, "palette": 0, "story": 0, "intro_seen": false}
+		app.start_game()
+		var style: StyleBoxFlat = app.dialogue.bubble.get_theme_stylebox("panel")
+		check.call(app.dialogue.speaker.text == "Executor" and style.border_color == DialogueView.EXECUTOR_COLOR, "Novo encontro restaura nome e cor do Executor")
+		app.dialogue.advance()
+		check.call(style.border_color == template.dialogue_color and app.dialogue.speaker.text == template.display_name, "Cada base recebe sua própria cor de resposta na partida")
+		var name_font: Font = app.dialogue.speaker.get_theme_font("font")
+		for name in template.aliases:
+			check.call(name_font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, app.dialogue.speaker.get_theme_font_size("font_size")).x <= app.dialogue.speaker.size.x, "Nome cabe no cabeçalho ampliado: " + name)
+		app.dialogue.finish()
+		await tree.process_frame
 	for dimensions in [Vector2(360, 800), Vector2(720, 1280), Vector2(720, 1600)]:
 		app.size = dimensions
 		app._layout_stage()
 		for story in Stories.CASES:
-			app.dialogue.begin(story, "Zefa do Trovão")
-			for step in range(3):
+			app.dialogue.begin(story, "Zefa do Trovão", app.execution_character.dialogue_color)
+			for step in range(2):
 				await tree.process_frame
 				check.call(app.get_global_rect().encloses(app.dialogue.bubble.get_global_rect()), "Balão cabe na tela em todas as dimensões")
 				var font: Font = app.dialogue.body.get_theme_font("font")

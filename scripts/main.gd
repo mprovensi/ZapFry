@@ -320,7 +320,7 @@ func start_game(show_intro: bool = true) -> void:
 	_update_guidance()
 	board_view.queue_redraw()
 	if show_intro and not profile.appearance["intro_seen"]:
-		dialogue.begin(Stories.CASES[profile.appearance["story"]], execution_character.display_name)
+		dialogue.begin(Stories.CASES[profile.appearance["story"]], execution_character.display_name, execution_character.dialogue_color)
 	else:
 		dialogue.close()
 	_sync_controls()

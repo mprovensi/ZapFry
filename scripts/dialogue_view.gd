@@ -1,5 +1,7 @@
 extends Control
-## Apresentação de três falas. Não conhece fases, relógio ou persistência.
+## Apresentação de duas falas. Não conhece fases, relógio ou persistência.
+
+const EXECUTOR_COLOR := Color("8be0ae")
 
 signal finished
 signal advanced
@@ -7,6 +9,7 @@ var active := false
 var step := 0
 var lines: Array = []
 var subject_name := ""
+var subject_color := Color.WHITE
 var advance_button: Button
 var skip_button: Button
 var bubble: Panel
@@ -14,6 +17,7 @@ var speaker: Label
 var body: Label
 var counter: Label
 var _pointer_down := false
+var _bubble_style: StyleBoxFlat
 
 
 func _ready() -> void:
@@ -26,7 +30,7 @@ func _ready() -> void:
 	area.gui_input.connect(_on_pointer)
 	add_child(area)
 	bubble = Panel.new()
-	bubble.size = Vector2(592, 248)
+	bubble.size = Vector2(592, 280)
 	bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("172a37")
@@ -34,11 +38,12 @@ func _ready() -> void:
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(24)
 	bubble.add_theme_stylebox_override("panel", style)
+	_bubble_style = style
 	add_child(bubble)
-	speaker = _label(Vector2(24, 18), Vector2(410, 40), 23, Color("6ce1c4"))
-	counter = _label(Vector2(466, 18), Vector2(100, 40), 21, Color("94adb8"))
+	speaker = _label(Vector2(24, 18), Vector2(410, 40), 28, Color.WHITE)
+	counter = _label(Vector2(466, 18), Vector2(100, 40), 26, Color("c7d4dd"))
 	counter.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	body = _label(Vector2(24, 72), Vector2(544, 150), 30, Color("f1eee1"))
+	body = _label(Vector2(24, 72), Vector2(544, 184), 40, Color("f1eee1"))
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	advance_button = Button.new()
 	advance_button.position = Vector2(112, 1474)
@@ -65,9 +70,10 @@ func _label(position_value: Vector2, extent: Vector2, font_size: int, color: Col
 	return label
 
 
-func begin(dialogue: Array, name_value: String) -> void:
+func begin(dialogue: Array, name_value: String, color_value: Color) -> void:
 	lines = dialogue.duplicate()
 	subject_name = name_value
+	subject_color = color_value
 	step = 0
 	active = true
 	_pointer_down = false
@@ -109,7 +115,11 @@ func close() -> void:
 
 func _update_text() -> void:
 	bubble.position = Vector2(64, 760 if step == 1 else 430)
-	speaker.text = subject_name if step == 1 else "Goblin engenheiro"
+	speaker.text = subject_name if step == 1 else "Executor"
+	var accent := subject_color if step == 1 else EXECUTOR_COLOR
+	_bubble_style.bg_color = accent.darkened(0.82)
+	_bubble_style.border_color = accent
+	speaker.add_theme_color_override("font_color", accent)
 	body.text = lines[step]
 	counter.text = "%d / %d" % [step + 1, lines.size()]
 	advance_button.text = "COMEÇAR" if step == lines.size() - 1 else "CONTINUAR"
@@ -119,9 +129,10 @@ func _update_text() -> void:
 func _draw() -> void:
 	if not active:
 		return
-	var points := PackedVector2Array([Vector2(320, 1005), Vector2(358, 1070), Vector2(386, 1005)]) if step == 1 else PackedVector2Array([Vector2(182, 433), Vector2(234, 370), Vector2(258, 433)])
-	draw_colored_polygon(points, Color("172a37"))
-	draw_polyline(points, Color("94adb8"), 2, true)
+	var bottom := bubble.position.y + bubble.size.y - 3.0
+	var points := PackedVector2Array([Vector2(320, bottom), Vector2(358, 1070), Vector2(386, bottom)]) if step == 1 else PackedVector2Array([Vector2(182, 433), Vector2(234, 370), Vector2(258, 433)])
+	draw_colored_polygon(points, _bubble_style.bg_color)
+	draw_polyline(points, _bubble_style.border_color, 2, true)
 
 
 func _on_pointer(event: InputEvent) -> void:

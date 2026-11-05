@@ -20,6 +20,7 @@ animations = [
 [resource]
 script = ExtResource("4")
 character_id = "pirata"
+dialogue_color = Color(0.48, 0.77, 0.98, 1)
 display_name = "Capitão Biscoito"
 aliases = PackedStringArray("Capitão Biscoito", "Zeca Maré", "Bento Convés", "Tito Âncora", "Neco Sete Nós")
 portrait = SubResource("Frames")

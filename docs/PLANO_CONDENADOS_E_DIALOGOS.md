@@ -2,7 +2,7 @@
 
 **Data:** 5 de novembro de 2026.  
 **Base:** Zap & Fry 0.15.0, Godot 4.7.2.  
-**Status:** cinco bases, 15 poses e 25 nomes entregues na 0.16.0. A 0.17.0 acrescenta quatro paletas por base, 24 histórias em balões, avanço/Pular e persistência do encontro no perfil v6. Testes de lógica, interação e renderização aprovados. Detalhes em [ENCONTROS_017.md](ENCONTROS_017.md).
+**Status:** cinco bases, 15 poses e 25 nomes entregues na 0.16.0; paletas e diálogos na 0.17.0. A revisão 0.17.1 substitui o roteiro original de três falas por exatamente dois balões: Executor e condenado. Os 24 casos foram reescritos, a fonte das falas passou a 40 e cada base ganhou sua cor de balão. Esta revisão substitui o formato planejado abaixo; detalhes em [ENCONTROS_017.md](ENCONTROS_017.md).
 
 ## 1. Resultado esperado
 

@@ -26,11 +26,9 @@ func _capture() -> void:
 	app.sound_enabled = false
 	app.profile.appearance = {"level": 0, "id": "cavaleira", "name": "Zefa do Trovão", "palette": 3, "story": 0, "intro_seen": false}
 	app.start_game()
-	await _shot(app, "intro-goblin")
+	await _shot(app, "intro-executor")
 	app.dialogue.advance()
 	await _shot(app, "intro-condenado")
-	app.dialogue.advance()
-	await _shot(app, "intro-final")
 	app.dialogue.finish()
 	await process_frame
 	await _shot(app, "palette-gameplay")

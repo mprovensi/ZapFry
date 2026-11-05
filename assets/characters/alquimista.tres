@@ -20,6 +20,7 @@ animations = [
 [resource]
 script = ExtResource("4")
 character_id = "alquimista"
+dialogue_color = Color(0.74, 0.63, 0.98, 1)
 display_name = "Dra. Fuzarca"
 aliases = PackedStringArray("Dra. Fuzarca", "Nina Borbulha", "Rita Reagente", "Teca Fumaça", "Lila Caldeirão")
 portrait = SubResource("Frames")

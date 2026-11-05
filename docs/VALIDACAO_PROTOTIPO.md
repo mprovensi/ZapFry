@@ -1,10 +1,14 @@
-# Validação do protótipo 0.17.0
+# Validação do protótipo 0.17.1
 
 **Data:** 5 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.17.1:** exatamente dois balões por encontro, identificação **Executor**, cores próprias para as cinco bases e fonte das falas ampliada de 30 para 40. Os 24 casos foram reescritos; os IDs persistidos continuam iguais. Testes confirmam encerramento após a resposta sem terceira fala, bloqueio da grade, ausência de giros involuntários, pausa, Pular, cores por base, 25 nomes e 48 falas sem cortes em três proporções. Fluxo completo aprovado: **39.761 verificações da engine, 41 testes Python, 730 estados de dicas, 3.471 verificações de efeitos e 48 de áudio**, sem falhas. APK/código 28 exportado e 77 texturas importadas auditadas. Capturas locais em `builds/encounters/intro-executor.png` e `intro-condenado.png`.
+
+Instalação da 0.17.1 confirmada no S20 FE/SM-G781B: versão/código corretos, APK transferido validado, VIBRATE concedida, save idêntico antes/depois e inicialização sem erros. Evidência em `builds/android/install-20261105T145206609399Z/status.json`; log em `builds/deploy-v0171.log`. SHA-256 do APK: `ec1e30132646f79b0e095e53ac8eb1a9b4ce5f9965bf9f82fffbb43027daf0e5`. Nenhuma partida automatizada no aparelho. A confirmação humana anterior dos efeitos refere-se à 0.17.0; a leitura dos novos textos no celular permanece a confirmar.
 
 **0.17.0:** 24 histórias em três balões, quatro paletas por base e perfil v6. A validação passou com 39.885 verificações na engine, 41 testes Python, 730 estados de dicas, 3.471 verificações de efeitos/renderização e 48 de áudio. As 24 fases foram resolvidas por mouse e toque; introdução, Pular, teclado, pausa e Ajustes têm cobertura específica. Comparações de pixels verificam paletas, pele, cadeira e esqueleto, incluindo materiais independentes. O relógio controlado nos testes evita falhas por suspensão do computador e tem regressões de pausa/retomada. Detalhes em [ENCONTROS_017.md](ENCONTROS_017.md).
 
