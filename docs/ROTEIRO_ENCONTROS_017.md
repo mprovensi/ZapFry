@@ -14,11 +14,11 @@ Sessão manual de aproximadamente dez minutos no celular, após a instalação. 
 | Item | Resultado no celular | Observação |
 | --- | --- | --- |
 | Progresso e preferências | A confirmar | |
-| Leitura e avanço dos balões | A confirmar | |
+| Leitura e avanço dos balões | Confirmado pelo usuário | 5/11/2026; balões funcionaram no S20 FE. |
 | Bloqueio da matriz e do tempo | A confirmar | |
 | Pausa e segundo plano | A confirmar | |
 | Pular e reiniciar | A confirmar | |
-| Flash, vibração e esqueleto | A confirmar | |
+| Flash, vibração e esqueleto | Confirmado pelo usuário | 5/11/2026; efeitos funcionaram durante a partida. |
 | Paleta no resultado | A confirmar | |
 | Reabertura | A confirmar | |
 
