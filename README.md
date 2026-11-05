@@ -1,6 +1,8 @@
-# Zap & Fry — protótipo 0.19.1
+# Zap & Fry — protótipo 0.19.2
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Revisão 0.19.2:** fundo da tarja do nome removido; identificação em negrito diretamente sobre o papel do balão. A fonte das falas foi reduzida de 40 para 36. Mantidas as 48 conversas curtas e a ausência dos contadores de passos.
 
 **Revisão 0.19.1:** contadores de passos removidos dos balões. O nome aparece em tarja colorida, com fonte maior e negrito. O catálogo dobrou para 48 conversas curtas, incluindo casos próprios para cada base, mantendo duas falas por encontro e os IDs anteriores.
 
@@ -10,7 +12,7 @@
 
 **Revisão 0.17.1:** dois balões por encontro — Executor e condenado —, 24 conversas reescritas, cores próprias por personagem e texto 33% maior. A apresentação mantém Pular, pausa e bloqueio da matriz. Detalhes em [docs/ENCONTROS_017.md](docs/ENCONTROS_017.md).
 
-**0.19.1 instalada no S20 FE:** atualização/código 31 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Conferência manual dos encontros e efeitos em [docs/ROTEIRO_ENCONTROS_017.md](docs/ROTEIRO_ENCONTROS_017.md).
+**0.19.2 instalada no S20 FE:** atualização/código 32 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Conferência manual dos encontros e efeitos em [docs/ROTEIRO_ENCONTROS_017.md](docs/ROTEIRO_ENCONTROS_017.md).
 
 Puzzle de rotação de fios com humor macabro e visual em Cartoon 2D com sprites substituíveis.
 Desenvolvido em **Godot 4.7.2 estável, GDScript e renderer Compatibility**.

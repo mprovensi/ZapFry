@@ -64,8 +64,8 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	var snapshot: Dictionary = app.profile.appearance.duplicate()
 	check.call(app.dialogue.active and app.dialogue.visible and not app.board_view.interactive, "Conversa abre antes do puzzle e bloqueia a grade")
 	check.call(app.dialogue.speaker.text == "Executor" and not _has_step_labels(app.dialogue), "Primeiro balão identifica o Executor sem contador de passos")
-	check.call(app.dialogue.speaker.get_theme_font_size("font_size") >= 32 and app.dialogue.nameplate.get_rect().encloses(app.dialogue.speaker.get_rect()), "Nome ampliado fica destacado e contido na tarja")
-	check.call(app.dialogue.body.get_theme_font_size("font_size") == 40, "Falas usam fonte maior de 40 unidades")
+	check.call(app.dialogue.speaker.get_theme_font_size("font_size") >= 32 and not _has_name_background(app.dialogue), "Nome permanece destacado sem fundo próprio")
+	check.call(app.dialogue.body.get_theme_font_size("font_size") == 36, "Falas usam fonte reduzida de 36 unidades")
 	var executor_style: StyleBoxFlat = app.dialogue.bubble.get_theme_stylebox("panel")
 	check.call(executor_style.border_width_left >= 6 and executor_style.bg_color.get_luminance() > 0.75 and app.dialogue.body.get_theme_color("font_color").get_luminance() < 0.1, "Balão de quadrinho usa papel claro, texto escuro e contorno marcado")
 	var executor_color := executor_style.bg_color
@@ -139,7 +139,7 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 			app.dialogue.begin(Stories.CASES[0], name, template.dialogue_color)
 			app.dialogue.advance()
 			check.call(name_font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, app.dialogue.speaker.get_theme_font_size("font_size")).x <= app.dialogue.speaker.size.x, "Nome cabe no cabeçalho ampliado: " + name)
-			check.call(app.dialogue.bubble.get_rect().size.x >= app.dialogue.nameplate.get_rect().end.x and app.dialogue.nameplate.get_rect().encloses(app.dialogue.speaker.get_rect()), "Tarja acompanha nomes longos sem cortar a identificação")
+			check.call(Rect2(Vector2.ZERO, app.dialogue.bubble.size).encloses(app.dialogue.speaker.get_rect()) and not _has_name_background(app.dialogue), "Nome cabe no papel do balão sem fundo adicional")
 		app.dialogue.finish()
 		await tree.process_frame
 	for dimensions in [Vector2(360, 800), Vector2(720, 1280), Vector2(720, 1600)]:
@@ -163,6 +163,13 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 func _has_step_labels(dialogue) -> bool:
 	for label in dialogue.bubble.find_children("*", "Label", true, false):
 		if label.text in ["1 / 2", "2 / 2", "1/2", "2/2"]:
+			return true
+	return false
+
+
+func _has_name_background(dialogue) -> bool:
+	for child in dialogue.bubble.get_children():
+		if child is Panel and child.get_rect().intersects(dialogue.speaker.get_rect()):
 			return true
 	return false
 

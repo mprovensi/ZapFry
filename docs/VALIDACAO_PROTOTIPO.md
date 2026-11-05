@@ -1,10 +1,14 @@
-# Validação do protótipo 0.19.1
+# Validação do protótipo 0.19.2
 
 **Data:** 5 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.19.2:** fundo do nome removido da árvore da interface. Identificação em fonte 32/negrito diretamente sobre o papel; conversa reduzida de 40 para 36. Mantidas as 48 conversas e a ausência dos contadores. Testes cobrem ausência de painel atrás do nome, encaixe dos 35 nomes e das 96 falas, navegação e pausa em três proporções.
+
+Fluxo obrigatório aprovado: **40.519 verificações da engine, 43 testes Python, 730 estados de dicas, 3.562 verificações visuais/temporais e 48 de áudio**. APK 0.19.2/código 32 exportado e 83 texturas auditadas. Instalado no S20 FE/SM-G781B: APK transferido validado por SHA-256, versão correta, VIBRATE concedida, save idêntico antes/depois e inicialização sem erros. Log em `builds/deploy-v0192-install.log`; capturas em `builds/encounters/intro-executor.png` e `intro-condenado.png`. SHA-256 do APK: `10ae4c4fd5faad71d33c2fd6a07eff06762d4a5b1557ea93b2398fdcbc8eb97c`. Nenhuma partida automatizada no aparelho; confirmação humana da leitura permanece pendente.
 
 **0.19.1:** contadores de passos removidos da árvore dos balões; nome destacado em tarja colorida, fonte 32 e negrito. O catálogo dobrou para 48 conversas com exatamente duas falas. Os novos casos foram acrescentados ao final, mantendo IDs e encontros anteriores. Casos próprios das sete bases têm restrições de compatibilidade. Testes verificam unicidade, restauração do último caso novo, ausência dos contadores, encaixe dos 35 nomes e leitura das 96 falas em três proporções, além de pausa, Pular e bloqueio da matriz.
 

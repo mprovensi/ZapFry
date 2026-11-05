@@ -18,11 +18,9 @@ var skip_button: Button
 var bubble: Panel
 var speaker: Label
 var body: Label
-var nameplate: Panel
 var _pointer_down := false
 var _bubble_style: StyleBoxFlat
 var _tail: Control
-var _name_style: StyleBoxFlat
 
 
 func _ready() -> void:
@@ -56,18 +54,8 @@ func _ready() -> void:
 	_tail.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_tail.draw.connect(_draw_tail)
 	bubble.add_child(_tail)
-	nameplate = Panel.new()
-	nameplate.position = Vector2(44, 24)
-	nameplate.size = Vector2(240, 52)
-	nameplate.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_name_style = StyleBoxFlat.new()
-	_name_style.set_corner_radius_all(12)
-	_name_style.set_border_width_all(2)
-	_name_style.border_color = INK
-	nameplate.add_theme_stylebox_override("panel", _name_style)
-	bubble.add_child(nameplate)
-	speaker = _label(Vector2(60, 28), Vector2(464, 44), 32, PAPER)
-	body = _label(Vector2(48, 92), Vector2(496, 154), 40, INK)
+	speaker = _label(Vector2(52, 28), Vector2(488, 44), 32, INK)
+	body = _label(Vector2(48, 84), Vector2(496, 162), 36, INK)
 	var lettering := FontVariation.new()
 	lettering.base_font = ThemeDB.fallback_font
 	lettering.variation_embolden = 0.5
@@ -149,10 +137,7 @@ func _update_text() -> void:
 	var accent := subject_color if step == 1 else EXECUTOR_COLOR
 	_bubble_style.bg_color = accent.lerp(PAPER, 0.85)
 	_bubble_style.border_color = INK
-	_name_style.bg_color = accent.darkened(0.62)
-	var name_width := ceilf(speaker.get_theme_font("font").get_string_size(speaker.text, HORIZONTAL_ALIGNMENT_LEFT, -1, speaker.get_theme_font_size("font_size")).x)
-	speaker.size.x = name_width
-	nameplate.size.x = name_width + 32
+	speaker.add_theme_color_override("font_color", accent.darkened(0.62))
 	body.text = lines[step]
 	advance_button.text = "COMEÇAR" if step == lines.size() - 1 else "CONTINUAR"
 	queue_redraw()
