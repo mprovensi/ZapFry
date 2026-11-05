@@ -18,10 +18,11 @@ var skip_button: Button
 var bubble: Panel
 var speaker: Label
 var body: Label
-var counter: Label
+var nameplate: Panel
 var _pointer_down := false
 var _bubble_style: StyleBoxFlat
 var _tail: Control
+var _name_style: StyleBoxFlat
 
 
 func _ready() -> void:
@@ -55,13 +56,22 @@ func _ready() -> void:
 	_tail.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_tail.draw.connect(_draw_tail)
 	bubble.add_child(_tail)
-	speaker = _label(Vector2(52, 32), Vector2(380, 40), 28, INK)
-	counter = _label(Vector2(456, 32), Vector2(80, 40), 24, Color("56606a"))
-	counter.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	body = _label(Vector2(48, 82), Vector2(496, 164), 40, INK)
+	nameplate = Panel.new()
+	nameplate.position = Vector2(44, 24)
+	nameplate.size = Vector2(240, 52)
+	nameplate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_name_style = StyleBoxFlat.new()
+	_name_style.set_corner_radius_all(12)
+	_name_style.set_border_width_all(2)
+	_name_style.border_color = INK
+	nameplate.add_theme_stylebox_override("panel", _name_style)
+	bubble.add_child(nameplate)
+	speaker = _label(Vector2(60, 28), Vector2(464, 44), 32, PAPER)
+	body = _label(Vector2(48, 92), Vector2(496, 154), 40, INK)
 	var lettering := FontVariation.new()
 	lettering.base_font = ThemeDB.fallback_font
 	lettering.variation_embolden = 0.5
+	speaker.add_theme_font_override("font", lettering)
 	body.add_theme_font_override("font", lettering)
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	advance_button = Button.new()
@@ -139,9 +149,11 @@ func _update_text() -> void:
 	var accent := subject_color if step == 1 else EXECUTOR_COLOR
 	_bubble_style.bg_color = accent.lerp(PAPER, 0.85)
 	_bubble_style.border_color = INK
-	speaker.add_theme_color_override("font_color", accent.darkened(0.65))
+	_name_style.bg_color = accent.darkened(0.62)
+	var name_width := ceilf(speaker.get_theme_font("font").get_string_size(speaker.text, HORIZONTAL_ALIGNMENT_LEFT, -1, speaker.get_theme_font_size("font_size")).x)
+	speaker.size.x = name_width
+	nameplate.size.x = name_width + 32
 	body.text = lines[step]
-	counter.text = "%d / %d" % [step + 1, lines.size()]
 	advance_button.text = "COMEÇAR" if step == lines.size() - 1 else "CONTINUAR"
 	queue_redraw()
 

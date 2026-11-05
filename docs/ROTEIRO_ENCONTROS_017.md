@@ -1,9 +1,9 @@
-# Playtest dos encontros — 0.19.0
+# Playtest dos encontros — 0.19.1
 
 Sessão manual de aproximadamente dez minutos no celular, após a instalação. Os testes automatizados já cobrem regras e renderização; registrar abaixo o que for realmente observado no aparelho. Não desinstalar nem limpar os dados para testar.
 
 1. **Progresso:** conferir a fase de continuação, os desbloqueios, recordes e Ajustes anteriores. Abrir o seletor não deve apagar conquistas.
-2. **Nova conversa:** entrar em outra fase desbloqueada. Devem aparecer somente dois balões: Executor em verde (1/2) e resposta do condenado na cor própria da base (2/2). Conferir fonte maior, nome legível e resposta relacionada à acusação. O botão Começar no segundo balão deve liberar o puzzle diretamente. A apresentação aparece uma vez por encontro; reiniciar a mesma tentativa dispensa a conversa já concluída.
+2. **Nova conversa:** entrar em outra fase desbloqueada. Devem aparecer somente dois balões: Executor em verde e resposta do condenado na cor própria da base, sem contadores de passos. Conferir nome em tarja colorida, fonte maior/negrito e resposta relacionada à acusação. O botão Começar no segundo balão deve liberar o puzzle diretamente. A apresentação aparece uma vez por encontro; reiniciar a mesma tentativa dispensa a conversa já concluída. O catálogo tem 48 conversas, incluindo casos próprios das sete bases.
 3. **Entrada e tempo:** aguardar alguns segundos no balão e tentar tocar na matriz. Os fios e o relógio devem permanecer parados. Avançar a última fala deve apenas fechar o diálogo. O primeiro giro válido inicia o tempo nas fases cronometradas.
 4. **Pausa:** durante outra conversa, pausar, abrir Ajustes e retornar. A fala deve ser preservada. Trocar de aplicativo e voltar deve manter a partida pausada, aguardando Continuar.
 5. **Pular:** em outro encontro, tocar Pular. A matriz fica disponível, sem giro ou dica involuntários. Reiniciar mantém nome, personagem e cor.

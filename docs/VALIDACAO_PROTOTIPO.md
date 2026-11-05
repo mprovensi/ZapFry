@@ -1,10 +1,16 @@
-# Validação do protótipo 0.19.0
+# Validação do protótipo 0.19.1
 
 **Data:** 5 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.19.1:** contadores de passos removidos da árvore dos balões; nome destacado em tarja colorida, fonte 32 e negrito. O catálogo dobrou para 48 conversas com exatamente duas falas. Os novos casos foram acrescentados ao final, mantendo IDs e encontros anteriores. Casos próprios das sete bases têm restrições de compatibilidade. Testes verificam unicidade, restauração do último caso novo, ausência dos contadores, encaixe dos 35 nomes e leitura das 96 falas em três proporções, além de pausa, Pular e bloqueio da matriz.
+
+Fluxo obrigatório aprovado: **40.519 verificações da engine, 43 testes Python, 730 estados de dicas, 3.562 verificações visuais/temporais e 48 de áudio**, sem falhas ou erros nos logs. APK 0.19.1/código 31 exportado; fases e 83 texturas importadas auditadas. Capturas em `builds/encounters/intro-executor.png` e `intro-condenado.png`; log em `builds/deploy-v0191-install.log`.
+
+Instalação da 0.19.1 confirmada no S20 FE/SM-G781B: APK transferido validado por SHA-256, versão/código corretos, VIBRATE concedida, perfil idêntico antes/depois e inicialização sem erros. Evidência em `builds/android/install-20261105T195902894702Z/status.json`. SHA-256 do APK: `bc91e5fd8841774d7ce2eefd9636c09469518f07a16c944f66fe6c9a4c345c88`. Nenhuma partida automatizada no aparelho; a leitura das alterações no celular permanece a confirmar pelo usuário.
 
 **0.19.0:** balões de quadrinhos com fundo claro tingido por personagem, texto escuro reforçado, contorno de seis unidades e cauda curva sem linha na junção. Removido o nome avulso à esquerda da cadeira; o nome continua no balão. Zumbi e elfa adulta integrados com três poses e oito estados cada, cinco nomes por base e quatro paletas: sete bases, 35 nomes e 140 combinações. Perfil v6 e IDs anteriores preservados.
 
