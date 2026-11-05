@@ -2,6 +2,8 @@
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
 
+**0.17.0 instalada no S20 FE:** atualização/código 27 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria do APK aprovados. Conferência manual dos encontros e efeitos em [docs/ROTEIRO_ENCONTROS_017.md](docs/ROTEIRO_ENCONTROS_017.md).
+
 Puzzle de rotação de fios com humor macabro e visual em Cartoon 2D com sprites substituíveis.
 Desenvolvido em **Godot 4.7.2 estável, GDScript e renderer Compatibility**.
 

@@ -10,6 +10,8 @@ O perfil v6 grava personagem, nome, paleta, história e apresentação concluíd
 
 ## Validação
 
+Conferência manual no aparelho: [ROTEIRO_ENCONTROS_017.md](ROTEIRO_ENCONTROS_017.md).
+
 - Catálogo, combinações, compatibilidade, migração e persistência: `tests/encounter_tests.gd`.
 - Interação nativa por mouse, toque e teclado; pausa, interrupção de gesto e prevenção de entrada duplicada ou vazamento para a matriz.
 - As 72 falas cabem nos balões em 360×800, 720×1280 e 720×1600.
