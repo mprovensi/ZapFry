@@ -50,6 +50,7 @@ func _run() -> void:
 	_test_hint_rules()
 	HintStressTests.new().run(_check)
 	await _test_ui()
+	await _test_campaign_ending()
 	await _test_selector()
 	await _test_settings()
 	await _test_focus_lifecycle()
@@ -299,6 +300,58 @@ func _test_ui() -> void:
 	await _solve_original_through_ui(app)
 	app.queue_free()
 	await process_frame
+
+
+func _test_campaign_ending() -> void:
+	var app = load("res://scenes/main.tscn").instantiate()
+	root.add_child(app)
+	await process_frame
+	app.set_process(false)
+	app.ticks_msec = func(): return 1000
+	app.sound_enabled = false
+	for id in range(1, app.levels.size()):
+		app.profile.record_win(id, 1000, 3, 5.0)
+	app.level_index = app.levels.size() - 2
+	app.start_game(false)
+	_solve_session(app.session)
+	app._process(app.RESOLUTION_DURATION)
+	_check(not app.campaign_ending.visible, "Penúltima fase usa resultado normal, sem agradecimento final")
+	for dimensions in [Vector2(360, 800), Vector2(720, 1280), Vector2(720, 1600)]:
+		app.size = dimensions
+		app._layout_stage()
+		for action in ["replay", "menu", "back"]:
+			app.level_index = app.levels.size() - 1
+			app.start_game(false)
+			_check(not app.campaign_ending.visible, "Entrar na última fase não antecipa o encerramento")
+			_solve_session(app.session)
+			app._process(app.RESOLUTION_DURATION - 0.05)
+			_check(not app.campaign_ending.visible and not app.overlay.visible, "Tela final aguarda a descarga e a recuperação completas")
+			app._process(0.06)
+			await process_frame
+			_check(app.campaign_ending.visible and app.overlay.visible and app.session.state == Session.State.WON, "Concluir a fase 24 apresenta a tela final")
+			_check(app.ending_title.text == "OBRIGADO POR JOGAR!" and app.ending_message.text.contains("Mais fases virão pela frente"), "Encerramento agradece e informa novas fases")
+			for label in [app.ending_title, app.ending_message]:
+				var font: Font = label.get_theme_font("font")
+				_check(app.get_global_rect().encloses(label.get_global_rect()) and font.get_height(label.get_theme_font_size("font_size")) * label.get_line_count() <= label.size.y + 1, "Mensagem final cabe na proporção " + str(dimensions))
+			_check(not app.ending_message.get_global_rect().intersects(app.buttons["continue"].get_global_rect()) and app.ending_title.get_global_rect().end.y < app.result_portrait.get_global_rect().position.y, "Texto final não cobre personagem nem botões")
+			var records: Dictionary = app.profile.records.duplicate(true)
+			var moves: int = app.session.moves
+			await _click(app.board_view.get_global_rect().get_center())
+			app._process(1.0)
+			_check(app.session.moves == moves and app.profile.records == records and app.profile.current_level == 0, "Tela final bloqueia o puzzle e não repete recordes")
+			if action == "replay":
+				await _touch(app.buttons["continue"].get_global_rect().get_center())
+				await _dismiss_intro(app)
+				_check(app.screen == "game" and app.level_index == 0 and app.session.state == Session.State.READY and not app.campaign_ending.visible, "Jogar do início abre a fase 1 e esconde o encerramento")
+				app.show_menu()
+			elif action == "menu":
+				await _click(app.buttons["exit"].get_global_rect().get_center())
+			else:
+				app._handle_back()
+			_check(app.screen == "menu" and not app.overlay.visible and not app.campaign_ending.visible and app.profile.records == records and app.profile.completed_count() == app.levels.size(), "Sair ou rejogar preserva a campanha e seus recordes")
+	app.queue_free()
+	await process_frame
+	print("Encerramento: agradecimento, novas fases, espera da descarga, menu e replay em três proporções verificados.")
 
 
 func _solve_original_through_ui(app) -> void:

@@ -82,6 +82,9 @@ var overlay: Control
 var settings: Control
 var dialogue: Control
 var result_portrait: TextureRect
+var campaign_ending: Control
+var ending_title: Label
+var ending_message: Label
 var music_slider: HSlider
 var effects_slider: HSlider
 var buttons: Dictionary = {}
@@ -230,6 +233,7 @@ func _ready() -> void:
 	result_portrait.position = Vector2(150, 352)
 	result_portrait.size = Vector2(420, 420)
 	overlay.add_child(result_portrait)
+	_make_campaign_ending()
 	_make_button("continue", "CONTINUAR", Rect2(112, 1098, 496, 104), _overlay_primary, true, overlay)
 	_make_button("exit", "MENU", Rect2(112, 1226, 496, 96), show_menu, false, overlay)
 	_make_button("pause_settings", "AJUSTES", Rect2(112, 1354, 496, 96), show_settings, false, overlay)
@@ -246,6 +250,33 @@ func _ready() -> void:
 	_layout_stage()
 	show_menu()
 	set_process(true)
+
+
+func _make_campaign_ending() -> void:
+	campaign_ending = Control.new()
+	campaign_ending.name = "CampaignEnding"
+	campaign_ending.size = GAME_DESIGN
+	campaign_ending.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(campaign_ending)
+	ending_title = Label.new()
+	ending_title.name = "EndingThanks"
+	ending_title.position = Vector2(48, 260)
+	ending_title.size = Vector2(624, 64)
+	ending_title.text = "OBRIGADO POR JOGAR!"
+	ending_title.add_theme_font_size_override("font_size", 44)
+	ending_message = Label.new()
+	ending_message.name = "MoreLevels"
+	ending_message.position = Vector2(64, 982)
+	ending_message.size = Vector2(592, 92)
+	ending_message.text = "Mais fases virão pela frente.\nAté a próxima descarga!"
+	ending_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	ending_message.add_theme_font_size_override("font_size", 28)
+	for label in [ending_title, ending_message]:
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.add_theme_color_override("font_color", CREAM)
+		campaign_ending.add_child(label)
 
 
 func _layout_stage() -> void:
@@ -562,6 +593,10 @@ func _overlay_primary() -> void:
 		start_game(false)
 
 
+func _is_final_result() -> bool:
+	return screen == "game" and session.state == Session.State.WON and level_index == levels.size() - 1
+
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
 		if is_instance_valid(settings) and settings.visible:
@@ -629,6 +664,7 @@ func _sync_controls() -> void:
 	board_view.visible = in_game
 	board_view.interactive = in_game and not introducing and session.state in [Session.State.READY, Session.State.PLAYING]
 	overlay.visible = in_game and not settings.visible and session.state in [Session.State.PAUSED, Session.State.WON, Session.State.LOST]
+	campaign_ending.visible = overlay.visible and _is_final_result()
 	buttons["continue"].text = "CONTINUAR" if session.state == Session.State.PAUSED else "REPETIR FASE"
 	if session.state == Session.State.WON:
 		buttons["continue"].text = "PRÓXIMA FASE" if level_index < levels.size() - 1 else "JOGAR DO INÍCIO"
@@ -936,15 +972,16 @@ func _draw_overlay() -> void:
 			summary += "  ·  " + Profile.format_time(session.elapsed)
 		next = "A SEGUIR · FASE %02d" % (level_index + 2)
 		if level_index == levels.size() - 1:
-			title = "MISSÃO CUMPRIDA"
 			next = "%d FASES CONCLUÍDAS" % levels.size()
 	elif session.state == Session.State.LOST:
 		title = "DEU PANE!"
 		accent = CORAL
 		summary = "O tempo acabou."
 		next = "Mais uma tentativa?"
-	_center("FASE %02d / %02d" % [level_index + 1, levels.size()], 240, 24, accent, overlay)
-	_center(title, 310, 50, CREAM, overlay)
+	var heading := "MISSÃO CUMPRIDA" if _is_final_result() else "FASE %02d / %02d" % [level_index + 1, levels.size()]
+	_center(heading, 240, 24, accent, overlay)
+	if not _is_final_result():
+		_center(title, 310, 50, CREAM, overlay)
 	var portrait: Texture2D = room_view.portrait_texture()
 	result_portrait.set_frame(portrait, execution_character)
 	if portrait == null:

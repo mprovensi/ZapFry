@@ -1,10 +1,16 @@
-# Validação do protótipo 0.19.2
+# Validação do protótipo 0.20.0
 
 **Data:** 5 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.20.0:** tela final após vencer a fase 24, com “OBRIGADO POR JOGAR!”, aviso “Mais fases virão pela frente” e ações de jogar do início ou voltar ao menu. Reutilizados cenário, personagem recuperado, estrelas e pontuação do resultado. As mensagens aguardam os 2,40 s completos da sequência; fases anteriores conservam a tela habitual.
+
+Fluxo obrigatório aprovado: **40.604 verificações da engine, 43 testes Python, 730 estados de dicas, 3.574 verificações visuais/temporais e 48 de áudio**, sem erros nos logs. As novas verificações cobrem três proporções, espera da animação, leitura, registro único, bloqueio do puzzle, Menu, Voltar e replay com conquistas preservadas. Comparações de pixels confirmam apresentação real das duas mensagens, incluindo o stretch do viewport em 360×800. APK/código 33 exportado, fases e 83 texturas auditadas. Evidências em `builds/deploy-v0200-install.log` e `builds/ending/`; guia em [TELA_FINAL_020.md](TELA_FINAL_020.md).
+
+Instalação 0.20.0 confirmada no S20 FE/SM-G781B: APK transferido validado por SHA-256, versão/código corretos, VIBRATE concedida, perfil idêntico antes/depois e inicialização sem erros. Evidência em `builds/android/install-20261105T203442540364Z/status.json`. SHA-256 do APK: `7d989029dda10c099994fe70b31a77a03f53b3c95e726e7f9af7bf870be23c1e`. Não foram automatizadas partidas no aparelho; a conclusão da fase 24 foi simulada somente na engine, com perfil isolado, para produzir as capturas.
 
 **0.19.2:** fundo do nome removido da árvore da interface. Identificação em fonte 32/negrito diretamente sobre o papel; conversa reduzida de 40 para 36. Mantidas as 48 conversas e a ausência dos contadores. Testes cobrem ausência de painel atrás do nome, encaixe dos 35 nomes e das 96 falas, navegação e pausa em três proporções.
 

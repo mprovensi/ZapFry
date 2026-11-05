@@ -4,6 +4,7 @@ extends SceneTree
 const EffectTests = preload("res://tests/execution_effect_tests.gd")
 const EncounterTests = preload("res://tests/encounter_tests.gd")
 const AnimationTests = preload("res://tests/animation_tests.gd")
+const Session = preload("res://scripts/game_session.gd")
 var checks := 0
 var failures := 0
 var render_results: Array[Dictionary] = []
@@ -50,10 +51,41 @@ func _exercise() -> void:
 		await process_frame
 		app._layout_stage()
 		await _test_render(app, dimensions)
+		await _test_ending_render(app, dimensions)
 	app.queue_free()
 	await process_frame
 	await EncounterTests.new().run_render(self, _check)
 	await AnimationTests.new().run_render(self, _check)
+
+
+func _test_ending_render(app, dimensions: Vector2i) -> void:
+	DirAccess.make_dir_recursive_absolute("res://builds/ending")
+	app.level_index = app.levels.size() - 1
+	app.start_game(false)
+	for value in app.level_data["reference_path"]:
+		var index := int(value)
+		var cell: Dictionary = app.session.board.cells[index]
+		for turn in range(4):
+			if int(cell["rotation"]) == int(cell["solution"]) or app.session.state == Session.State.RESOLVING:
+				break
+			app.session.rotate_cell(index)
+	app._process(app.RESOLUTION_DURATION)
+	var final := await _render(app)
+	_check(app.campaign_ending.visible, "Tela final aparece no renderer real após a fase 24")
+	# Incluir o stretch do viewport para medir pixels físicos, inclusive em 360×800.
+	var regions: Array[Rect2i] = []
+	for label in [app.ending_title, app.ending_message]:
+		var transform: Transform2D = root.get_final_transform() * label.get_global_transform_with_canvas()
+		regions.append(_pixel_rect(transform, Rect2(Vector2.ZERO, label.size), final.get_size()))
+	app.campaign_ending.hide()
+	var without_copy := await _render(app)
+	for index in range(regions.size()):
+		var region := regions[index]
+		var difference := _difference(final, without_copy, region)
+		print("Encerramento %s, mensagem %d: região %s; diferença %.6f" % [dimensions, index, region, difference])
+		_check(region.has_area() and difference > 0.005, "Agradecimento e aviso de novas fases são realmente renderizados")
+	app.campaign_ending.show()
+	_check(final.save_png("res://builds/ending/%dx%d.png" % [dimensions.x, dimensions.y]) == OK, "Prévia da tela final salva")
 
 
 func _test_render(app, dimensions: Vector2i) -> void:
