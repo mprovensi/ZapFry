@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="" load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://scripts/art_pack.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_idle.svg" id="2"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_idle_blink.svg" id="3"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_worried.svg" id="4"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_anticipation.svg" id="5"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_zap_a.svg" id="6"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_zap_b.svg" id="7"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_recover.svg" id="8"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_win.svg" id="9"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/character_lose.svg" id="10"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/chair_idle.svg" id="11"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/chair_active.svg" id="12"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/straight.svg" id="13"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/straight_live.svg" id="14"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/curve.svg" id="15"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/curve_live.svg" id="16"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/tee.svg" id="17"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/tee_live.svg" id="18"]
+[ext_resource type="Texture2D" path="res://assets/art/starter/blocker.svg" id="19"]
+
+[sub_resource type="SpriteFrames" id="CharacterFrames"]
+animations = [{"frames": [{"duration": 9.0, "texture": ExtResource("2")} , {"duration": 1.0, "texture": ExtResource("3")} ], "loop": true, "name": &"idle", "speed": 2.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("4")} ], "loop": true, "name": &"worried", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("5")} ], "loop": false, "name": &"anticipation", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("6")} , {"duration": 1.0, "texture": ExtResource("7")} ], "loop": true, "name": &"zap", "speed": 10.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("5")} ], "loop": false, "name": &"zap_soft", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("8")} ], "loop": false, "name": &"recover", "speed": 2.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("9")} ], "loop": false, "name": &"win", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("10")} ], "loop": false, "name": &"lose", "speed": 1.0}]
+
+[sub_resource type="SpriteFrames" id="ChairFrames"]
+animations = [{"frames": [{"duration": 1.0, "texture": ExtResource("11")} ], "loop": false, "name": &"idle", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("11")} ], "loop": false, "name": &"worried", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("12")} ], "loop": false, "name": &"anticipation", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("12")} , {"duration": 1.0, "texture": ExtResource("11")} ], "loop": true, "name": &"zap", "speed": 10.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("12")} ], "loop": false, "name": &"zap_soft", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("11")} ], "loop": false, "name": &"recover", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("11")} ], "loop": false, "name": &"win", "speed": 1.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("11")} ], "loop": false, "name": &"lose", "speed": 1.0}]
+
+[resource]
+script = ExtResource("1")
+pack_name = "Cartoon inicial v1"
+character = SubResource("CharacterFrames")
+chair = SubResource("ChairFrames")
+straight = ExtResource("13")
+straight_live = ExtResource("14")
+curve = ExtResource("15")
+curve_live = ExtResource("16")
+tee = ExtResource("17")
+tee_live = ExtResource("18")
+blocker = ExtResource("19")

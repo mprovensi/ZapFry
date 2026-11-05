@@ -1,0 +1,17 @@
+.godot/
+builds/*
+!builds/.gdignore
+.tools/
+*.apk
+*.aab
+*.exe
+*.pck
+*.keystore
+*.jks
+export_credentials.cfg
+__pycache__/
+*.pyc
+.env
+.env.*
+.aws/
+*.pem

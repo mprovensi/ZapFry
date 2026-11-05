@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Região do traje. O shader limita a troca ao matiz do tecido. -->
+  <path fill="white" d="M350 348H674V740H350Z M266 398H410V586H266Z M614 398H758V586H614Z M338 608H506V914H338Z M518 608H686V914H518Z"/>
+</svg>

@@ -1,0 +1,26 @@
+{
+  "id": 8, "name": "Tudo conectado", "size": 4, "time_limit": 180.0,
+  "source_index": 0, "source_port": 8, "target_index": 15, "target_port": 2,
+  "reference_path": [0, 1, 2, 6, 10, 9, 13, 14, 15],
+  "guided": false, "reference_taps": 10, "lesson": "combined",
+  "instruction": "Use o T e desvie do fusível. Uma conexão de cada vez.",
+  "tip_lines": ["T e fusível no mesmo painel.", "Você já conhece as duas regras."],
+  "cells": [
+    {"kind": "straight", "rotation": 1, "solution": 1, "fixed": true},
+    {"kind": "straight", "rotation": 0, "solution": 1},
+    {"kind": "curve", "rotation": 1, "solution": 2},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "blocker", "rotation": 0, "solution": 0, "fixed": true},
+    {"kind": "straight", "rotation": 1, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "curve", "rotation": 3, "solution": 1},
+    {"kind": "tee", "rotation": 1, "solution": 3},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "curve", "rotation": 2, "solution": 0},
+    {"kind": "straight", "rotation": 0, "solution": 1},
+    {"kind": "straight", "rotation": 1, "solution": 1, "fixed": true}
+  ]
+}

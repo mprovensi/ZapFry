@@ -1,0 +1,101 @@
+{
+  "characters": [
+    {
+      "id": "cavaleira",
+      "file": "01_cavaleira_idle_v2.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "visible_bounds": [
+        241,
+        18,
+        997,
+        1245
+      ],
+      "sha256": "902777c48ddca4342cdfc856a0a925975ecd062dd81c0fd46b4d8e685749ca4f"
+    },
+    {
+      "id": "pirata",
+      "file": "02_pirata_idle.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "visible_bounds": [
+        242,
+        11,
+        996,
+        1244
+      ],
+      "sha256": "c4b93e3786424ce97a3817e9efface851e1e354c40a312c9745b9a22999d155a"
+    },
+    {
+      "id": "alquimista",
+      "file": "03_alquimista_idle.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "visible_bounds": [
+        243,
+        5,
+        1011,
+        1245
+      ],
+      "sha256": "a1a42dfb4731c403e1012318779f751254f5e440d6197e10f3fb69d674b85c38"
+    },
+    {
+      "id": "bardo",
+      "file": "04_bardo_idle.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "visible_bounds": [
+        244,
+        19,
+        995,
+        1244
+      ],
+      "sha256": "8be583ec69fa25e2adc4041ffd0d88dc5ddc271c8390e789497f834a62ff21ed"
+    },
+    {
+      "id": "vampiro",
+      "file": "05_vampiro_idle.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "visible_bounds": [
+        242,
+        17,
+        995,
+        1244
+      ],
+      "sha256": "98a82e96e15181ec7a841b6eda29e0a058d8167f4eee20f7aafeeaee843588d6"
+    }
+  ],
+  "engine_preview_failures": 0,
+  "production_assets_modified": false
+}

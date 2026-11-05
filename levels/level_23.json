@@ -1,0 +1,229 @@
+{
+  "id": 23,
+  "name": "Último desvio",
+  "size": 6,
+  "time_limit": 225,
+  "source_index": 0,
+  "source_port": 8,
+  "target_index": 35,
+  "target_port": 2,
+  "reference_path": [
+    0,
+    1,
+    2,
+    8,
+    7,
+    6,
+    12,
+    18,
+    19,
+    25,
+    31,
+    32,
+    33,
+    27,
+    21,
+    22,
+    16,
+    17,
+    23,
+    29,
+    28,
+    34,
+    35
+  ],
+  "guided": false,
+  "reference_taps": 38,
+  "lesson": "six_by_six",
+  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "tip_lines": [
+    "O T oferece mais de um caminho.",
+    "Nem todo ramo chega à saída."
+  ],
+  "cells": [
+    {
+      "kind": "straight",
+      "rotation": 1,
+      "solution": 1,
+      "fixed": true
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 2
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 3
+    },
+    {
+      "kind": "straight",
+      "rotation": 2,
+      "solution": 2
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 2,
+      "solution": 1
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 3
+    },
+    {
+      "kind": "curve",
+      "rotation": 2,
+      "solution": 2
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 3
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 3
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 2
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 2
+    },
+    {
+      "kind": "blocker",
+      "rotation": 0,
+      "solution": 0,
+      "fixed": true
+    },
+    {
+      "kind": "curve",
+      "rotation": 2,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 1,
+      "solution": 3
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "tee",
+      "rotation": 0,
+      "solution": 1
+    },
+    {
+      "kind": "blocker",
+      "rotation": 0,
+      "solution": 0,
+      "fixed": true
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 1,
+      "solution": 3
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "tee",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 3
+    },
+    {
+      "kind": "curve",
+      "rotation": 1,
+      "solution": 0
+    },
+    {
+      "kind": "straight",
+      "rotation": 1,
+      "solution": 1,
+      "fixed": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# Sala contínua e revisão de UX — 0.12.1
+
+A tela de jogo agora usa uma única sala, seguindo a distribuição do conceito `Goblin_engineer_operates_electri…_c4bcbdc7_2K.jpg`. Goblin, matriz e ocupante da cadeira ficam próximos; as molduras dos setores e os cards explicativos dos personagens foram retirados da partida. As células continuam visíveis como peças físicas do painel.
+
+O cabeçalho reúne menu, fase atual, tamanho da matriz, tempo, giros e pausa. O medidor de carga fica na parede ao lado do goblin e mostra a proporção e a contagem de fios energizados; não é necessário energizar todos os fios para vencer. O rodapé reúne a instrução contextual em até duas linhas e os botões de reiniciar e dica. Os quatro botões da partida têm pelo menos 96 unidades lógicas de altura, equivalentes a 48 unidades de tela no cenário 360×800 usado nos testes; isso não é uma medição física de dp no Android.
+
+A área lógica continua 720×1600; a matriz conserva 624×624 unidades. As áreas de toque, fases, temporizadores, dicas, seleção futura de personagem e sequência chave–choque–recuperação não mudaram. `RoomView.embedded` faz os atores serem desenhados diretamente sobre o cenário, sem painéis ou textos próprios. Menu e seletor mantêm sua apresentação. O fundo é opcional em `ArtPack.game_background`; o pacote anterior funciona como fallback.
+
+Fontes de implementação: `scripts/main.gd`, `scripts/room_view.gd` e `scripts/art_pack.gd`. Troca futura do ocupante: `OPERADOR_E_PERSONAGENS.md`.
+
+## Arte de fundo
+
+Arquivo salvo: `assets/art/concept_v3/game_room.png`. Modo: edição/reconstrução com a ferramenta nativa `image_gen`, usando o JPEG de referência. Os originais foram preservados. Nenhum texto, personagem, interface ou matriz foi embutido no fundo; esses elementos continuam dinâmicos. A importação limita o lado maior a 2048 px, mantendo o PNG fonte.
+
+Prompt final:
+
+Use case: background-extraction. Asset type: ONE continuous portrait mobile game room backdrop for Zap & Fry. Image 1 is the reference environment to extract/reconstruct. Preserve its hand painted cartoon industrial villain laboratory: dark blue gray metal wall plates, subtle rivets, restrained gold/black warning stripes at far side edges, a few thick pipes and loose conduits hugging the far sides, warm dim work lights at upper corners, a little floor at bottom. RECREATE THE ROOM AS A SINGLE UNBROKEN ENVIRONMENT, not panels/cards: no horizontal divider bars, no separate boxed sections, no frames around content zones. Remove ALL foreground characters (goblin and knight), their control box/lever/chair, puzzle grid, all UI including clocks, numbers, meters, buttons, text, symbols, and HUD. Reconstruct the hidden wall. Portrait aspect 9:20 approximately. Composition intended for separately rendered gameplay objects: keep upper-left quarter calm for a goblin at y=10%-25%; keep upper-right wall calm for one native charge meter; keep the whole central rectangle x=6%-94%, y=25%-64% unobstructed, flat dark wall for a 6x6 wire puzzle; keep lower-center x=25%-75%,y=64%-86% clear for a chair character. Top 8% and bottom 12% stay dark and uncluttered for native controls. Orthographic/front-facing wall, no strong perspective. Readable restrained lighting, continuous room depth, attractive painted cartoon finish matching the reference, no built-in text anywhere. No people, no wires crossing the central puzzle space, no other screens or empty panel frames. Opaque background.

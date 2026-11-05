@@ -1,0 +1,164 @@
+{
+  "id": 15,
+  "name": "Fios e distrações",
+  "size": 5,
+  "time_limit": 180,
+  "source_index": 0,
+  "source_port": 8,
+  "target_index": 24,
+  "target_port": 2,
+  "reference_path": [
+    0,
+    1,
+    6,
+    5,
+    10,
+    15,
+    16,
+    17,
+    18,
+    13,
+    14,
+    19,
+    24
+  ],
+  "guided": false,
+  "reference_taps": 22,
+  "lesson": "five_by_five",
+  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "tip_lines": [
+    "O T oferece mais de um caminho.",
+    "Nem todo ramo chega à saída."
+  ],
+  "cells": [
+    {
+      "kind": "straight",
+      "rotation": 1,
+      "solution": 1,
+      "fixed": true
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 2
+    },
+    {
+      "kind": "curve",
+      "rotation": 2,
+      "solution": 2
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 3
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 3
+    },
+    {
+      "kind": "curve",
+      "rotation": 2,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 1,
+      "solution": 3
+    },
+    {
+      "kind": "straight",
+      "rotation": 2,
+      "solution": 2
+    },
+    {
+      "kind": "blocker",
+      "rotation": 0,
+      "solution": 0,
+      "fixed": true
+    },
+    {
+      "kind": "straight",
+      "rotation": 1,
+      "solution": 1
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "blocker",
+      "rotation": 0,
+      "solution": 0,
+      "fixed": true
+    },
+    {
+      "kind": "straight",
+      "rotation": 1,
+      "solution": 1
+    },
+    {
+      "kind": "tee",
+      "rotation": 3,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 3,
+      "solution": 2
+    },
+    {
+      "kind": "curve",
+      "rotation": 1,
+      "solution": 0
+    },
+    {
+      "kind": "tee",
+      "rotation": 1,
+      "solution": 2
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 1,
+      "solution": 3
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 0,
+      "fixed": true
+    }
+  ]
+}

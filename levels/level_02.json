@@ -1,0 +1,26 @@
+{
+  "id": 2, "name": "Agora, uma curva", "size": 4, "time_limit": 0.0,
+  "source_index": 0, "source_port": 8, "target_index": 15, "target_port": 2,
+  "reference_path": [0, 1, 2, 3, 7, 11, 15],
+  "guided": true, "reference_taps": 2,
+  "instruction": "Siga a seta para ligar os dois fios, um de cada vez.",
+  "tip_lines": ["Siga a corrente acesa.", "A curva leva a energia para baixo."],
+  "cells": [
+    {"kind": "straight", "rotation": 1, "solution": 1, "fixed": true},
+    {"kind": "straight", "rotation": 0, "solution": 1},
+    {"kind": "straight", "rotation": 1, "solution": 1, "fixed": true},
+    {"kind": "curve", "rotation": 1, "solution": 2},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "straight", "rotation": 0, "solution": 0, "fixed": true},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "straight", "rotation": 0, "solution": 0, "fixed": true},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "curve", "rotation": 0, "solution": 0, "fixed": true}
+  ]
+}

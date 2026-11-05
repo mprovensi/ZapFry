@@ -1,0 +1,27 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/characters/cavaleira/idle.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/characters/cavaleira/zap.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/characters/cavaleira/recover.png" id="3"]
+[ext_resource type="Script" path="res://scripts/execution_character.gd" id="4"]
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [
+{ "frames": [{"duration": 1.0, "texture": ExtResource("1")}], "loop": false, "name": &"idle", "speed": 1.0 }
+, { "frames": [{"duration": 1.0, "texture": ExtResource("1")}], "loop": false, "name": &"worried", "speed": 1.0 }
+, { "frames": [{"duration": 1.0, "texture": ExtResource("1")}], "loop": false, "name": &"anticipation", "speed": 1.0 }
+, { "frames": [{"duration": 1.0, "texture": ExtResource("1")}], "loop": false, "name": &"lose", "speed": 1.0 }
+, { "frames": [{"duration": 1.0, "texture": ExtResource("2")}], "loop": false, "name": &"zap", "speed": 1.0 }
+, { "frames": [{"duration": 1.0, "texture": ExtResource("2")}], "loop": false, "name": &"zap_soft", "speed": 1.0 }
+, { "frames": [{"duration": 1.0, "texture": ExtResource("3")}], "loop": false, "name": &"recover", "speed": 1.0 }
+, { "frames": [{"duration": 1.0, "texture": ExtResource("3")}], "loop": false, "name": &"win", "speed": 1.0 }
+]
+
+[resource]
+script = ExtResource("4")
+character_id = "cavaleira"
+display_name = "Zefa do Trovão"
+aliases = PackedStringArray("Zefa do Trovão", "Bia Escudo", "Dora Aço", "Nara Faísca", "Tita Couraça")
+portrait = SubResource("Frames")
+
+clothing_hue = 0.925

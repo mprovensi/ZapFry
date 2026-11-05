@@ -1,0 +1,358 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/blocker.png" id="1_62jwk"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/chair_active.svg" id="2_n1eap"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/chair_idle.svg" id="3_tgctg"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_anticipation.svg" id="4_p1kva"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_idle.svg" id="5_lxjr7"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_idle_blink.svg" id="6_rapkb"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_lose.svg" id="7_k548u"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_recover.svg" id="8_oc8yy"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_win.svg" id="9_adcju"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_worried.svg" id="10_r32k3"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_zap_a.svg" id="11_a3nvd"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/character_zap_b.svg" id="12_ualcy"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/curve_uniform.png" id="13_fhj3u"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/curve_live_uniform.png" id="14_hefl1"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/engineer.png" id="15_4i17t"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/engineer_middle.png" id="16_t3cv7"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/engineer_down.png" id="17_futmw"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/game_room.png" id="18_64tpc"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/menu_chair_wires.png" id="19_a4ojt"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/portrait_idle.png" id="20_vhquf"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/portrait_recover.png" id="21_ie3u5"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/portrait_zap.png" id="22_jiguw"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/primary_button.png" id="23_8velo"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/restart_icon.png" id="24_3kqt4"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/room_background.png" id="25_bygdv"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/actor_floor.png" id="26_l6fxc"]
+[ext_resource type="Script" path="res://scripts/art_pack.gd" id="27_1rv0v"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/straight.png" id="28_67loa"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/straight_live.png" id="29_k2g5i"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/tee_uniform.png" id="30_w60b8"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/tee_live_uniform.png" id="31_c38w1"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/tile_plate.png" id="32_0tx6i"]
+[ext_resource type="Texture2D" path="res://assets/art/cartoon_v2/ui_background.svg" id="33_mlbbs"]
+
+[sub_resource type="SpriteFrames" id="ChairFrames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_n1eap")
+}],
+"loop": 0,
+"name": &"anticipation",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tgctg")
+}],
+"loop": 0,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tgctg")
+}],
+"loop": 0,
+"name": &"lose",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tgctg")
+}],
+"loop": 0,
+"name": &"recover",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tgctg")
+}],
+"loop": 0,
+"name": &"win",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tgctg")
+}],
+"loop": 0,
+"name": &"worried",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_n1eap")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_tgctg")
+}],
+"loop": 1,
+"name": &"zap",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_n1eap")
+}],
+"loop": 0,
+"name": &"zap_soft",
+"speed": 1.0
+}]
+
+[sub_resource type="SpriteFrames" id="CharacterFrames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_p1kva")
+}],
+"loop": 0,
+"name": &"anticipation",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 9.0,
+"texture": ExtResource("5_lxjr7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_rapkb")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_k548u")
+}],
+"loop": 0,
+"name": &"lose",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_oc8yy")
+}],
+"loop": 0,
+"name": &"recover",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_adcju")
+}],
+"loop": 0,
+"name": &"win",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_r32k3")
+}],
+"loop": 1,
+"name": &"worried",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_a3nvd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_ualcy")
+}],
+"loop": 1,
+"name": &"zap",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_p1kva")
+}],
+"loop": 0,
+"name": &"zap_soft",
+"speed": 1.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uh00g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_4i17t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_t3cv7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_futmw")
+}],
+"loop": 0,
+"name": &"anticipation",
+"speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_4i17t")
+}],
+"loop": 0,
+"name": &"idle",
+"speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_4i17t")
+}],
+"loop": 0,
+"name": &"lose",
+"speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_futmw")
+}],
+"loop": 0,
+"name": &"recover",
+"speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_futmw")
+}],
+"loop": 0,
+"name": &"win",
+"speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_4i17t")
+}],
+"loop": 0,
+"name": &"worried",
+"speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_futmw")
+}],
+"loop": 0,
+"name": &"zap",
+"speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_futmw")
+}],
+"loop": 0,
+"name": &"zap_soft",
+"speed": 7.5
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iwrir"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_vhquf")
+}],
+"loop": 0,
+"name": &"anticipation",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_vhquf")
+}],
+"loop": 0,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_vhquf")
+}],
+"loop": 0,
+"name": &"lose",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_ie3u5")
+}],
+"loop": 0,
+"name": &"recover",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_ie3u5")
+}],
+"loop": 0,
+"name": &"win",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_vhquf")
+}],
+"loop": 0,
+"name": &"worried",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("22_jiguw")
+}],
+"loop": 0,
+"name": &"zap",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("22_jiguw")
+}],
+"loop": 0,
+"name": &"zap_soft",
+"speed": 1.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q4f58"]
+atlas = ExtResource("23_8velo")
+region = Rect2(3, 4, 250, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_drhx0"]
+atlas = ExtResource("24_3kqt4")
+region = Rect2(60, 53, 392, 409)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lmj3o"]
+atlas = ExtResource("26_l6fxc")
+region = Rect2(106.6, 48, 298.80002, 108)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mhuej"]
+atlas = ExtResource("32_0tx6i")
+region = Rect2(27, 31, 456, 452)
+
+[resource]
+script = ExtResource("27_1rv0v")
+pack_name = "Conceito industrial v3"
+character = SubResource("CharacterFrames")
+chair = SubResource("ChairFrames")
+room_background = ExtResource("25_bygdv")
+ui_background = ExtResource("33_mlbbs")
+game_background = ExtResource("18_64tpc")
+room_floor = SubResource("AtlasTexture_lmj3o")
+tile_background = SubResource("AtlasTexture_mhuej")
+live_color = Color(0.4745098, 0.9254902, 1, 1)
+restart_icon = SubResource("AtlasTexture_drhx0")
+portrait = SubResource("SpriteFrames_iwrir")
+menu_portrait = ExtResource("19_a4ojt")
+primary_button = SubResource("AtlasTexture_q4f58")
+engineer = SubResource("SpriteFrames_uh00g")
+straight = ExtResource("28_67loa")
+straight_live = ExtResource("29_k2g5i")
+curve = ExtResource("13_fhj3u")
+curve_live = ExtResource("14_hefl1")
+tee = ExtResource("30_w60b8")
+tee_live = ExtResource("31_c38w1")
+blocker = ExtResource("1_62jwk")

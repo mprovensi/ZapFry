@@ -1,0 +1,159 @@
+{
+  "id": 9,
+  "name": "Painel maior, sem pressa",
+  "size": 5,
+  "time_limit": 0,
+  "source_index": 0,
+  "source_port": 8,
+  "target_index": 24,
+  "target_port": 2,
+  "reference_path": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    9,
+    14,
+    19,
+    24
+  ],
+  "guided": true,
+  "reference_taps": 6,
+  "lesson": "five_by_five",
+  "instruction": "A grade cresceu. Siga a seta e jogue sem pressa.",
+  "tip_lines": [
+    "Agora a grade tem 5 × 5 casas.",
+    "Mesma regra, sem limite de tempo."
+  ],
+  "cells": [
+    {
+      "kind": "straight",
+      "rotation": 1,
+      "solution": 1,
+      "fixed": true
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 1
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 1
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 1
+    },
+    {
+      "kind": "curve",
+      "rotation": 1,
+      "solution": 2
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "straight",
+      "rotation": 3,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "straight",
+      "rotation": 0,
+      "solution": 0,
+      "fixed": true
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "empty",
+      "rotation": 0,
+      "solution": 0
+    },
+    {
+      "kind": "curve",
+      "rotation": 0,
+      "solution": 0,
+      "fixed": true
+    }
+  ]
+}

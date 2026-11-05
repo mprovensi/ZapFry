@@ -1,0 +1,7 @@
+[
+  {"id":"cavaleira","name":"Zefa do Trovão","role":"Cavaleira fanfarrona","file":"01_cavaleira_idle_v2.png"},
+  {"id":"pirata","name":"Capitão Biscoito","role":"Pirata atrapalhado","file":"02_pirata_idle.png"},
+  {"id":"alquimista","name":"Dra. Fuzarca","role":"Alquimista goblin","file":"03_alquimista_idle.png"},
+  {"id":"bardo","name":"Nico Mi Maior","role":"Bardo dramático","file":"04_bardo_idle.png"},
+  {"id":"vampiro","name":"Conde Protocolo","role":"Vampiro burocrata","file":"05_vampiro_idle.png"}
+]

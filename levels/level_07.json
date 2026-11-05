@@ -1,0 +1,26 @@
+{
+  "id": 7, "name": "Fusível queimado", "size": 4, "time_limit": 180.0,
+  "source_index": 0, "source_port": 8, "target_index": 15, "target_port": 2,
+  "reference_path": [0, 4, 8, 9, 10, 6, 7, 11, 15],
+  "guided": false, "reference_taps": 9, "lesson": "fuse",
+  "instruction": "O fusível com X não gira. Contorne-o com os fios.",
+  "tip_lines": ["O X marca um fusível queimado.", "A energia precisa passar ao redor."],
+  "cells": [
+    {"kind": "curve", "rotation": 2, "solution": 2, "fixed": true},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "straight", "rotation": 1, "solution": 0},
+    {"kind": "blocker", "rotation": 0, "solution": 0, "fixed": true},
+    {"kind": "curve", "rotation": 0, "solution": 1},
+    {"kind": "curve", "rotation": 1, "solution": 2},
+    {"kind": "curve", "rotation": 1, "solution": 0},
+    {"kind": "straight", "rotation": 0, "solution": 1},
+    {"kind": "curve", "rotation": 2, "solution": 3},
+    {"kind": "straight", "rotation": 1, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "curve", "rotation": 0, "solution": 0, "fixed": true}
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": 1,
+  "name": "Um toque e pronto",
+  "size": 4,
+  "time_limit": 0.0,
+  "source_index": 0,
+  "source_port": 8,
+  "target_index": 3,
+  "target_port": 2,
+  "reference_path": [0, 1, 2, 3],
+  "guided": true,
+  "reference_taps": 1,
+  "instruction": "Toque uma vez no fio com a seta. Sem pressa!",
+  "tip_lines": ["Toque no fio com a seta.", "Um toque gira o fio em 90°."],
+  "cells": [
+    {"kind": "straight", "rotation": 1, "solution": 1, "fixed": true},
+    {"kind": "straight", "rotation": 0, "solution": 1},
+    {"kind": "straight", "rotation": 1, "solution": 1, "fixed": true},
+    {"kind": "straight", "rotation": 1, "solution": 1, "fixed": true},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0},
+    {"kind": "empty", "rotation": 0, "solution": 0}
+  ]
+}

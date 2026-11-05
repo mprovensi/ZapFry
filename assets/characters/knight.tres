@@ -1,0 +1,78 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/portrait_idle.png" id="1_jgqwb"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/portrait_recover.png" id="2_54nj0"]
+[ext_resource type="Texture2D" path="res://assets/art/concept_v3/portrait_zap.png" id="3_5mxg7"]
+[ext_resource type="Script" path="res://scripts/execution_character.gd" id="4_v23u2"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sa3so"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jgqwb")
+}],
+"loop": 0,
+"name": &"anticipation",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jgqwb")
+}],
+"loop": 0,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jgqwb")
+}],
+"loop": 0,
+"name": &"lose",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_54nj0")
+}],
+"loop": 0,
+"name": &"recover",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_54nj0")
+}],
+"loop": 0,
+"name": &"win",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jgqwb")
+}],
+"loop": 0,
+"name": &"worried",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5mxg7")
+}],
+"loop": 0,
+"name": &"zap",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5mxg7")
+}],
+"loop": 0,
+"name": &"zap_soft",
+"speed": 1.0
+}]
+
+[resource]
+script = ExtResource("4_v23u2")
+display_name = "Cavaleiro"
+portrait = SubResource("SpriteFrames_sa3so")
