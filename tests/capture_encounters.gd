@@ -44,6 +44,8 @@ func _capture() -> void:
 
 
 func _shot(app, name: String) -> void:
+	if app.dialogue.active and app.dialogue.presentation_time < 0.18:
+		app._process(0.18 - app.dialogue.presentation_time)
 	app.queue_redraw()
 	await process_frame
 	await process_frame

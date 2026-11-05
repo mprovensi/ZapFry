@@ -14,6 +14,9 @@ var is_operator := false
 var embedded := false
 var state: StringName = &"idle"
 var animation_time := 0.0
+var phase_progress := 0.0
+var speaking := false
+var speech_time := 0.0
 var soft_flashes := true
 var is_menu := false
 var line_one := "É só uma revisão elétrica..."
@@ -63,16 +66,18 @@ func _draw() -> void:
 	if character_texture != null:
 		var character_rect := ArtPack.contain_rect(character_texture.get_size(), art_bounds)
 		# Respiração discreta, ancorada nos pés; as poses continuam substituíveis.
-		if state == &"idle":
+		if state == &"idle" and (execution_character == null or is_menu):
 			var breathing := sin(animation_time * 2.5) * 0.007
 			character_rect.position.y -= character_rect.size.y * breathing
 			character_rect.size.y *= 1.0 + breathing
 		elif state == &"anticipation":
-			character_rect = _anchored_scale(character_rect, Vector2(1.06, 0.94))
+			var tension := sin(PI * clampf(phase_progress, 0, 1)) * 0.03
+			character_rect = _anchored_scale(character_rect, Vector2(1.0 + tension, 1.0 - tension))
 		elif state == &"zap":
 			var shake := 0.4 if soft_flashes else 2.0
-			character_rect.position.x += sin(animation_time * 91.0) * shake
-			character_rect = _anchored_scale(character_rect, Vector2(0.97, 1.03))
+			var envelope := smoothstep(0, 0.10, phase_progress) * (1.0 - smoothstep(0.90, 1.0, phase_progress))
+			character_rect.position.x += sin(animation_time * 91.0) * shake * envelope
+			character_rect = _anchored_scale(character_rect, Vector2(1.0 - 0.03 * envelope, 1.0 + 0.03 * envelope))
 		elif state == &"recover":
 			var spring := sin(animation_time * 18.0) * exp(-animation_time * 8.0) * 0.025
 			character_rect = _anchored_scale(character_rect, Vector2(1.0 - spring, 1.0 + spring))
@@ -80,6 +85,8 @@ func _draw() -> void:
 			portrait_view.position = character_rect.position
 			portrait_view.size = character_rect.size
 			portrait_view.set_frame(character_texture, execution_character if not is_menu else null)
+			if execution_character != null and not is_menu:
+				portrait_view.set_motion(execution_character.face_region, face_offset())
 		else:
 			draw_texture_rect(character_texture, character_rect, false)
 	else:
@@ -132,7 +139,14 @@ func _draw_operator() -> void:
 	var texture := _engineer_texture()
 	var bounds := Rect2(Vector2.ZERO, size) if embedded else Rect2(14, 8, 250, size.y - 16)
 	if texture != null:
-		draw_texture_rect(texture, ArtPack.contain_rect(texture.get_size(), bounds), false)
+		var rect := ArtPack.contain_rect(texture.get_size(), bounds)
+		portrait_view.position = rect.position
+		portrait_view.size = rect.size
+		portrait_view.set_frame(texture)
+		portrait_view.set_motion(art_pack.engineer_face_region, face_offset(), art_pack.engineer_left_eye, art_pack.engineer_right_eye, blink_amount())
+		if state == &"anticipation":
+			var pose := ArtPack.sample_transition(art_pack.engineer, state, animation_time)
+			portrait_view.set_pose_blend(pose["next"], pose["blend"])
 	else:
 		# Pacotes antigos mantêm um indicador de chave funcional.
 		var pivot := Vector2(130, size.y * 0.6)
@@ -170,6 +184,26 @@ func _draw_operator() -> void:
 func _anchored_scale(rect: Rect2, factor: Vector2) -> Rect2:
 	var extent := rect.size * factor
 	return Rect2(rect.position + Vector2((rect.size.x - extent.x) * 0.5, rect.size.y - extent.y), extent)
+
+
+func face_offset() -> Vector2:
+	if is_menu or state in [&"zap", &"win", &"lose"]:
+		return Vector2.ZERO
+	if state == &"recover":
+		return Vector2(0, sin(animation_time * 18.0) * exp(-animation_time * 8.0) * 0.012)
+	if state == &"anticipation":
+		return Vector2(0, -sin(PI * clampf(phase_progress, 0, 1)) * 0.007)
+	var offset := Vector2(0, sin(animation_time * 2.5) * 0.002)
+	if speaking:
+		offset += Vector2(sin(speech_time * 5.0) * 0.003, sin(speech_time * 8.0) * 0.008)
+	return offset
+
+
+func blink_amount() -> float:
+	if not is_operator or state not in [&"idle", &"worried"]:
+		return 0.0
+	var time := fmod(maxf(0, animation_time), 4.6)
+	return smoothstep(3.8, 3.9, time) * (1.0 - smoothstep(3.9, 4.0, time))
 
 
 func portrait_texture() -> Texture2D:

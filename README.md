@@ -1,6 +1,8 @@
-# Zap & Fry — protótipo 0.17.1
+# Zap & Fry — protótipo 0.18.0
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Novidade 0.18.0:** Executor pisca e reage à própria fala; os cinco condenados fazem pequenos movimentos de cabeça ao responder. Balões entram suavemente, alavanca recebe transições curtas entre poses e o retrato acomoda o movimento na recuperação. Os dois balões, a fonte maior, a pausa e o esqueleto durante o choque são preservados. Detalhes e prévia em [docs/ANIMACOES_018.md](docs/ANIMACOES_018.md).
 
 **Revisão 0.17.1:** dois balões por encontro — Executor e condenado —, 24 conversas reescritas, cores próprias por personagem e texto 33% maior. A apresentação mantém Pular, pausa e bloqueio da matriz. Detalhes em [docs/ENCONTROS_017.md](docs/ENCONTROS_017.md).
 

@@ -10,6 +10,7 @@ var step := 0
 var lines: Array = []
 var subject_name := ""
 var subject_color := Color.WHITE
+var presentation_time := 0.0
 var advance_button: Button
 var skip_button: Button
 var bubble: Panel
@@ -114,7 +115,8 @@ func close() -> void:
 
 
 func _update_text() -> void:
-	bubble.position = Vector2(64, 760 if step == 1 else 430)
+	presentation_time = 0.0
+	_update_entrance()
 	speaker.text = subject_name if step == 1 else "Executor"
 	var accent := subject_color if step == 1 else EXECUTOR_COLOR
 	_bubble_style.bg_color = accent.darkened(0.82)
@@ -126,13 +128,32 @@ func _update_text() -> void:
 	queue_redraw()
 
 
+func advance_presentation(delta: float) -> void:
+	if not active or not visible:
+		return
+	presentation_time += maxf(0, delta)
+	_update_entrance()
+
+
+func _update_entrance() -> void:
+	var progress := smoothstep(0.0, 0.18, presentation_time)
+	bubble.position = Vector2(64, (760 if step == 1 else 430) + 12.0 * (1.0 - progress))
+	bubble.modulate.a = lerpf(0.45, 1.0, progress)
+	queue_redraw()
+
+
 func _draw() -> void:
 	if not active:
 		return
 	var bottom := bubble.position.y + bubble.size.y - 3.0
-	var points := PackedVector2Array([Vector2(320, bottom), Vector2(358, 1070), Vector2(386, bottom)]) if step == 1 else PackedVector2Array([Vector2(182, 433), Vector2(234, 370), Vector2(258, 433)])
-	draw_colored_polygon(points, _bubble_style.bg_color)
-	draw_polyline(points, _bubble_style.border_color, 2, true)
+	var top := bubble.position.y + 3.0
+	var points := PackedVector2Array([Vector2(320, bottom), Vector2(358, 1070), Vector2(386, bottom)]) if step == 1 else PackedVector2Array([Vector2(182, top), Vector2(234, 370), Vector2(258, top)])
+	var fill := _bubble_style.bg_color
+	var edge := _bubble_style.border_color
+	fill.a *= bubble.modulate.a
+	edge.a *= bubble.modulate.a
+	draw_colored_polygon(points, fill)
+	draw_polyline(points, edge, 2, true)
 
 
 func _on_pointer(event: InputEvent) -> void:

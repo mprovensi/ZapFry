@@ -3,6 +3,7 @@ extends SceneTree
 
 const EffectTests = preload("res://tests/execution_effect_tests.gd")
 const EncounterTests = preload("res://tests/encounter_tests.gd")
+const AnimationTests = preload("res://tests/animation_tests.gd")
 var checks := 0
 var failures := 0
 var render_results: Array[Dictionary] = []
@@ -52,6 +53,7 @@ func _exercise() -> void:
 	app.queue_free()
 	await process_frame
 	await EncounterTests.new().run_render(self, _check)
+	await AnimationTests.new().run_render(self, _check)
 
 
 func _test_render(app, dimensions: Vector2i) -> void:

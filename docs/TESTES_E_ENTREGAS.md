@@ -33,6 +33,8 @@ O SHA-256 dos arquivos de código, assets, fases, cenas, testes, ferramentas e c
 
 O resultado do conjunto de verificações fica em `builds/verification.json`, com status, horários UTC, suites concluídas e fingerprint das fontes. Esse relatório não substitui os testes: cada entrega os executa novamente.
 
+Desde a 0.18.0, cada suíte exige também um log novo, sem `ERROR:`, `SCRIPT ERROR:` ou `SHADER ERROR:`. Erros da engine bloqueiam a entrega mesmo quando o processo retorna código zero. Há regressões simulando esse caso nas três suítes e a ausência do log.
+
 **Usar este fluxo em todas as entregas.** Exportar diretamente pelo editor, executar ADB manualmente ou reutilizar scripts históricos de `builds/` contorna a barreira. A regra para futuras alterações está em `AGENTS.md`.
 
 ## Cobertura das partes sensíveis

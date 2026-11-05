@@ -222,7 +222,9 @@ func _ready() -> void:
 	dialogue = DialogueView.new()
 	stage.add_child(dialogue)
 	dialogue.finished.connect(_on_intro_finished)
-	dialogue.advanced.connect(func(): _cue("ui"))
+	dialogue.advanced.connect(func():
+		_cue("ui")
+		_update_room())
 	_style_button(dialogue.advance_button, true)
 	_style_button(dialogue.skip_button, false)
 	dialogue.advance_button.add_theme_font_size_override("font_size", 28)
@@ -267,6 +269,7 @@ func _layout_stage() -> void:
 
 
 func _process(delta: float) -> void:
+	dialogue.advance_presentation(delta)
 	if screen != "game" or session.state != Session.State.PAUSED:
 		pulse += delta
 	if screen == "game":
@@ -873,6 +876,12 @@ func _update_room() -> void:
 	room_view.state = &"idle"
 	room_view.is_menu = screen == "menu"
 	room_view.animation_time = pulse
+	room_view.phase_progress = 0.0
+	var talking: bool = screen == "game" and dialogue.active
+	room_view.speaking = talking and dialogue.step == 1
+	operator_view.speaking = talking and dialogue.step == 0
+	room_view.speech_time = dialogue.presentation_time
+	operator_view.speech_time = dialogue.presentation_time
 	room_view.soft_flashes = reduced_flashes
 	room_view.line_one = "O painel precisa de uma revisão."
 	room_view.line_two = "Ache o fio certo e ligue a energia."
@@ -883,12 +892,15 @@ func _update_room() -> void:
 			if resolution_elapsed < SWITCH_PULL_TIME:
 				room_view.state = &"anticipation"
 				room_view.animation_time = resolution_elapsed
+				room_view.phase_progress = resolution_elapsed / SWITCH_PULL_TIME
 			elif resolution_elapsed < ZAP_END_TIME:
 				room_view.state = &"zap"
 				room_view.animation_time = resolution_elapsed - SWITCH_PULL_TIME
+				room_view.phase_progress = (resolution_elapsed - SWITCH_PULL_TIME) / (ZAP_END_TIME - SWITCH_PULL_TIME)
 			else:
 				room_view.state = &"recover"
 				room_view.animation_time = resolution_elapsed - ZAP_END_TIME
+				room_view.phase_progress = (resolution_elapsed - ZAP_END_TIME) / (RESOLUTION_DURATION - ZAP_END_TIME)
 		elif session.state == Session.State.WON:
 			room_view.state = &"win"
 		elif session.state == Session.State.LOST:
@@ -898,6 +910,7 @@ func _update_room() -> void:
 	room_view.queue_redraw()
 	operator_view.state = room_view.state
 	operator_view.animation_time = room_view.animation_time
+	operator_view.phase_progress = room_view.phase_progress
 	operator_view.queue_redraw()
 	cable_view.queue_redraw()
 

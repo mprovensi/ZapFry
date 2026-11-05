@@ -39,6 +39,11 @@ class DeploymentPipelineTests(unittest.TestCase):
             "$line = ConvertTo-Json -Compress -InputObject @($args)\n"
             "Add-Content -LiteralPath $env:ZAP_TEST_LOG -Value $line -Encoding utf8\n"
             "if ($env:ZAP_TEST_FAIL -and ([string]::Join(' ', $args)).Contains($env:ZAP_TEST_FAIL)) { exit 7 }\n"
+            "$logIndex = [Array]::IndexOf($args, '--log-file')\n"
+            "if ($logIndex -ge 0 -and -not $env:ZAP_TEST_NO_LOG) {\n"
+            "  $text = if ($env:ZAP_TEST_LOG_ERROR -and ([string]::Join(' ', $args)).Contains($env:ZAP_TEST_LOG_ERROR)) { 'SHADER ERROR: simulated compile failure' } else { 'Godot tests OK' }\n"
+            "  Set-Content -LiteralPath $args[$logIndex + 1] -Value $text\n"
+            "}\n"
             "if ($env:ZAP_TEST_MUTATE -and ((-not $env:ZAP_TEST_MUTATE_EXPORT_ONLY -and ($args -contains 'res://tests/run_audio_tests.gd')) -or ($args -contains '--export-debug'))) { Add-Content -LiteralPath $env:ZAP_TEST_MUTATE -Value '# changed' }\n"
             "if ($args -contains '--export-debug') { Set-Content -LiteralPath $args[-1] -Value 'fake package' }\n"
             "exit 0\n", encoding="utf-8-sig")
@@ -80,6 +85,23 @@ class DeploymentPipelineTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertFalse(any("install_android.py" in call for call in calls))
         self.assertEqual(old.read_bytes(), b"old apk")
+
+    def test_engine_error_in_each_log_blocks_even_with_zero_exit(self):
+        for marker in ["run_tests.gd", "run_effect_tests.gd", "run_audio_tests.gd"]:
+            with self.subTest(stage=marker):
+                self.log.write_text("", encoding="utf-8")
+                self.env["ZAP_TEST_LOG_ERROR"] = marker
+                result, calls = self.run_pipeline("install")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertFalse(any("--export-debug" in call or "install_android.py" in call for call in calls))
+                report = json.loads((self.root / "builds/verification.json").read_text(encoding="utf-8-sig"))
+                self.assertEqual(report["status"], "failed")
+
+    def test_missing_engine_log_blocks_delivery(self):
+        self.env["ZAP_TEST_NO_LOG"] = "1"
+        result, calls = self.run_pipeline("install")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any("--export-debug" in call or "install_android.py" in call for call in calls))
 
     def test_windows_export_is_also_blocked_on_test_failure(self):
         result, calls = self.run_pipeline("windows", "run_effect_tests.gd")

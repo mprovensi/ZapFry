@@ -16,6 +16,9 @@ extends Resource
 @export var primary_button: Texture2D
 @export var engineer: SpriteFrames
 @export var engineer_cable_anchor := Vector2(0.16, 0.66)
+@export var engineer_face_region := Rect2()
+@export var engineer_left_eye := Rect2()
+@export var engineer_right_eye := Rect2()
 @export_group("Painel — orientação base: reto NS, curva NE, T NEW")
 @export var straight: Texture2D
 @export var straight_live: Texture2D
@@ -34,18 +37,24 @@ func frame_texture(layer: StringName, state: StringName, seconds: float, soft: b
 
 
 static func sample_frames(frames: SpriteFrames, state: StringName, seconds: float, soft: bool = false) -> Texture2D:
+	return sample_transition(frames, state, seconds, soft, 0.0)["texture"]
+
+
+static func sample_transition(frames: SpriteFrames, state: StringName, seconds: float, soft: bool = false, blend_seconds: float = 0.05) -> Dictionary:
+	var empty := {"texture": null, "next": null, "blend": 0.0}
 	if frames == null:
-		return null
+		return empty
 	var animation := state
 	if soft and state == &"zap":
 		animation = &"zap_soft"
 	if not frames.has_animation(animation) or frames.get_frame_count(animation) == 0:
 		animation = &"idle"
 	if not frames.has_animation(animation) or frames.get_frame_count(animation) == 0:
-		return null
+		return empty
 	var speed := frames.get_animation_speed(animation)
 	if speed <= 0.0:
-		return frames.get_frame_texture(animation, 0)
+		var still := frames.get_frame_texture(animation, 0)
+		return {"texture": still, "next": still, "blend": 0.0}
 	var duration := 0.0
 	for index in range(frames.get_frame_count(animation)):
 		duration += frames.get_frame_duration(animation, index) / speed
@@ -57,9 +66,16 @@ static func sample_frames(frames: SpriteFrames, state: StringName, seconds: floa
 	for index in range(frames.get_frame_count(animation)):
 		var frame_duration := frames.get_frame_duration(animation, index) / speed
 		if time < frame_duration:
-			return frames.get_frame_texture(animation, index)
+			var next_index := index + 1
+			if next_index == frames.get_frame_count(animation):
+				next_index = 0 if frames.get_animation_loop(animation) else index
+			var weight := 0.0
+			if blend_seconds > 0 and next_index != index:
+				weight = smoothstep(maxf(0, frame_duration - blend_seconds), frame_duration, time)
+			return {"texture": frames.get_frame_texture(animation, index), "next": frames.get_frame_texture(animation, next_index), "blend": weight}
 		time -= frame_duration
-	return frames.get_frame_texture(animation, frames.get_frame_count(animation) - 1)
+	var last := frames.get_frame_texture(animation, frames.get_frame_count(animation) - 1)
+	return {"texture": last, "next": last, "blend": 0.0}
 
 
 func wire_texture(kind: String, live: bool) -> Texture2D:

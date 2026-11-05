@@ -14,6 +14,7 @@ const PowerCableTests = preload("res://tests/power_cable_tests.gd")
 const ExecutionEffectTests = preload("res://tests/execution_effect_tests.gd")
 const CharacterRosterTests = preload("res://tests/character_roster_tests.gd")
 const EncounterTests = preload("res://tests/encounter_tests.gd")
+const AnimationTests = preload("res://tests/animation_tests.gd")
 var failures := 0
 var checks := 0
 var level: Dictionary
@@ -77,6 +78,7 @@ func _test_encounters() -> void:
 	app.ticks_msec = func(): return 1000
 	app.sound_enabled = false
 	await EncounterTests.new().run_ui(app, self, _check)
+	AnimationTests.new().run_ui(app, _check)
 	app.queue_free()
 	await process_frame
 

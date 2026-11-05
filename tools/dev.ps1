@@ -124,8 +124,19 @@ try {
         & python tools/validate_hint_states.py prepare
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     }
+    $suiteLogs = @{ 'test' = 'tests.log'; 'effects-test' = 'effects-tests.log'; 'audio-test' = 'audio-tests.log' }
+    $engineLog = $null
+    if ($suiteLogs.ContainsKey($Action)) {
+        $engineLog = Join-Path $projectRoot ('builds\' + $suiteLogs[$Action])
+        if (Test-Path -LiteralPath $engineLog) { Remove-Item -LiteralPath $engineLog }
+    }
     & $GodotPath @engineArgs
     $engineExitCode = $LASTEXITCODE
+    if ($engineLog -and $engineExitCode -eq 0) {
+        if (-not (Test-Path -LiteralPath $engineLog) -or (Select-String -LiteralPath $engineLog -Pattern '^(ERROR:|SCRIPT ERROR:|SHADER ERROR:)')) {
+            throw "A suíte $Action não gerou log válido ou registrou erros da engine. Entrega bloqueada: $engineLog"
+        }
+    }
     if ($Action -in @('android', 'windows', 'install') -and $engineExitCode -eq 0) {
         $verified = Get-Content -LiteralPath (Join-Path $projectRoot 'builds\verification.json') -Raw | ConvertFrom-Json
         if ((Get-SourceFingerprint) -ne $verified.sourceFingerprint) {

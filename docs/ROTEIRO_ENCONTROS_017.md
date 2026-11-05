@@ -1,4 +1,4 @@
-# Playtest dos encontros — 0.17.1
+# Playtest dos encontros — 0.18.0
 
 Sessão manual de aproximadamente dez minutos no celular, após a instalação. Os testes automatizados já cobrem regras e renderização; registrar abaixo o que for realmente observado no aparelho. Não desinstalar nem limpar os dados para testar.
 
@@ -10,6 +10,7 @@ Sessão manual de aproximadamente dez minutos no celular, após a instalação. 
 6. **Descarga:** para uma conclusão rápida, repetir a fase 1 pelo seletor. Com vibração ligada e flashes normais nos Ajustes, observar pulso físico, clarão transparente e esqueleto durante o choque. A sequência dura 2,40 s, incluindo alavanca e recuperação. Conferir também flashes suaves, se desejado, e depois restaurar a preferência.
 7. **Resultado:** conferir o número da fase, o mesmo nome/cor do encontro e a aparência recuperada. Próxima fase deve apresentar o novo encontro. O sorteio evita repetir a base imediatamente; nomes e cores podem voltar em outros encontros.
 8. **Reabertura:** voltar ao menu, fechar e reabrir normalmente. Fase, recordes, preferências e aparência atual devem permanecer. O tabuleiro parcial não é salvo; a tentativa reinicia.
+9. **Animações:** aguardar cinco segundos para observar a piscada do Executor. Conferir movimento discreto da cabeça de quem fala, entrada breve dos balões e congelamento ao pausar. Na conclusão, observar a passagem entre poses da alavanca e a acomodação após o choque, sem deslocar conexões nem cobrir o esqueleto.
 
 | Item | Resultado no celular | Observação |
 | --- | --- | --- |
@@ -21,5 +22,6 @@ Sessão manual de aproximadamente dez minutos no celular, após a instalação. 
 | Flash, vibração e esqueleto | Confirmado pelo usuário | 5/11/2026; efeitos funcionaram durante a partida. |
 | Paleta no resultado | A confirmar | |
 | Reabertura | A confirmar | |
+| Animações e pausa da apresentação | A confirmar | Novidade 0.18.0; observar no aparelho. |
 
 Ao registrar um defeito, informar fase, passos, esperado e observado. Não marcar vibração ou conforto dos flashes como aprovados apenas com base na instalação ou nos testes da engine.

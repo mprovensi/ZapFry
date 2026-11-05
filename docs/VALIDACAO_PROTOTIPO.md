@@ -1,10 +1,14 @@
-# Validação do protótipo 0.17.1
+# Validação do protótipo 0.18.0
 
 **Data:** 5 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.18.0:** piscada e movimento discreto do Executor, reação dos cinco condenados, entrada dos balões em 0,18 s e transições de pose/recuperação suavizadas. Exatamente dois balões e sequência de 2,40 s preservados. Expressões congelam na pausa e não deslocam grade, controles ou conexões. Renderização com recoloração ativa confirma mudanças na cabeça, estabilidade de corpo/gerador/cadeira e esqueleto intacto durante o choque. Fluxo obrigatório aprovado: **39.795 verificações da engine, 43 testes Python, 730 estados de dicas, 3.490 verificações visuais/temporais e 48 de áudio**, sem erros nos logs. APK/código 29 exportado; fases e 77 texturas importadas auditadas. Evidência em `builds/deploy-v0180.log`, `builds/verification.json` e `builds/animations/`. Guia em [ANIMACOES_018.md](ANIMACOES_018.md).
+
+A instalação da 0.18.0 permanece pendente: o celular não foi encontrado no ADB, inclusive após renovar o serviço. A última instalação confirmada é a 0.17.1. A prévia de seis segundos foi capturada na engine com perfil isolado, sem partidas automatizadas no aparelho. Os novos testes da entrega também bloqueiam erros de engine registrados no log mesmo com retorno zero do processo.
 
 **0.17.1:** exatamente dois balões por encontro, identificação **Executor**, cores próprias para as cinco bases e fonte das falas ampliada de 30 para 40. Os 24 casos foram reescritos; os IDs persistidos continuam iguais. Testes confirmam encerramento após a resposta sem terceira fala, bloqueio da grade, ausência de giros involuntários, pausa, Pular, cores por base, 25 nomes e 48 falas sem cortes em três proporções. Fluxo completo aprovado: **39.761 verificações da engine, 41 testes Python, 730 estados de dicas, 3.471 verificações de efeitos e 48 de áudio**, sem falhas. APK/código 28 exportado e 77 texturas importadas auditadas. Capturas locais em `builds/encounters/intro-executor.png` e `intro-condenado.png`.
 
