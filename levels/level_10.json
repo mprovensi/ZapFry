@@ -1,6 +1,6 @@
 {
   "id": 10,
-  "name": "Curvas no caminho",
+  "name": "Uma luz antes do choque",
   "size": 5,
   "time_limit": 150,
   "source_index": 0,
@@ -21,10 +21,10 @@
   "guided": false,
   "reference_taps": 12,
   "lesson": "five_by_five",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "Ligue IN a OUT e acenda a lâmpada marcada.",
   "tip_lines": [
-    "Nem todo fio precisa acender.",
-    "Observe a entrada e a saída."
+    "A lâmpada também precisa de energia.",
+    "Só então a cadeira dispara."
   ],
   "cells": [
     {
@@ -154,5 +154,9 @@
       "solution": 0,
       "fixed": true
     }
-  ]
+  ],
+  "required_nodes": [
+    12
+  ],
+  "rules_revision": 2
 }

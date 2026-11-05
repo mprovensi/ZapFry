@@ -22,12 +22,13 @@ SPECS = [{'id': 9,
   'instruction': 'A grade cresceu. Siga a seta e jogue sem pressa.',
   'tips': ['Agora a grade tem 5 × 5 casas.', 'Mesma regra, sem limite de tempo.']},
  {'id': 10,
-  'name': 'Curvas no caminho',
+  'name': 'Uma luz antes do choque',
+  'required_nodes': [12],
   'time': 150,
   'path': [0, 1, 6, 11, 12, 13, 14, 19, 24],
   'costs': {1: 2, 6: 1, 11: 3, 12: 1, 13: 1, 14: 3, 19: 1},
-  'instruction': 'Ligue IN a OUT. Há fios que não levam ao destino.',
-  'tips': ['Nem todo fio precisa acender.', 'Observe a entrada e a saída.'],
+  'instruction': 'Ligue IN a OUT e acenda a lâmpada marcada.',
+  'tips': ['A lâmpada também precisa de energia.', 'Só então a cadeira dispara.'],
   'guided': False,
   'distractors': {2: ('curve', 3),
                   3: ('curve', 1),
@@ -48,13 +49,15 @@ SPECS = [{'id': 9,
   'tees': {},
   'minimum_taps': 12},
  {'id': 11,
-  'name': 'Um T no painel',
+  'name': 'O T também acende a luz',
+  'required_nodes': [6],
+  'lamp_solutions': {6: 0},
   'time': 180,
   'path': [0, 5, 10, 11, 12, 7, 8, 9, 14, 19, 24],
-  'costs': {5: 1, 10: 3, 11: 1, 12: 1, 7: 3, 8: 1, 9: 2, 14: 1, 19: 1},
-  'tees': {11: 2},
-  'instruction': 'Use o T para ligar IN a OUT. Uma ponta pode ficar livre.',
-  'tips': ['T: uma ponta pode ficar livre.', 'Ligue a entrada à saída.'],
+  'costs': {5: 1, 10: 3, 11: 1, 12: 1, 7: 3, 8: 1, 9: 1, 14: 1, 19: 1},
+  'tees': {11: 0},
+  'instruction': 'Use um ramo do T para acender a lâmpada e ligue OUT.',
+  'tips': ['A lâmpada pode ficar num ramo do T.', 'Cadeira e lâmpada ligadas juntas.'],
   'guided': False,
   'distractors': {1: ('curve', 1),
                   2: ('straight', 3),
@@ -185,11 +188,19 @@ def make_level(spec: dict, width: int = WIDTH) -> dict:
         if cells[index]["kind"] != "empty":
             raise ValueError("Distração sobrescreve outro componente.")
         cells[index] = {"kind": kind, "rotation": rotation, "solution": rotation}
+    branch_taps = 0
+    for index, goal in spec.get("lamp_solutions", {}).items():
+        cell = cells[index]
+        cell["solution"] = goal
+        branch_taps += next(t for t in range(4) if rotate(MASKS[cell["kind"]], cell["rotation"] + t)
+                           == rotate(MASKS[cell["kind"]], goal))
     result = {"id": spec["id"], "name": spec["name"], "size": width, "time_limit": spec["time"],
               "source_index": path[0], "source_port": 8, "target_index": path[-1], "target_port": 2,
               "reference_path": path, "guided": spec.get("guided", False),
-              "reference_taps": sum(spec["costs"].values()), "lesson": "five_by_five" if width == 5 else "six_by_six",
+              "reference_taps": sum(spec["costs"].values()) + branch_taps, "lesson": "five_by_five" if width == 5 else "six_by_six",
               "instruction": spec["instruction"], "tip_lines": spec["tips"], "cells": cells}
+    if spec.get("required_nodes"):
+        result.update(required_nodes=spec["required_nodes"], rules_revision=2)
     report = audit_level(result)
     expected_minimum = spec.get("minimum_taps", result["reference_taps"])
     if report["minimum_taps"] != expected_minimum:

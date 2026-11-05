@@ -21,6 +21,8 @@ var target_port: int
 var energized: Dictionary = {}
 var solved := false
 var revision := 0
+var required_nodes: Array[int] = []
+var objectives_valid := true
 
 
 func load_level(data: Dictionary) -> void:
@@ -30,6 +32,19 @@ func load_level(data: Dictionary) -> void:
 	source_port = int(data["source_port"])
 	target_index = int(data["target_index"])
 	target_port = int(data["target_port"])
+	required_nodes.clear()
+	objectives_valid = data.get("required_nodes", []) is Array
+	if objectives_valid:
+		for value in data.get("required_nodes", []):
+			# JSON da engine representa números inteiros como float.
+			if typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)) or float(value) != floor(float(value)):
+				objectives_valid = false
+				break
+			var index := int(value)
+			if index < 0 or index >= cells.size() or index in [source_index, target_index] or required_nodes.has(index) or cells[index]["kind"] in ["empty", "blocker"]:
+				objectives_valid = false
+				break
+			required_nodes.append(index)
 	recompute()
 
 
@@ -40,9 +55,9 @@ static func rotate_mask(mask: int, turns: int) -> int:
 	return result
 
 
-func mask_at(index: int) -> int:
+func mask_at(index: int, rotations: Dictionary = {}) -> int:
 	var cell: Dictionary = cells[index]
-	return rotate_mask(int(BASE_MASKS[cell["kind"]]), int(cell["rotation"]))
+	return rotate_mask(int(BASE_MASKS[cell["kind"]]), int(rotations.get(index, cell["rotation"])))
 
 
 func can_rotate(index: int) -> bool:
@@ -60,18 +75,43 @@ func rotate_cell(index: int) -> bool:
 
 func recompute() -> void:
 	revision += 1
-	energized.clear()
-	solved = false
-	if cells.is_empty() or (mask_at(source_index) & source_port) == 0:
-		return
+	energized = energized_for()
+	solved = objectives_met(energized)
+
+
+func objectives_met(powered: Dictionary, rotations: Dictionary = {}) -> bool:
+	if not objectives_valid or not powered.has(target_index) or (mask_at(target_index, rotations) & target_port) == 0:
+		return false
+	for index in required_nodes:
+		if not powered.has(index):
+			return false
+	return true
+
+
+func target_connected() -> bool:
+	return energized.has(target_index) and (mask_at(target_index) & target_port) != 0
+
+
+func lit_required_count() -> int:
+	var count := 0
+	for index in required_nodes:
+		if energized.has(index):
+			count += 1
+	return count
+
+
+func energized_for(rotations: Dictionary = {}) -> Dictionary:
+	var powered: Dictionary = {}
+	if cells.is_empty() or (mask_at(source_index, rotations) & source_port) == 0:
+		return powered
 	var frontier: Array[int] = [source_index]
-	energized[source_index] = true
+	powered[source_index] = true
 	var cursor := 0
 	while cursor < frontier.size():
 		var index := frontier[cursor]
 		cursor += 1
 		var position := Vector2i(index % width, index / width)
-		var mask := mask_at(index)
+		var mask := mask_at(index, rotations)
 		for direction in range(4):
 			if (mask & int(PORTS[direction])) == 0:
 				continue
@@ -79,8 +119,8 @@ func recompute() -> void:
 			if neighbor.x < 0 or neighbor.x >= width or neighbor.y < 0 or neighbor.y >= width:
 				continue
 			var next := neighbor.y * width + neighbor.x
-			if energized.has(next) or (mask_at(next) & int(OPPOSITES[direction])) == 0:
+			if powered.has(next) or (mask_at(next, rotations) & int(OPPOSITES[direction])) == 0:
 				continue
-			energized[next] = true
+			powered[next] = true
 			frontier.append(next)
-	solved = energized.has(target_index) and (mask_at(target_index) & target_port) != 0
+	return powered

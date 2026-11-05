@@ -23,6 +23,16 @@ static func _number(value: Variant, fallback: float) -> float:
 	return float(value)
 
 
+static func _record_values(entry: Dictionary) -> Dictionary:
+	return {"completed": entry.get("completed", false) == true,
+		"stars": clampi(int(_number(entry.get("stars", 0), 0)), 0, 3),
+		"best_score": maxi(0, int(_number(entry.get("best_score", 0), 0))),
+		"best_time": maxf(-1, _number(entry.get("best_time", -1), -1)),
+		"completions": maxi(0, int(_number(entry.get("completions", 0), 0))),
+		"legacy": entry.get("legacy", false) == true,
+		"rules_revision": maxi(1, int(_number(entry.get("rules_revision", 1), 1)))}
+
+
 func load_profile(path: String, count: int = 24) -> Error:
 	level_count = maxi(1, count)
 	sound_enabled = true
@@ -61,13 +71,16 @@ func load_profile(path: String, count: int = 24) -> Error:
 			if not text_key.is_valid_int() or int(text_key) < 1 or int(text_key) > level_count or not raw[key] is Dictionary:
 				continue
 			var entry: Dictionary = raw[key]
-			var record := {
-				"completed": entry.get("completed", false) == true,
-				"stars": clampi(int(_number(entry.get("stars", 0), 0)), 0, 3),
-				"best_score": maxi(0, int(_number(entry.get("best_score", 0), 0))),
-				"best_time": maxf(-1, _number(entry.get("best_time", -1), -1)),
-				"completions": maxi(0, int(_number(entry.get("completions", 0), 0))),
-				"legacy": entry.get("legacy", false) == true}
+			var record := _record_values(entry)
+			record["history"] = {}
+			var history: Variant = entry.get("history", {})
+			if history is Dictionary:
+				for revision in history:
+					var revision_key := str(revision)
+					if revision_key.is_valid_int() and int(revision_key) > 0 and history[revision] is Dictionary:
+						var historical := _record_values(history[revision])
+						historical["rules_revision"] = int(revision_key)
+						record["history"][str(int(revision_key))] = historical
 			if record["stars"] > 0 or record["best_score"] > 0:
 				record["completed"] = true
 			records[str(int(text_key))] = record
@@ -78,7 +91,7 @@ func load_profile(path: String, count: int = 24) -> Error:
 	for index in range(unlocked_level):
 		var id := str(index + 1)
 		if not records.has(id):
-			records[id] = {"completed": true, "stars": 0, "best_score": 0, "best_time": -1.0, "completions": 0, "legacy": true}
+			records[id] = {"completed": true, "stars": 0, "best_score": 0, "best_time": -1.0, "completions": 0, "legacy": true, "rules_revision": 1, "history": {}}
 	var fallback := 0 if completed_count() >= level_count else unlocked_level
 	current_level = clampi(int(_number(config.get_value("progress", "current_level", fallback), fallback)), 0, unlocked_level)
 	var saved: Variant = config.get_value("appearance", "current", {})
@@ -94,16 +107,23 @@ func level_record(id: int) -> Dictionary:
 	return records.get(str(id), {}).duplicate(true)
 
 
-func record_win(id: int, score: int, stars: int, elapsed: float) -> bool:
-	if id < 1 or id > level_count or score <= 0 or stars < 1 or stars > 3 or not is_finite(elapsed) or elapsed < 0:
+func record_win(id: int, score: int, stars: int, elapsed: float, rules_revision: int = 1) -> bool:
+	if id < 1 or id > level_count or score <= 0 or stars < 1 or stars > 3 or not is_finite(elapsed) or elapsed < 0 or rules_revision < 1:
 		return false
 	var previous := level_record(id)
+	var history: Dictionary = previous.get("history", {}).duplicate(true)
+	if not previous.is_empty() and int(previous.get("rules_revision", 1)) != rules_revision:
+		var old_revision := str(int(previous.get("rules_revision", 1)))
+		previous.erase("history")
+		history[old_revision] = previous
+		previous = history.get(str(rules_revision), {})
 	var old_time := float(previous.get("best_time", -1))
 	records[str(id)] = {"completed": true,
 		"stars": maxi(int(previous.get("stars", 0)), stars),
 		"best_score": maxi(int(previous.get("best_score", 0)), score),
 		"best_time": elapsed if old_time < 0 else minf(old_time, elapsed),
-		"completions": int(previous.get("completions", 0)) + 1, "legacy": false}
+		"completions": int(previous.get("completions", 0)) + 1, "legacy": false,
+		"rules_revision": rules_revision, "history": history}
 	best_score = maxi(best_score, score)
 	unlocked_level = maxi(unlocked_level, mini(id, level_count - 1))
 	current_level = id if id < level_count else 0
@@ -145,7 +165,7 @@ func save_profile(path: String) -> Error:
 	if directory_error != OK:
 		return directory_error
 	var config := ConfigFile.new()
-	config.set_value("metadata", "schema_version", 6)
+	config.set_value("metadata", "schema_version", 7)
 	config.set_value("appearance", "current", appearance)
 	config.set_value("preferences", "sound", sound_enabled)
 	config.set_value("preferences", "music_volume", music_volume)

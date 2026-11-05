@@ -1,6 +1,6 @@
 {
   "id": 11,
-  "name": "Um T no painel",
+  "name": "O T também acende a luz",
   "size": 5,
   "time_limit": 180,
   "source_index": 0,
@@ -23,10 +23,10 @@
   "guided": false,
   "reference_taps": 14,
   "lesson": "five_by_five",
-  "instruction": "Use o T para ligar IN a OUT. Uma ponta pode ficar livre.",
+  "instruction": "Use um ramo do T para acender a lâmpada e ligue OUT.",
   "tip_lines": [
-    "T: uma ponta pode ficar livre.",
-    "Ligue a entrada à saída."
+    "A lâmpada pode ficar num ramo do T.",
+    "Cadeira e lâmpada ligadas juntas."
   ],
   "cells": [
     {
@@ -63,7 +63,7 @@
     {
       "kind": "straight",
       "rotation": 1,
-      "solution": 1
+      "solution": 0
     },
     {
       "kind": "curve",
@@ -77,7 +77,7 @@
     },
     {
       "kind": "curve",
-      "rotation": 0,
+      "rotation": 1,
       "solution": 2
     },
     {
@@ -87,8 +87,8 @@
     },
     {
       "kind": "tee",
-      "rotation": 1,
-      "solution": 2
+      "rotation": 3,
+      "solution": 0
     },
     {
       "kind": "curve",
@@ -156,5 +156,9 @@
       "solution": 0,
       "fixed": true
     }
-  ]
+  ],
+  "required_nodes": [
+    6
+  ],
+  "rules_revision": 2
 }

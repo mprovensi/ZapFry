@@ -192,8 +192,33 @@ func _draw() -> void:
 			draw_circle(arrow, 18 * detail_scale, INK)
 			draw_arc(arrow, 10 * detail_scale, -2.4, 1.1, 20, LIVE, maxf(2, 3 * detail_scale), true)
 			draw_colored_polygon(PackedVector2Array([arrow + Vector2(-1, 4) * detail_scale, arrow + Vector2(8, 11) * detail_scale, arrow + Vector2(10, 0) * detail_scale]), LIVE)
+		if model.required_nodes.has(index):
+			_draw_lamp(lamp_rect(index), live)
 	_draw_terminal(model.source_index, Vector2.LEFT, "IN", live_color)
-	_draw_terminal(model.target_index, Vector2.RIGHT, "OUT", Color("6ce1c4") if model.solved else Color("93a8b1"))
+	_draw_terminal(model.target_index, Vector2.RIGHT, "OUT", Color("6ce1c4") if model.target_connected() else Color("93a8b1"))
+
+
+func lamp_rect(index: int) -> Rect2:
+	var rect := cell_rect(index)
+	var extent := clampf(rect.size.x * 0.30, 27, 38)
+	return Rect2(Vector2(rect.end.x - extent - 5, rect.position.y + 5), Vector2.ONE * extent)
+
+
+func _draw_lamp(rect: Rect2, live: bool) -> void:
+	var center := rect.get_center()
+	var unit := rect.size.x / 38.0
+	var bulb := center + Vector2(0, -3) * unit
+	var color := Color("ffe47a") if live else Color("d3dfe6")
+	draw_circle(center, 19 * unit, INK)
+	if live:
+		for direction in [Vector2.UP, Vector2.LEFT, Vector2.RIGHT]:
+			draw_line(bulb + direction * 12 * unit, bulb + direction * 16 * unit, color, 2 * unit, true)
+	draw_circle(bulb, 9 * unit, color)
+	draw_circle(bulb, 6 * unit, Color("fff4ac") if live else Color("344b60"))
+	draw_line(bulb + Vector2(-3, 0) * unit, bulb + Vector2(0, 4) * unit, color, 2 * unit, true)
+	draw_line(bulb + Vector2(0, 4) * unit, bulb + Vector2(3, 0) * unit, color, 2 * unit, true)
+	for y in [7, 10, 13]:
+		draw_line(bulb + Vector2(-4, y) * unit, bulb + Vector2(4, y) * unit, color, 2 * unit, true)
 
 
 func _draw_blocker(center: Vector2, step: float) -> void:

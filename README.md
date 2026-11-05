@@ -1,6 +1,8 @@
-# Zap & Fry — protótipo 0.20.0
+# Zap & Fry — protótipo 0.21.0
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Novidade 0.21.0:** lâmpadas obrigatórias nas fases 10 e 11, com ícone apagado/aceso, contador no cabeçalho e aviso quando OUT está ligado mas falta a lâmpada. A fase 11 usa um ramo do T; dicas resolvem a rede completa. Mantidos os mínimos de 12/14 giros e os tempos de 150/180 s. As demais fases continuam clássicas. Recordes anteriores ficam preservados por revisão de regras no perfil v7. Detalhes em [docs/DESAFIOS_021.md](docs/DESAFIOS_021.md).
 
 **Novidade 0.20.0:** concluir a fase 24 apresenta uma tela final com agradecimento por jogar e aviso de que mais fases virão. Mantidos cenário, personagem, estrelas, pontuação e ações de jogar do início ou voltar ao menu, preservando conquistas. Detalhes em [docs/TELA_FINAL_020.md](docs/TELA_FINAL_020.md).
 
@@ -14,7 +16,7 @@
 
 **Revisão 0.17.1:** dois balões por encontro — Executor e condenado —, 24 conversas reescritas, cores próprias por personagem e texto 33% maior. A apresentação mantém Pular, pausa e bloqueio da matriz. Detalhes em [docs/ENCONTROS_017.md](docs/ENCONTROS_017.md).
 
-**0.20.0 instalada no S20 FE:** atualização/código 33 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Conferência manual dos encontros e efeitos em [docs/ROTEIRO_ENCONTROS_017.md](docs/ROTEIRO_ENCONTROS_017.md).
+**0.21.0 instalada no S20 FE:** atualização/código 34 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Rejogue as fases 10 e 11 pelo seletor para experimentar as lâmpadas. Conferência humana da nova regra no aparelho permanece pendente.
 
 Puzzle de rotação de fios com humor macabro e visual em Cartoon 2D com sprites substituíveis.
 Desenvolvido em **Godot 4.7.2 estável, GDScript e renderer Compatibility**.
@@ -48,13 +50,13 @@ As três primeiras fases têm seta de orientação e **nenhum limite de tempo**.
 
 A fase 6 apresenta o T com orientação visual: uma ponta extra pode ficar aberta. A fase 7 apresenta o fusível queimado, marcado com X, que precisa ser contornado. A fase 8 combina as duas regras. As três oferecem três minutos.
 
-As fases 9–16 usam uma grade 5×5. A fase 9 continua guiada e sem cronômetro. A fase 10 introduz o painel cheio, com mínimo de 12 giros e 150 segundos. Após o playtest, as fases 11–16 passaram a ter seis fios de distração e **180 segundos** cada. Os mínimos continuam crescendo de 14 a 24 giros, mas há menos ruído visual e mais espaço para pensar. As fases 1–10 foram preservadas integralmente.
+As fases 9–16 usam uma grade 5×5. A fase 9 continua guiada e sem cronômetro. A fase 10 introduz a lâmpada obrigatória, com mínimo de 12 giros e 150 segundos. Na 11, a lâmpada usa um ramo do T, com mínimo de 14 giros. As fases 11–16 têm seis fios de distração e **180 segundos** cada. Os mínimos continuam crescendo de 14 a 24 giros; a fase 12 permanece clássica para variar o ritmo.
 
 As fases 17–24 completam a campanha em grade 6×6, com mínimos de 26 a 40 giros. Cada painel tem oito fios de distração e dois fusíveis; 17–20 oferecem **210 segundos** e 21–24 oferecem **225 segundos**. A conclusão da fase 24 encerra a campanha. O cabeçalho mostra **FASE NN / 24** em destaque; pausa e resultado também identificam a fase.
 
 A vitória dispara automaticamente o zap e oferece **Próxima fase**. O menu permite jogar ou continuar o progresso. Para repetir desde a primeira fase, abrir **Fases** e selecionar a fase 1. **Fases** abre três setores com oito fases cada, mostrando bloqueios, estrelas, melhor pontuação e melhor tempo. É possível repetir qualquer fase desbloqueada sem perder os recordes. Reiniciar repete a tentativa atual sem limite de vezes. A fase antiga foi retirada da campanha introdutória e preservada apenas como teste de regressão.
 
-**Dica grátis:** uma utilização por tentativa corrige e trava um fio de uma solução calculada a partir do **tabuleiro atual**, respeitando os fios já fixos. A dica procura a rota com menos giros restantes e preserva conexões em T que já servem ao caminho. O fio recebe contorno verde e um ✓ até reiniciar; o texto informa sua linha e coluna, contadas a partir de 1. Os giros necessários contam nas jogadas; a dica pode concluir a fase. Reiniciar restaura o fio e a oportunidade de dica. Não há anúncio ou compra para utilizá-la.
+**Dica grátis:** uma utilização por tentativa corrige e trava um fio de uma solução calculada a partir do **tabuleiro atual**, respeitando os fios já fixos. A dica procura a rede com menos giros restantes, incluindo os ramos das lâmpadas nas fases que as exigem. Um T que liga OUT pode precisar mudar para alimentar também a lâmpada. O fio recebe contorno verde e um ✓ até reiniciar; o texto informa sua linha e coluna, contadas a partir de 1. Os giros necessários contam nas jogadas; a dica pode concluir a fase. Reiniciar restaura o fio e a oportunidade de dica. Não há anúncio ou compra para utilizá-la.
 
 | Fase | Aprendizado | Toques na solução de referência | Tempo |
 | --- | --- | --- | --- |
@@ -67,8 +69,8 @@ A vitória dispara automaticamente o zap e oferece **Próxima fase**. O menu per
 | 7 | Contornar fusível queimado | 9 | 180 s |
 | 8 | Combinar T e fusível | 10 | 180 s |
 | 9 | Adaptar-se ao painel 5×5, com seta | 6 | Livre |
-| 10 | Distinguir o caminho em um painel cheio | 12 | 150 s |
-| 11 | Escolher as conexões do T | 14 | 180 s |
+| 10 | Acender a lâmpada e ligar OUT | 12 | 150 s |
+| 11 | Alimentar a lâmpada por um ramo do T | 14 | 180 s |
 | 12 | Contornar o atalho bloqueado | 16 | 180 s |
 | 13 | Separar ramificações e distrações | 18 | 180 s |
 | 14 | Contornar dois fusíveis | 20 | 180 s |

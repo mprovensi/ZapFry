@@ -50,7 +50,8 @@ def is_solved(level: dict, rotations: list[int] | None = None) -> bool:
             if neighbor not in seen and masks[neighbor] & opposite:
                 seen.add(neighbor)
                 frontier.append(neighbor)
-    return target in seen and bool(masks[target] & level["target_port"])
+    return (target in seen and bool(masks[target] & level["target_port"])
+            and all(i in seen for i in level.get("required_nodes", [])))
 
 
 def validate_structure(level: dict) -> None:
@@ -86,10 +87,29 @@ def validate_structure(level: dict) -> None:
     require(isinstance(level.get("tip_lines"), list) and len(level["tip_lines"]) == 2
             and all(isinstance(t, str) and t.strip() for t in level["tip_lines"]), "Dicas visuais inválidas.")
     require(type(level.get("guided")) is bool, "Flag de orientação inválida.")
+    nodes = level.get("required_nodes", [])
+    require(isinstance(nodes, list), "Objetivos precisam ser uma lista.")
+    require(all(type(i) is int and 0 <= i < len(cells) for i in nodes), "Índice de objetivo inválido.")
+    require(len(set(nodes)) == len(nodes), "Objetivos duplicados.")
+    require(all(i not in (level["source_index"], level["target_index"])
+                and cells[i]["kind"] not in ("empty", "blocker") for i in nodes), "Objetivo bloqueado ou redundante.")
+    require(type(level.get("rules_revision", 1)) is int and level.get("rules_revision", 1) >= 1,
+            "Revisão das regras inválida.")
 
 
 def find_solution(level: dict) -> dict | None:
     """Pesquisa apenas kind/rotation/fixed, terminais e grade. Retorna mínimo global."""
+    classic = _find_path(level)
+    if not level.get("required_nodes") or classic is None:
+        return classic
+    try:
+        from .required_nodes_solver import solve_required
+    except ImportError:
+        from required_nodes_solver import solve_required
+    return solve_required(level, classic, MASKS, DIRECTIONS, rotate, movable, is_solved)
+
+
+def _find_path(level: dict) -> dict | None:
     cells, width = level["cells"], level["size"]
     source, target = level["source_index"], level["target_index"]
 
@@ -159,7 +179,8 @@ def validate_reference(level: dict) -> int:
             raise ValueError(f"Referência tem conexão interrompida entre {left} e {right}.")
     rotations = [c["rotation"] for c in cells]
     taps = 0
-    for index in path:
+    # Uma referência com ramificações também orienta peças fora do caminho OUT.
+    for index in range(len(cells)):
         cell = cells[index]
         options = range(4) if movable(cell) else range(1)
         turns = next((t for t in options if rotate(MASKS[cell["kind"]], rotations[index] + t) == masks[index]), None)

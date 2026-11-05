@@ -62,6 +62,10 @@ def prepare():
             for orientation in range(4):
                 if orientation == level["cells"][index]["solution"] or rotate(MASKS["tee"], orientation) & required != required:
                     continue
+                reference = [cell["solution"] for cell in level["cells"]]
+                reference[index] = orientation
+                if not is_solved(level, reference):
+                    continue  # Servir ao caminho OUT não basta se o ramo alimenta uma lâmpada.
                 state = copy.deepcopy(level)
                 for previous in path[:position]:
                     state["cells"][previous]["rotation"] = state["cells"][previous]["solution"]
@@ -77,6 +81,18 @@ def prepare():
                          {"kind": kind, "rotation": rotation},
                          {"kind": "curve", "rotation": 3}]}
             add(f"small-{kind}-{rotation}", state)
+    # Oráculos pequenos incluem redes ramificadas e duas lâmpadas, sem autoria.
+    for kind in ("curve", "tee", "straight"):
+        for lamps in ([2], [2, 3]):
+            for fixed in (True, False):
+                for seed in range(4):
+                    state = {"id": 0, "size": 2, "time_limit": 90, "source_index": 0, "source_port": 8,
+                             "target_index": 1, "target_port": 2, "required_nodes": lamps,
+                             "cells": [{"kind": "tee", "rotation": 2, "fixed": fixed},
+                                       {"kind": "straight", "rotation": 1, "fixed": True},
+                                       {"kind": kind, "rotation": seed},
+                                       {"kind": "curve", "rotation": (seed + 1) % 4}]}
+                    add(f"lamp-{kind}-{len(lamps)}-{fixed}-{seed}", state)
     INPUT.write_text(json.dumps({"cases": cases}, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Estados de dica preparados: {len(cases)}.")
 

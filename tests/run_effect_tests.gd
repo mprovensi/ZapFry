@@ -52,10 +52,38 @@ func _exercise() -> void:
 		app._layout_stage()
 		await _test_render(app, dimensions)
 		await _test_ending_render(app, dimensions)
+		await _test_lamp_render(app, dimensions)
 	app.queue_free()
 	await process_frame
 	await EncounterTests.new().run_render(self, _check)
 	await AnimationTests.new().run_render(self, _check)
+
+
+func _test_lamp_render(app, dimensions: Vector2i) -> void:
+	DirAccess.make_dir_recursive_absolute("res://builds/lamps")
+	app.level_index = 10
+	app.start_game(false)
+	app.board_view.energy_time = 1.0
+	var off := await _render(app)
+	var transform: Transform2D = root.get_final_transform() * app.board_view.get_global_transform_with_canvas()
+	var region := _pixel_rect(transform, app.board_view.lamp_rect(6), off.get_size())
+	app.session.board.required_nodes.clear()
+	app.board_view.queue_redraw()
+	var without := await _render(app)
+	_check(region.has_area() and _difference(off, without, region) > 0.025, "Símbolo da lâmpada apagada é visível: " + str(dimensions))
+	app.session.board.required_nodes.append(6)
+	# Uma peça recém-ligada deve mudar também a forma do símbolo, com raios.
+	app.session.board.cells[5]["rotation"] = app.session.board.cells[5]["solution"]
+	app.session.board.cells[10]["rotation"] = app.session.board.cells[10]["solution"]
+	app.session.board.cells[11]["rotation"] = app.session.board.cells[11]["solution"]
+	app.session.board.cells[6]["rotation"] = app.session.board.cells[6]["solution"]
+	app.session.board.recompute()
+	_check(app.session.board.energized.has(6), "Fixture visual alimenta ramo da lâmpada")
+	app.board_view.queue_redraw()
+	var on := await _render(app)
+	_check(_difference(off, on, region) > 0.025, "Lâmpada acesa distingue-se por brilho e raios: " + str(dimensions))
+	_check(off.save_png("res://builds/lamps/%dx%d-off.png" % [dimensions.x, dimensions.y]) == OK, "Captura de lâmpada apagada salva")
+	_check(on.save_png("res://builds/lamps/%dx%d-on.png" % [dimensions.x, dimensions.y]) == OK, "Captura de lâmpada acesa salva")
 
 
 func _test_ending_render(app, dimensions: Vector2i) -> void:

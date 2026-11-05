@@ -13,8 +13,8 @@ Relatório gerado por `python tools/validate_levels.py`. O resolvedor procura a 
 | 7 | Fusível queimado | 9 | 9 | 180 s | 18 s |
 | 8 | Tudo conectado | 10 | 10 | 180 s | 20 s |
 | 9 | Painel maior, sem pressa | 6 | 6 | Livre | 12 s |
-| 10 | Curvas no caminho | 12 | 12 | 150 s | 24 s |
-| 11 | Um T no painel | 14 | 14 | 180 s | 28 s |
+| 10 | Uma luz antes do choque | 12 | 12 | 150 s | 24 s |
+| 11 | O T também acende a luz | 14 | 14 | 180 s | 28 s |
 | 12 | Fusível no atalho | 16 | 16 | 180 s | 32 s |
 | 13 | Corrente dividida | 18 | 18 | 180 s | 36 s |
 | 14 | Contorno duplo | 20 | 20 | 180 s | 40 s |
@@ -45,7 +45,7 @@ Coordenadas em linha/coluna, começando em 1. Coordenadas repetidas significam t
 - **Fase 8:** L1 C2 → L1 C3 → L2 C3 → L3 C3 → L3 C3 → L3 C2 → L3 C2 → L4 C2 → L4 C2 → L4 C3.
 - **Fase 9:** L1 C2 → L1 C3 → L1 C4 → L1 C5 → L2 C5 → L3 C5.
 - **Fase 10:** L1 C2 → L1 C2 → L2 C2 → L3 C2 → L3 C2 → L3 C2 → L3 C3 → L3 C4 → L3 C5 → L3 C5 → L3 C5 → L4 C5.
-- **Fase 11:** L2 C1 → L3 C1 → L3 C1 → L3 C1 → L3 C2 → L3 C3 → L2 C3 → L2 C3 → L2 C3 → L2 C4 → L2 C5 → L2 C5 → L3 C5 → L4 C5.
+- **Fase 11:** L2 C1 → L3 C1 → L3 C1 → L3 C1 → L3 C2 → L3 C3 → L2 C3 → L2 C3 → L2 C3 → L2 C4 → L2 C5 → L3 C5 → L4 C5 → L2 C2.
 - **Fase 12:** L2 C1 → L3 C1 → L4 C1 → L4 C1 → L4 C2 → L4 C3 → L4 C3 → L4 C3 → L3 C3 → L3 C3 → L3 C3 → L3 C4 → L3 C5 → L3 C5 → L3 C5 → L4 C5.
 - **Fase 13:** L1 C2 → L1 C2 → L1 C2 → L2 C2 → L2 C2 → L2 C1 → L2 C1 → L3 C1 → L4 C1 → L4 C1 → L4 C2 → L3 C2 → L3 C3 → L2 C3 → L2 C4 → L2 C5 → L3 C5 → L4 C5.
 - **Fase 14:** L2 C1 → L2 C1 → L2 C1 → L2 C2 → L2 C3 → L2 C3 → L2 C3 → L1 C3 → L1 C3 → L1 C4 → L1 C5 → L1 C5 → L2 C5 → L3 C5 → L3 C4 → L3 C4 → L4 C4 → L5 C4 → L5 C4 → L5 C4.
@@ -101,13 +101,13 @@ Quatro cenários por fase: mouse e toque nas dimensões 720×1280 e 360×800. Ca
 
 ## Dicas em partidas parciais e com erros
 
-**730 estados aprovados**, com conferência independente em Python antes e depois da dica realmente aplicada pelo Godot.
-Inclui 26 regressões com T já conectado, rota montada a partir da entrada/saída, rotações incorretas, simetrias e tabuleiros impossíveis.
+**761 estados aprovados**, com conferência independente em Python antes e depois da dica realmente aplicada pelo Godot.
+Inclui 25 regressões com T já conectado, rota montada a partir da entrada/saída, rotações incorretas, simetrias e tabuleiros impossíveis.
 Toda dica concedida reduz os giros mínimos restantes e permite concluir pela engine; a simulação parte do estado de teste com o cronômetro integral e usa dois segundos por giro restante.
 
 | Fase | Estados com dica útil e conclusão |
 | --- | --- |
-| 11 | 41 |
+| 11 | 40 |
 | 12 | 39 |
 | 13 | 40 |
 | 14 | 41 |

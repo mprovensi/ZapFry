@@ -95,7 +95,33 @@ func run(check: Callable) -> void:
 	check.call(reread.music_volume == 1 and reread.effects_volume == 1 and reread.unlocked_level == 5, "Volumes inválidos usam valores seguros sem perder o progresso")
 	check.call(Profile.format_time(59.96) == "01:00,0" and Profile.format_time(-1) == "—", "Tempo formatado não exibe segundos iguais a 60")
 	_test_interrupted_saves(directory, check)
+	_test_rule_revisions(directory, check)
 	print("Perfis: recordes, migração, persistência e recuperação verificados.")
+
+
+func _test_rule_revisions(directory: String, check: Callable) -> void:
+	var old := ConfigFile.new()
+	old.set_value("progress", "unlocked_level", 18)
+	old.set_value("progress", "current_level", 16)
+	old.set_value("progress", "levels", {"11": {"completed": true, "stars": 3,
+		"best_score": 1950, "best_time": 9.5, "completions": 4}})
+	var path := directory + "/rules.cfg"
+	old.save(path)
+	var profile := Profile.new()
+	profile.load_profile(path)
+	check.call(profile.level_record(11)["rules_revision"] == 1, "Recorde sem revisão é importado como regra original")
+	check.call(profile.record_win(11, 1200, 1, 90, 2), "Vitória com lâmpada registra revisão 2")
+	var current := profile.level_record(11)
+	check.call(current["best_score"] == 1200 and current["best_time"] == 90 and current["stars"] == 1 and current["completions"] == 1, "Recordes de regras diferentes não são comparados")
+	check.call(current["history"]["1"]["best_score"] == 1950 and current["history"]["1"]["best_time"] == 9.5 and current["history"]["1"]["stars"] == 3 and current["history"]["1"]["completions"] == 4, "Recorde original é preservado integralmente no histórico")
+	profile.record_win(11, 1300, 2, 80, 2)
+	check.call(profile.level_record(11)["best_score"] == 1300 and profile.level_record(11)["completions"] == 2, "Nova comparação usa somente a mesma revisão")
+	check.call(profile.unlocked_level == 18 and profile.completed_count() == 18, "Mudança de regra mantém desbloqueios e conclusões")
+	check.call(profile.save_profile(path) == OK, "Perfil com histórico pode ser salvo atomicamente")
+	var restored := Profile.new()
+	restored.load_profile(path)
+	check.call(restored.records == profile.records and restored.current_level == profile.current_level, "Revisões e histórico sobrevivem ao reinício")
+	check.call(not restored.record_win(11, 1400, 2, 70, 0), "Revisão inválida não altera os recordes")
 
 
 func _test_interrupted_saves(directory: String, check: Callable) -> void:

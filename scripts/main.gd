@@ -305,7 +305,7 @@ func _process(delta: float) -> void:
 					Input.vibrate_handheld(800)
 			if resolution_elapsed >= RESOLUTION_DURATION:
 				session.finish_resolution()
-				profile.record_win(level_index + 1, session.score(), session.stars(), session.elapsed)
+				profile.record_win(level_index + 1, session.score(), session.stars(), session.elapsed, int(level_data.get("rules_revision", 1)))
 				_save_preferences()
 		_sync_controls()
 	_update_room()
@@ -561,6 +561,8 @@ func _on_cell_pressed(index: int) -> void:
 				feedback = "Este fio está preso. Gire as outras peças."
 	else:
 		feedback = str(level_data["instruction"])
+		if session.board.target_connected() and not session.board.solved and not session.board.required_nodes.is_empty():
+			feedback = "OUT conectado. Falta acender a lâmpada marcada."
 		board_view.animate_energy(previous_energy)
 		_cue("rotate")
 		if session.state == Session.State.RESOLVING:
@@ -855,7 +857,10 @@ func _draw_selector() -> void:
 func _draw_game() -> void:
 	draw_rect(Rect2(0, 0, 720, 122), Color(0.025, 0.045, 0.065, 0.94))
 	draw_rect(Rect2(0, 1374, 720, 226), Color(0.025, 0.045, 0.065, 0.83))
-	_text("PAINEL %d × %d" % [session.board.width, session.board.width], Vector2(26, 94), 20, MUTED)
+	if session.board.required_nodes.is_empty():
+		_text("PAINEL %d × %d" % [session.board.width, session.board.width], Vector2(26, 94), 20, MUTED)
+	else:
+		_text("LÂMPADA %d/%d" % [session.board.lit_required_count(), session.board.required_nodes.size()], Vector2(26, 94), 20, YELLOW)
 	_text("TEMPO" if session.has_time_limit() else "SEM TEMPO", Vector2(296, 32), 14, MUTED)
 	var seconds := int(ceil(session.remaining))
 	var clock_text := "%02d:%02d" % [seconds / 60, seconds % 60]

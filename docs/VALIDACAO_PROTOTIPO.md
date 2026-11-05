@@ -1,10 +1,16 @@
-# Validação do protótipo 0.20.0
+# Validação do protótipo 0.21.0
 
 **Data:** 5 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.21.0:** primeira entrega dos desafios: lâmpadas obrigatórias nas fases 10 e 11, com ramo de T na 11, ícone apagado/aceso, contador e aviso de objetivo pendente. Dicas consideram a rede inteira; mínimos de 12/14 giros e tempos de 150/180 s mantidos. Demais fases seguem clássicas. Perfil v7 arquiva recordes por revisão sem apagar desbloqueios, encontros ou preferências. Detalhes em [DESAFIOS_021.md](DESAFIOS_021.md).
+
+Fluxo obrigatório aprovado: **41.050 verificações da engine, 49 testes Python, 761 estados de dicas, 3.589 verificações visuais/temporais e 48 de áudio**. Incluídos oráculos exaustivos em tabuleiros pequenos, ramificações, ciclos, duas lâmpadas, dados inválidos, estados impossíveis, objetivo pendente, pausa e migração dos recordes. As 24 soluções foram executadas por mouse e toque. Renderização do ícone verificada em 360×800, 720×1280 e 720×1600; mantida a cobertura de flash, tremor, esqueleto e encerramento.
+
+APK 0.21.0/código 34 instalado no S20 FE/SM-G781B com perfil idêntico antes/depois, VIBRATE concedida e inicialização sem erros. Fases idênticas às fontes e 83 texturas auditadas. Evidências em `builds/deploy-v0210-install-retry.log`, `builds/lamps/` e `builds/android/install-20261105T214431411815Z/status.json`. SHA-256: `e5c33a4b6c8b135761ceaa88b971c1bf9fd2bcd2578e098a4a5cc3451037e869`. Nenhuma partida automatizada no aparelho; playtest humano das lâmpadas pendente.
 
 **0.20.0:** tela final após vencer a fase 24, com “OBRIGADO POR JOGAR!”, aviso “Mais fases virão pela frente” e ações de jogar do início ou voltar ao menu. Reutilizados cenário, personagem recuperado, estrelas e pontuação do resultado. As mensagens aguardam os 2,40 s completos da sequência; fases anteriores conservam a tela habitual.
 

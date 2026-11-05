@@ -56,6 +56,10 @@ func configure(data: Dictionary, result: Dictionary, unlocked: bool) -> void:
 	elif bool(record.get("legacy", false)):
 		_score.text = "Recordes por registrar"
 		_time.text = "Rejogue esta fase."
+	elif completed and int(record.get("rules_revision", 1)) != int(data.get("rules_revision", 1)):
+		_status.text = "REGRA NOVA"
+		_score.text = "Anterior: %d pts" % int(record.get("best_score", 0))
+		_time.text = "Rejogue com a lâmpada."
 	elif completed:
 		_score.text = "Recorde: %d pts" % int(record.get("best_score", 0))
 		_time.text = "Melhor: " + Profile.format_time(float(record.get("best_time", -1)))

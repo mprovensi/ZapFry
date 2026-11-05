@@ -2,6 +2,7 @@ extends RefCounted
 ## Dijkstra no tabuleiro atual. Não consulta solution nem reference_path.
 
 const Board = preload("res://scripts/circuit_board.gd")
+const RequiredSolution = preload("res://scripts/required_circuit_solution.gd")
 var board: CircuitBoard
 var choices: Dictionary = {}
 var heap: Array = []
@@ -9,6 +10,19 @@ var serial := 0
 
 
 func solve(model: CircuitBoard) -> Dictionary:
+	if not model.objectives_valid:
+		return {}
+	var classic := _solve_path(model)
+	if model.required_nodes.is_empty() or classic.is_empty():
+		return classic
+	# O mínimo até OUT é um limite inferior para qualquer rede completa.
+	var rotations: Dictionary = classic["rotations"]
+	if model.objectives_met(model.energized_for(rotations), rotations):
+		return classic
+	return RequiredSolution.new().solve(model, classic)
+
+
+func _solve_path(model: CircuitBoard) -> Dictionary:
 	board = model
 	choices.clear()
 	heap.clear()
