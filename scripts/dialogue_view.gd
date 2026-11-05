@@ -2,6 +2,8 @@ extends Control
 ## Apresentação de duas falas. Não conhece fases, relógio ou persistência.
 
 const EXECUTOR_COLOR := Color("8be0ae")
+const PAPER := Color("fff9e9")
+const INK := Color("141a22")
 
 signal finished
 signal advanced
@@ -19,6 +21,7 @@ var body: Label
 var counter: Label
 var _pointer_down := false
 var _bubble_style: StyleBoxFlat
+var _tail: Control
 
 
 func _ready() -> void:
@@ -36,15 +39,30 @@ func _ready() -> void:
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("172a37")
 	style.border_color = Color("94adb8")
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(24)
+	style.set_border_width_all(6)
+	style.corner_radius_top_left = 110
+	style.corner_radius_top_right = 138
+	style.corner_radius_bottom_left = 130
+	style.corner_radius_bottom_right = 114
+	style.corner_detail = 24
+	style.shadow_color = Color(0.02, 0.03, 0.04, 0.45)
+	style.shadow_size = 3
+	style.shadow_offset = Vector2(6, 8)
 	bubble.add_theme_stylebox_override("panel", style)
 	_bubble_style = style
 	add_child(bubble)
-	speaker = _label(Vector2(24, 18), Vector2(410, 40), 28, Color.WHITE)
-	counter = _label(Vector2(466, 18), Vector2(100, 40), 26, Color("c7d4dd"))
+	_tail = Control.new()
+	_tail.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tail.draw.connect(_draw_tail)
+	bubble.add_child(_tail)
+	speaker = _label(Vector2(52, 32), Vector2(380, 40), 28, INK)
+	counter = _label(Vector2(456, 32), Vector2(80, 40), 24, Color("56606a"))
 	counter.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	body = _label(Vector2(24, 72), Vector2(544, 184), 40, Color("f1eee1"))
+	body = _label(Vector2(48, 82), Vector2(496, 164), 40, INK)
+	var lettering := FontVariation.new()
+	lettering.base_font = ThemeDB.fallback_font
+	lettering.variation_embolden = 0.5
+	body.add_theme_font_override("font", lettering)
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	advance_button = Button.new()
 	advance_button.position = Vector2(112, 1474)
@@ -119,9 +137,9 @@ func _update_text() -> void:
 	_update_entrance()
 	speaker.text = subject_name if step == 1 else "Executor"
 	var accent := subject_color if step == 1 else EXECUTOR_COLOR
-	_bubble_style.bg_color = accent.darkened(0.82)
-	_bubble_style.border_color = accent
-	speaker.add_theme_color_override("font_color", accent)
+	_bubble_style.bg_color = accent.lerp(PAPER, 0.85)
+	_bubble_style.border_color = INK
+	speaker.add_theme_color_override("font_color", accent.darkened(0.65))
 	body.text = lines[step]
 	counter.text = "%d / %d" % [step + 1, lines.size()]
 	advance_button.text = "COMEÇAR" if step == lines.size() - 1 else "CONTINUAR"
@@ -139,21 +157,31 @@ func _update_entrance() -> void:
 	var progress := smoothstep(0.0, 0.18, presentation_time)
 	bubble.position = Vector2(64, (760 if step == 1 else 430) + 12.0 * (1.0 - progress))
 	bubble.modulate.a = lerpf(0.45, 1.0, progress)
-	queue_redraw()
+	_tail.queue_redraw()
 
 
-func _draw() -> void:
+func _draw_tail() -> void:
 	if not active:
 		return
-	var bottom := bubble.position.y + bubble.size.y - 3.0
-	var top := bubble.position.y + 3.0
-	var points := PackedVector2Array([Vector2(320, bottom), Vector2(358, 1070), Vector2(386, bottom)]) if step == 1 else PackedVector2Array([Vector2(182, top), Vector2(234, 370), Vector2(258, top)])
-	var fill := _bubble_style.bg_color
-	var edge := _bubble_style.border_color
-	fill.a *= bubble.modulate.a
-	edge.a *= bubble.modulate.a
-	draw_colored_polygon(points, fill)
-	draw_polyline(points, edge, 2, true)
+	var outline := PackedVector2Array()
+	var start := Vector2(252, 280) if step == 1 else Vector2(140, 0)
+	var tip := Vector2(296, 318) if step == 1 else Vector2(240, -54)
+	var end := Vector2(326, 280) if step == 1 else Vector2(214, 0)
+	var first := Vector2(268, 288) if step == 1 else Vector2(158, -16)
+	var second := Vector2(282, 294) if step == 1 else Vector2(210, -26)
+	var third := Vector2(303, 303) if step == 1 else Vector2(223, -24)
+	var fourth := Vector2(304, 286) if step == 1 else Vector2(217, -10)
+	for index in range(17):
+		outline.append(start.bezier_interpolate(first, second, tip, index / 16.0))
+	for index in range(1, 17):
+		outline.append(tip.bezier_interpolate(third, fourth, end, index / 16.0))
+	# A junção cobre a borda, sem linha atravessando a cauda.
+	var inset := Vector2(0, -8 if step == 1 else 8)
+	var fill := PackedVector2Array([start + inset])
+	fill.append_array(outline)
+	fill.append(end + inset)
+	_tail.draw_colored_polygon(fill, _bubble_style.bg_color)
+	_tail.draw_polyline(outline, INK, 6, true)
 
 
 func _on_pointer(event: InputEvent) -> void:

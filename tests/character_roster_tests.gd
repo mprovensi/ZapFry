@@ -7,13 +7,15 @@ const Profile = preload("res://scripts/player_profile.gd")
 func run(check: Callable) -> void:
 	var previous := ""
 	var roster := Roster.new(7281)
+	var count := Roster.TEMPLATES.size()
+	check.call(count == 7, "Catálogo inclui as cinco bases, o zumbi e a elfa")
 	for cycle in range(20):
 		var seen: Dictionary = {}
-		for index in range(5):
-			var level_index := cycle * 5 + index
+		for index in range(count):
+			var level_index := cycle * count + index
 			var choice: Dictionary = roster.select(level_index, {})
 			var snapshot: Dictionary = choice["snapshot"]
-			check.call(not seen.has(snapshot["id"]) and snapshot["id"] != previous, "Sorteio mostra os cinco sem repetição, inclusive entre rodadas")
+			check.call(not seen.has(snapshot["id"]) and snapshot["id"] != previous, "Sorteio mostra todas as bases sem repetição, inclusive entre rodadas")
 			seen[snapshot["id"]] = true
 			previous = snapshot["id"]
 			var repeated: Dictionary = roster.select(level_index, snapshot)
@@ -55,7 +57,7 @@ func run(check: Callable) -> void:
 	config.set_value("appearance", "current", {"level": "bad", "id": [], "name": 99})
 	config.save(path)
 	check.call(restored.load_profile(path) == OK and restored.appearance.is_empty(), "Aparência malformada é descartada sem invalidar o progresso")
-	print("Condenados: cinco bases, poses próprias, sorteio sem repetição, aliases e persistência verificados.")
+	print("Condenados: sete bases, poses próprias, sorteio sem repetição, aliases e persistência verificados.")
 
 
 func run_ui(app, check: Callable) -> void:
@@ -72,8 +74,7 @@ func run_ui(app, check: Callable) -> void:
 	check.call(app.execution_character == selected and app.profile.appearance == snapshot and app.session.board.cells == cells, "Pausa e ajustes não sorteiam nem alteram a tentativa")
 	app.start_game(false)
 	check.call(app.execution_character == selected and app.profile.appearance == snapshot, "Reiniciar preserva o condenado")
-	check.call(app.character_name.text == selected.display_name and app.character_name.visible, "Nome sorteado é exibido na partida")
-	check.call(not app.character_name.get_global_rect().intersects(app.room_view.get_global_rect()), "Nome não encobre o condenado")
+	check.call(not _has_floating_name(app), "Partida não exibe nome avulso ao lado da cadeira")
 	app.level_index = 1
 	app.start_game(false)
 	check.call(app.execution_character.character_id != selected.character_id, "Fase seguinte recebe outro condenado")
@@ -86,7 +87,7 @@ func run_ui(app, check: Callable) -> void:
 				app.reduced_flashes = soft
 				app.level_index = 0
 				app.start_game(false)
-				check.call(app.get_global_rect().encloses(app.character_name.get_global_rect()) and not app.character_name.get_global_rect().intersects(app.room_view.get_global_rect()), "Nome cabe ao lado da cadeira em todas as proporções")
+				check.call(not _has_floating_name(app), "Nome avulso permanece removido em todas as proporções e personagens")
 				app._on_cell_pressed(1)
 				app._process(0.6)
 				check.call(app.room_view.portrait_texture() == template.frame_texture(&"zap", 0, soft) and not app.overlay.visible, "Cada condenado exibe o próprio esqueleto durante o choque")
@@ -94,3 +95,10 @@ func run_ui(app, check: Callable) -> void:
 				check.call(app.room_view.portrait_texture() == template.frame_texture(&"recover", 0) and not app.overlay.visible, "Recuperação própria antecede resultado em ambos os modos")
 				app._process(0.6)
 				check.call(app.room_view.portrait_texture() == template.frame_texture(&"win", 0), "Resultado mantém a identidade do condenado")
+
+
+func _has_floating_name(app) -> bool:
+	for child in app.stage.get_children():
+		if child is Label and child.visible and child.text == app.execution_character.display_name:
+			return true
+	return false

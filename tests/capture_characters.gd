@@ -43,7 +43,7 @@ func _capture_all() -> void:
 	app.queue_free()
 	await process_frame
 	await _pose_sheet()
-	print("Cinco condenados: 15 capturas da partida e prancha de poses salvas.")
+	print("Sete condenados: 21 capturas da partida e prancha de poses salvas.")
 
 
 func _game_image(app, name: String) -> void:
@@ -56,7 +56,7 @@ func _game_image(app, name: String) -> void:
 
 func _pose_sheet() -> void:
 	var viewport := SubViewport.new()
-	viewport.size = Vector2i(1800, 1300)
+	viewport.size = Vector2i(Roster.TEMPLATES.size() * 360, 1300)
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
 	var fill := ColorRect.new()

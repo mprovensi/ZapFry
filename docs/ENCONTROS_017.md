@@ -1,12 +1,12 @@
-# Encontros e paletas — 0.17.1
+# Encontros e paletas — 0.19.0
 
 Cada nova fase apresenta exatamente dois balões: uma acusação do **Executor** e uma resposta curta do condenado. Os 24 casos foram reescritos na 0.17.1 para ligar a resposta diretamente à acusação, sem terceira fala. Há restrições para manter histórias específicas compatíveis com seus personagens. A seleção evita repetir o último caso quando começa outro encontro. IDs dos casos permanecem estáveis, preservando os encontros já salvos.
 
-O Executor usa balão verde; cavaleira usa rosa, pirata azul, alquimista lilás, bardo âmbar e vampiro vermelho. Cada `ExecutionCharacter` guarda sua cor em `dialogue_color`, independente da paleta de roupa e do nome sorteado. Fundo, borda, cauda e identificação acompanham o falante. A fonte das falas passou de 30 para 40 unidades; os nomes passaram de 23 para 28. O balão foi ampliado para acomodar a leitura.
+O Executor usa verde; cavaleira rosa, pirata azul, alquimista lilás, bardo âmbar, vampiro vermelho, zumbi turquesa e elfa dourado. Cada `ExecutionCharacter` guarda sua cor em `dialogue_color`, independente da paleta de roupa e do nome sorteado. Desde a 0.19.0, o balão tem papel claro tingido nessa cor, nome escuro, contorno grosso e cauda curva integrada, como em quadrinhos. A fonte das falas é de 40 unidades com peso adicional; nomes têm 28. O nome avulso ao lado da cadeira foi removido, mantendo a identificação dentro do balão.
 
 Toque, clique, Enter ou Espaço avançam uma fala; **Pular** termina a apresentação. A matriz e a dica ficam bloqueadas durante a conversa. O relógio começa somente na primeira jogada válida. Pausa, Ajustes e segundo plano preservam a fala atual; reiniciar uma tentativa dispensa a introdução já apresentada.
 
-As cinco bases têm quatro paletas de roupa cada, incluindo a original. Com os 25 nomes, são 100 combinações de nome e paleta. `character_portrait.gd` aplica um material exclusivo por retrato, com máscara SVG corporal e seleção de matiz; os PNGs originais permanecem intactos. Pele, cadeira e ossos brilhantes são preservados nas regiões verificadas pelo teste de pixels. A máscara e os limites de cor deverão ser revistos quando os sprites forem substituídos.
+As sete bases têm quatro paletas de roupa cada, incluindo a original. Com os 35 nomes, são 140 combinações de nome e paleta. `character_portrait.gd` aplica um material exclusivo por retrato, com máscara SVG corporal e seleção de matiz; os PNGs originais permanecem intactos. Pele, cadeira e ossos brilhantes são preservados nas regiões verificadas pelo teste de pixels. A máscara e os limites de cor deverão ser revistos quando os sprites forem substituídos.
 
 O perfil v6 grava personagem, nome, paleta, história e apresentação concluída. Perfis anteriores recebem a paleta original e uma história compatível, mantendo progresso e preferências. Os templates compartilhados não são alterados pelo sorteio. A aparência permanece igual no diálogo, partida e resultado.
 
@@ -16,7 +16,7 @@ Conferência manual no aparelho: [ROTEIRO_ENCONTROS_017.md](ROTEIRO_ENCONTROS_01
 
 - Catálogo, combinações, compatibilidade, migração e persistência: `tests/encounter_tests.gd`.
 - Interação nativa por mouse, toque e teclado; pausa, interrupção de gesto e prevenção de entrada duplicada ou vazamento para a matriz.
-- As 48 falas cabem nos balões em 360×800, 720×1280 e 720×1600. Os testes também verificam os 25 nomes no cabeçalho ampliado, as seis cores distintas e o início da fase após o segundo balão, sem entrada involuntária na matriz.
+- As 48 falas cabem nos balões em 360×800, 720×1280 e 720×1600. Os testes também verificam os 35 nomes no cabeçalho ampliado, as seis cores distintas e o início da fase após o segundo balão, sem entrada involuntária na matriz.
 - Renderização das quatro paletas nas três poses das cinco bases, com comparação de pixels e isolamento dos materiais.
 - O relógio real continua sendo usado em produção. Os testes controlam a fonte de tempo para que interrupções do computador não expirem fases artificialmente; há cobertura de desconto único, pausa e retomada.
 - Exportação e instalação continuam sujeitas às três suítes obrigatórias de `tools/dev.ps1`; a auditoria do APK inclui a máscara importada.

@@ -73,7 +73,6 @@ var screen := "menu"
 var stage: Control
 var board_view: Control
 var phase_label: Label
-var character_name: Label
 var feedback_label: Label
 var room_view: Control
 var operator_view: Control
@@ -149,14 +148,6 @@ func _ready() -> void:
 	feedback_label.add_theme_color_override("font_color", CREAM)
 	feedback_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stage.add_child(feedback_label)
-	character_name = Label.new()
-	character_name.position = Vector2(20, 1110)
-	character_name.size = Vector2(160, 100)
-	character_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	character_name.add_theme_font_size_override("font_size", 22)
-	character_name.add_theme_color_override("font_color", CREAM)
-	character_name.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stage.add_child(character_name)
 	cable_view = PowerCableView.new()
 	cable_view.name = "PowerCables"
 	stage.add_child(cable_view)
@@ -618,8 +609,6 @@ func _sync_controls() -> void:
 	shock_flash.visible = in_game and flash > 0.0
 	_update_room()
 	phase_label.visible = in_game
-	character_name.visible = in_game and not settings.visible
-	character_name.text = execution_character.display_name if execution_character != null else ""
 	feedback_label.visible = in_game and not introducing
 	feedback_label.text = feedback
 	phase_label.text = "FASE %02d / %02d" % [level_index + 1, levels.size()]

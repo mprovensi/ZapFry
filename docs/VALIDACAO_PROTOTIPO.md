@@ -1,10 +1,16 @@
-# Validação do protótipo 0.18.0
+# Validação do protótipo 0.19.0
 
 **Data:** 5 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.19.0:** balões de quadrinhos com fundo claro tingido por personagem, texto escuro reforçado, contorno de seis unidades e cauda curva sem linha na junção. Removido o nome avulso à esquerda da cadeira; o nome continua no balão. Zumbi e elfa adulta integrados com três poses e oito estados cada, cinco nomes por base e quatro paletas: sete bases, 35 nomes e 140 combinações. Perfil v6 e IDs anteriores preservados.
+
+Fluxo obrigatório aprovado: **40.004 verificações da engine, 43 testes Python, 730 estados de dicas, 3.562 verificações visuais/temporais e 48 de áudio**, sem falhas ou erros nos logs. APK 0.19.0/código 30 exportado; auditoria confirmou fases iguais às fontes e **83 texturas importadas**, incluindo os seis PNGs novos. Evidência em `builds/deploy-v0190.log` e `builds/verification.json`. Capturas em `builds/encounters/intro-executor.png`, `intro-condenado.png` e `builds/characters/`. Prompts e recursos em [SPRITES_019_PROMPTS.md](SPRITES_019_PROMPTS.md).
+
+Instalação da 0.19.0 pendente: o celular não apareceu no ADB nem entre os dispositivos USB presentes do Windows. A última instalação confirmada permanece a 0.17.1. As capturas e testes usam perfil isolado; não foram automatizadas partidas no aparelho.
 
 **0.18.0:** piscada e movimento discreto do Executor, reação dos cinco condenados, entrada dos balões em 0,18 s e transições de pose/recuperação suavizadas. Exatamente dois balões e sequência de 2,40 s preservados. Expressões congelam na pausa e não deslocam grade, controles ou conexões. Renderização com recoloração ativa confirma mudanças na cabeça, estabilidade de corpo/gerador/cadeira e esqueleto intacto durante o choque. Fluxo obrigatório aprovado: **39.795 verificações da engine, 43 testes Python, 730 estados de dicas, 3.490 verificações visuais/temporais e 48 de áudio**, sem erros nos logs. APK/código 29 exportado; fases e 77 texturas importadas auditadas. Evidência em `builds/deploy-v0180.log`, `builds/verification.json` e `builds/animations/`. Guia em [ANIMACOES_018.md](ANIMACOES_018.md).
 

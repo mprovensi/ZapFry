@@ -5,7 +5,8 @@ const Character = preload("res://scripts/execution_character.gd")
 const Stories = preload("res://scripts/encounter_stories.gd")
 const TEMPLATES := [preload("res://assets/characters/cavaleira.tres"),
 	preload("res://assets/characters/pirata.tres"), preload("res://assets/characters/alquimista.tres"),
-	preload("res://assets/characters/bardo.tres"), preload("res://assets/characters/vampiro.tres")]
+	preload("res://assets/characters/bardo.tres"), preload("res://assets/characters/vampiro.tres"),
+	preload("res://assets/characters/zumbi.tres"), preload("res://assets/characters/elfa.tres")]
 var _rng := RandomNumberGenerator.new()
 var _bag: Array[int] = []
 var _last_id := ""

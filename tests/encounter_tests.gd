@@ -27,7 +27,7 @@ func run(check: Callable) -> void:
 				combinations[str([snapshot["id"], snapshot["name"], snapshot["palette"]])] = true
 				check.call(selected["character"].palette_index == palette and snapshot["intro_seen"], "Nome e paleta selecionados chegam à instância")
 		check.call(template.palette_index == 0, "Templates não são recoloridos pelo sorteio")
-	check.call(combinations.size() == 100, "Cinco bases, cinco nomes e quatro cores geram 100 combinações")
+	check.call(combinations.size() == 140, "Sete bases, cinco nomes e quatro cores geram 140 combinações")
 	var prior := -1
 	for level in range(24):
 		var selected := roster.select(level, {})
@@ -58,6 +58,7 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	check.call(app.dialogue.speaker.text == "Executor" and app.dialogue.counter.text == "1 / 2", "Primeiro balão identifica o Executor e as duas falas")
 	check.call(app.dialogue.body.get_theme_font_size("font_size") == 40, "Falas usam fonte maior de 40 unidades")
 	var executor_style: StyleBoxFlat = app.dialogue.bubble.get_theme_stylebox("panel")
+	check.call(executor_style.border_width_left >= 6 and executor_style.bg_color.get_luminance() > 0.75 and app.dialogue.body.get_theme_color("font_color").get_luminance() < 0.1, "Balão de quadrinho usa papel claro, texto escuro e contorno marcado")
 	var executor_color := executor_style.bg_color
 	app._on_cell_pressed(1)
 	app.use_free_hint()
@@ -66,7 +67,7 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	await _click(tree, app.dialogue.advance_button.get_global_rect().get_center())
 	check.call(app.dialogue.step == 1 and app.dialogue.speaker.text == app.execution_character.display_name, "Resposta mostra o nome do condenado")
 	var subject_style: StyleBoxFlat = app.dialogue.bubble.get_theme_stylebox("panel")
-	check.call(subject_style.bg_color != executor_color and subject_style.border_color == app.execution_character.dialogue_color and app.dialogue.counter.text == "2 / 2", "Resposta usa a cor do condenado e é o segundo e último balão")
+	check.call(subject_style.bg_color != executor_color and subject_style.bg_color == app.execution_character.dialogue_color.lerp(DialogueView.PAPER, 0.85) and app.dialogue.counter.text == "2 / 2", "Resposta mantém papel tingido na cor do condenado e é o segundo e último balão")
 	await _click(tree, app.buttons["pause"].get_global_rect().get_center())
 	check.call(app.session.state == Session.State.PAUSED and app.dialogue.active and not app.dialogue.visible, "Pausa do cabeçalho funciona durante a conversa")
 	app.show_settings()
@@ -121,9 +122,9 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 		app.profile.appearance = {"level": app.level_index, "id": template.character_id, "name": template.display_name, "palette": 0, "story": 0, "intro_seen": false}
 		app.start_game()
 		var style: StyleBoxFlat = app.dialogue.bubble.get_theme_stylebox("panel")
-		check.call(app.dialogue.speaker.text == "Executor" and style.border_color == DialogueView.EXECUTOR_COLOR, "Novo encontro restaura nome e cor do Executor")
+		check.call(app.dialogue.speaker.text == "Executor" and style.bg_color == DialogueView.EXECUTOR_COLOR.lerp(DialogueView.PAPER, 0.85), "Novo encontro restaura nome e cor do Executor")
 		app.dialogue.advance()
-		check.call(style.border_color == template.dialogue_color and app.dialogue.speaker.text == template.display_name, "Cada base recebe sua própria cor de resposta na partida")
+		check.call(style.bg_color == template.dialogue_color.lerp(DialogueView.PAPER, 0.85) and app.dialogue.speaker.text == template.display_name, "Cada base recebe sua própria cor de resposta na partida")
 		var name_font: Font = app.dialogue.speaker.get_theme_font("font")
 		for name in template.aliases:
 			check.call(name_font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, app.dialogue.speaker.get_theme_font_size("font_size")).x <= app.dialogue.speaker.size.x, "Nome cabe no cabeçalho ampliado: " + name)
@@ -144,7 +145,7 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 			await tree.process_frame
 	app.dialogue.close()
 	app.start_game(false)
-	print("Encontros: 24 histórias, 100 combinações, navegação, toque e texto em três proporções verificados.")
+	print("Encontros: 24 histórias, 140 combinações, navegação, toque e texto em três proporções verificados.")
 
 
 func run_render(tree: SceneTree, check: Callable) -> void:

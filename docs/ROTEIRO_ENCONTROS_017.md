@@ -1,4 +1,4 @@
-# Playtest dos encontros — 0.18.0
+# Playtest dos encontros — 0.19.0
 
 Sessão manual de aproximadamente dez minutos no celular, após a instalação. Os testes automatizados já cobrem regras e renderização; registrar abaixo o que for realmente observado no aparelho. Não desinstalar nem limpar os dados para testar.
 
@@ -11,6 +11,7 @@ Sessão manual de aproximadamente dez minutos no celular, após a instalação. 
 7. **Resultado:** conferir o número da fase, o mesmo nome/cor do encontro e a aparência recuperada. Próxima fase deve apresentar o novo encontro. O sorteio evita repetir a base imediatamente; nomes e cores podem voltar em outros encontros.
 8. **Reabertura:** voltar ao menu, fechar e reabrir normalmente. Fase, recordes, preferências e aparência atual devem permanecer. O tabuleiro parcial não é salvo; a tentativa reinicia.
 9. **Animações:** aguardar cinco segundos para observar a piscada do Executor. Conferir movimento discreto da cabeça de quem fala, entrada breve dos balões e congelamento ao pausar. Na conclusão, observar a passagem entre poses da alavanca e a acomodação após o choque, sem deslocar conexões nem cobrir o esqueleto.
+10. **Quadrinhos e novas bases:** observar papel claro, contorno grosso, cauda curva integrada e texto escuro. O nome deve aparecer somente no balão, sem nome avulso ao lado da cadeira. Ao encontrar zumbi ou elfa no sorteio, conferir espera, esqueleto e recuperação, cor da roupa e estabilidade da cadeira.
 
 | Item | Resultado no celular | Observação |
 | --- | --- | --- |

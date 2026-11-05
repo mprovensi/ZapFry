@@ -1,6 +1,8 @@
-# Zap & Fry — protótipo 0.18.0
+# Zap & Fry — protótipo 0.19.0
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Novidade 0.19.0:** balões de quadrinhos com papel claro tingido por personagem, contorno grosso, cauda curva e texto escuro. O nome avulso ao lado da cadeira foi removido; a identificação continua no diálogo. Zumbi **Zeca Soneca** e elfa adulta **Líria Faísca** entram no sorteio com espera, choque e recuperação próprios: sete bases, 35 nomes e 140 combinações de nome/cor. Arte, prompts e integração em [docs/SPRITES_019_PROMPTS.md](docs/SPRITES_019_PROMPTS.md).
 
 **Novidade 0.18.0:** Executor pisca e reage à própria fala; os cinco condenados fazem pequenos movimentos de cabeça ao responder. Balões entram suavemente, alavanca recebe transições curtas entre poses e o retrato acomoda o movimento na recuperação. Os dois balões, a fonte maior, a pausa e o esqueleto durante o choque são preservados. Detalhes e prévia em [docs/ANIMACOES_018.md](docs/ANIMACOES_018.md).
 
