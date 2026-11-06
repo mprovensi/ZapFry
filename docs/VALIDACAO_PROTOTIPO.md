@@ -1,10 +1,12 @@
-# Validação do protótipo 0.21.3
+# Validação do protótipo 0.21.4
 
 **Data:** 6 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.21.4:** volume da trilha aumentado em 6 dB: −8 dB normalmente e −16 dB durante a descarga. Mantidos efeitos, controle proporcional dos ajustes, pausa e silêncio. Fluxo obrigatório aprovado: 41.065 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio. APK/código 38 auditado com fases idênticas e 83 texturas. Instalação pendente porque o celular não estava disponível no ADB; nenhuma alteração foi feita no aparelho. Log: `builds/deploy-v0214-install.log`. Detalhes em [TRILHA_SONORA.md](TRILHA_SONORA.md).
 
 **0.21.3:** fundo claro iniciado na linha divisória do cabeçalho, retirando a faixa escura restante. Limite único de 112 unidades compartilhado por cabeçalho, clarão e área da conversa. Fluxo aprovado: 41.065 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio. APK/código 37 instalado no S20 FE, com save idêntico e inicialização sem erros. Evidência em `builds/android/install-20261106T151544944704Z/status.json`; capturas em `builds/game-chrome/`.
 

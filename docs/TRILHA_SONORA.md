@@ -8,7 +8,7 @@ Composição e síntese próprias, sem samples ou gravações de terceiros. Font
 - Mestre de autoria: `builds/audio/fortress-after-hours.wav`, PCM estéreo de 16 bits; não é incluído no aplicativo.
 - Medições: `builds/audio/music-metrics.json`.
 
-O canal de música pertence ao `GameAudio`, separado do zumbido e dos efeitos. Toca no menu, seletor, partida e resultado; não reinicia a cada atualização da interface. O volume normal aumentou **6 dB**, de −20 para **−14 dB**. Durante a descarga baixa para **−22 dB** (redução de 8 dB), destacando o zap. Os efeitos mantêm seu volume. O botão SOM interrompe todos os canais. Pausa e segundo plano suspendem a música; continuar retoma a posição. Uma nova partida não troca o stream nem reinicia o loop.
+O canal de música pertence ao `GameAudio`, separado do zumbido e dos efeitos. Toca no menu, seletor, partida e resultado; não reinicia a cada atualização da interface. Na revisão **0.21.4**, o volume da trilha aumentou **6 dB**, de −14 para **−8 dB**. Durante a descarga baixa para **−16 dB** (redução de 8 dB), destacando o zap. Os efeitos mantêm seu volume. O botão SOM interrompe todos os canais. Pausa e segundo plano suspendem a música; continuar retoma a posição. Uma nova partida não troca o stream nem reinicia o loop.
 
 Verificações de integração em `tests/polish_tests.gd`: recurso em loop, canal independente, contexto sem substituição do stream, pausa/retomada, redução durante a descarga, segundo plano inclusive no menu e silêncio quando SOM está desligado. A preferência de som existente continua valendo; não foi acrescentada outra opção.
 
@@ -17,4 +17,10 @@ Validação de loop: `./tools/dev.ps1 audio-test` executa as verificações exis
 
 ## Controles de volume — 0.15.0
 
-A tela Ajustes oferece ganhos independentes de música e efeitos entre 0 e 100%. Em 100%, mantém os níveis desta trilha: −14 dB normalmente e −22 dB durante a descarga. O ganho escolhido é somado a esses níveis em decibéis pela conversão nativa de amplitude; em zero, a música fica pausada e os efeitos/zumbido param. Som geral desliga tudo sem apagar os níveis escolhidos. Abrir Ajustes pela pausa mantém a música pausada. Preferências e migração: `AJUSTES.md`. Teste dedicado atualizado: 48 verificações, zero falhas, três ciclos do OGG decodificados.
+A tela Ajustes oferece ganhos independentes de música e efeitos entre 0 e 100%. Na versão 0.21.4, o nível 100% corresponde a −8 dB normalmente e −16 dB durante a descarga. O ganho escolhido é somado a esses níveis em decibéis pela conversão nativa de amplitude; em zero, a música fica pausada e os efeitos/zumbido param. Som geral desliga tudo sem apagar os níveis escolhidos. Abrir Ajustes pela pausa mantém a música pausada. Preferências e migração: `AJUSTES.md`. Teste dedicado: controle proporcional de volume, independência dos efeitos, pausa, silêncio e três ciclos do OGG decodificados. A atualização não altera a porcentagem de volume salva pelo jogador.
+
+## Validação da 0.21.4 — 6 de novembro de 2026
+
+Fluxo obrigatório aprovado: 49 testes Python, 41.065 verificações da engine, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio, incluindo três ciclos completos do OGG. APK/código 38 exportado e auditado, com fases idênticas às fontes e 83 texturas. Log: `builds/deploy-v0214-install.log`.
+
+A instalação não foi realizada: o S20 FE não estava disponível no ADB. O fluxo parou na seleção do aparelho, antes de alterar sua instalação ou perfil. A escuta do novo volume no celular permanece pendente.

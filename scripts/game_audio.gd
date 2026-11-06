@@ -10,8 +10,8 @@ const SOUNDS := {
 	"win": preload("res://assets/audio/win.wav"),
 	"lose": preload("res://assets/audio/lose.wav"),
 	"warning": preload("res://assets/audio/warning.wav")}
-const MUSIC_VOLUME_DB := -14.0
-const MUSIC_RESOLVING_DB := -22.0
+const MUSIC_VOLUME_DB := -8.0
+const MUSIC_RESOLVING_DB := -16.0
 var enabled := true
 var music_volume := 1.0
 var effects_volume := 1.0
