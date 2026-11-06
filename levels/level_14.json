@@ -1,6 +1,6 @@
 {
   "id": 14,
-  "name": "Contorno duplo",
+  "name": "Desvio no sentido certo",
   "size": 5,
   "time_limit": 180,
   "source_index": 0,
@@ -25,10 +25,10 @@
   "guided": false,
   "reference_taps": 20,
   "lesson": "five_by_five",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "Contorne os fusíveis e faça a corrente seguir a seta.",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "Contorne o fusível queimado.",
+    "A corrente entra pela cauda da seta."
   ],
   "cells": [
     {
@@ -80,9 +80,9 @@
       "fixed": true
     },
     {
-      "kind": "straight",
-      "rotation": 3,
-      "solution": 0
+      "kind": "diode",
+      "rotation": 0,
+      "solution": 2
     },
     {
       "kind": "curve",
@@ -151,7 +151,7 @@
     },
     {
       "kind": "curve",
-      "rotation": 1,
+      "rotation": 2,
       "solution": 0
     },
     {
@@ -160,5 +160,6 @@
       "solution": 1,
       "fixed": true
     }
-  ]
+  ],
+  "rules_revision": 2
 }

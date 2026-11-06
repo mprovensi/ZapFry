@@ -37,7 +37,7 @@ func run(check: Callable) -> void:
 	for number in range(1, 25):
 		var campaign: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_%02d.json" % number))
 		session.start(campaign)
-		check.call(not session.board.required_nodes.is_empty() == (number in [10, 11]), "Desafio escolhido pela autoria; fase %d" % number)
+		check.call(not session.board.required_nodes.is_empty() == (number in [10, 11, 16]), "Desafio escolhido pela autoria; fase %d" % number)
 		check.call(session.board.objectives_valid, "Objetivos válidos na fase %d" % number)
 		if number in [10, 11]:
 			check.call(campaign["rules_revision"] == 2, "Regras novas têm revisão própria")

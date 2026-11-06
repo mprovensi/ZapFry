@@ -25,22 +25,22 @@ func solve(model: CircuitBoard, classic: Dictionary) -> Dictionary:
 		_complete(classic["rotations"], int(classic["taps"]))
 		if not best.is_empty() and best["taps"] == classic["taps"]:
 			return best
-	for choice: Vector2i in _options(board.source_index, board.source_port):
+	for choice: Vector2i in _options(board.source_index, board.source_port, 0):
 		_complete({board.source_index: choice.y}, choice.x)
 	return best
 
 
-func _options(index: int, required: int) -> Array:
-	var key := (index << 4) | required
+func _options(index: int, incoming: int, outgoing: int) -> Array:
+	var key := (index << 8) | (incoming << 4) | outgoing
 	if options.has(key):
 		return options[key]
 	var found: Dictionary = {}
 	var cell: Dictionary = board.cells[index]
 	for turns in range(4 if board.can_rotate(index) else 1):
 		var rotation := (int(cell["rotation"]) + turns) % 4
-		var mask := Board.rotate_mask(Board.BASE_MASKS[cell["kind"]], rotation)
-		if mask != 0 and mask & required == required and not found.has(mask):
-			found[mask] = Vector2i(turns, rotation)
+		var identity := board.orientation_key(index, rotation)
+		if board.accepts_rotation(index, rotation, incoming, outgoing) and not found.has(identity):
+			found[identity] = Vector2i(turns, rotation)
 	options[key] = found.values()
 	return options[key]
 
@@ -58,7 +58,9 @@ func _build_graph() -> void:
 			for edge: Array in adjacent:
 				if edge[0] == incoming:
 					continue
-				var choices := _options(index, incoming | int(edge[0]))
+				# A busca vai do objetivo à fonte: edge aponta à entrada,
+				# e o estado incoming guarda a saída em direção ao objetivo.
+				var choices := _options(index, int(edge[0]), incoming)
 				if choices.is_empty():
 					continue
 				var destination := (int(edge[1]) << 4) | int(edge[2])
@@ -91,7 +93,7 @@ func _distances(network: Dictionary) -> Dictionary:
 	var distances: Dictionary = {}
 	var queue: Array[int] = []
 	for index: int in network:
-		var mask := board.mask_at(index, network)
+		var mask := board.ports_at(index, network).y
 		for port: int in Board.PORTS:
 			if mask & port:
 				var key := (index << 4) | port
@@ -128,7 +130,7 @@ func _attach(index: int, incoming: int, path: Dictionary, visited: int, cost: in
 		var opposite: int = edge[2]
 		if port == incoming or visited & (1 << neighbor):
 			continue
-		for choice: Vector2i in _options(index, incoming | port):
+		for choice: Vector2i in _options(index, port, incoming):
 			var estimate := choice.x + int(distances.get((neighbor << 4) | opposite, UNREACHABLE))
 			candidates.append([estimate, choice.x, choice.y, neighbor, opposite])
 	candidates.sort_custom(func(a: Array, b: Array): return a[0] < b[0])

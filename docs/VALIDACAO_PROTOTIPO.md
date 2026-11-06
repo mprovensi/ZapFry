@@ -1,10 +1,14 @@
-# Validação do protótipo 0.21.4
+# Validação do protótipo 0.22.0
 
 **Data:** 6 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.22.0:** fios de sentido único nas fases 13 e 14 e combinação com lâmpada na fase 16. Entrada e saída distintas no modelo, dicas com correção de 180°, seta persistente e aviso de bloqueio. Fases clássicas preservadas; mínimos de 18/20/24 giros e tempos de 180 s mantidos. Revisão de regras 2 nas fases alteradas usa o histórico existente dos recordes. Detalhes em [FIOS_DIRECIONAIS_022.md](FIOS_DIRECIONAIS_022.md).
+
+Fluxo completo aprovado: **41.705 verificações da engine, 55 testes Python, 806 estados de dicas, 3.640 verificações visuais/temporais e 48 de áudio**. Incluídos quatro sentidos, entrada invertida, fonte e destino direcionais, ramo de lâmpada, ciclos, estados impossíveis e dica pela interface. As 24 fases continuam solucionáveis por mouse e toque. APK/código 39 exportado e auditado com fases idênticas e 83 texturas. Instalação pendente: o S20 FE não estava disponível no ADB; nenhuma alteração foi feita no aparelho. Evidência em `builds/deploy-v0220-install.log` e `builds/directional-wires/`.
 
 **0.21.4:** volume da trilha aumentado em 6 dB: −8 dB normalmente e −16 dB durante a descarga. Mantidos efeitos, controle proporcional dos ajustes, pausa e silêncio. Fluxo obrigatório aprovado: 41.065 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio. APK/código 38 auditado com fases idênticas e 83 texturas. Após reconectar o celular, a entrega completa foi repetida e a versão foi instalada no S20 FE, com perfil idêntico e inicialização sem erros. Registro: `builds/android/install-20261106T153815939863Z/status.json`; log: `builds/deploy-v0214-install-reconnected.log`. Detalhes em [TRILHA_SONORA.md](TRILHA_SONORA.md).
 

@@ -75,9 +75,7 @@ func hint_candidate() -> int:
 		_hint_revision = board.revision
 	for value in _hint_plan.get("path", []):
 		var index := int(value)
-		var cell: Dictionary = board.cells[index]
-		var goal := Board.rotate_mask(int(Board.BASE_MASKS[cell["kind"]]), int(_hint_plan["rotations"][index]))
-		if board.can_rotate(index) and board.mask_at(index) != goal:
+		if board.can_rotate(index) and not board.matches_rotation(index, int(_hint_plan["rotations"][index])):
 			return index
 	return -1
 
@@ -87,10 +85,9 @@ func use_hint() -> int:
 	if index < 0:
 		return -1
 	var cell: Dictionary = board.cells[index]
-	var base := int(Board.BASE_MASKS[cell["kind"]])
-	var goal := Board.rotate_mask(base, int(_hint_plan["rotations"][index]))
+	var goal := board.orientation_key(index, int(_hint_plan["rotations"][index]))
 	var turns := 1
-	while turns < 4 and Board.rotate_mask(base, int(cell["rotation"]) + turns) != goal:
+	while turns < 4 and board.orientation_key(index, int(cell["rotation"]) + turns) != goal:
 		turns += 1
 	cell["rotation"] = (int(cell["rotation"]) + turns) % 4
 	cell["fixed"] = true

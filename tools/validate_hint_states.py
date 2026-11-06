@@ -29,13 +29,13 @@ def prepare():
         level = json.loads(file.read_text(encoding="utf-8"))
         number = level["id"]
         add(f"{number}-initial", copy.deepcopy(level))
-        if number == 11:
+        if number in (11, 13, 14, 16):
             state = copy.deepcopy(level)
             state.pop("reference_path")
             state.pop("reference_taps")
             for cell in state["cells"]:
                 cell.pop("solution")
-            add("11-no-authored-reference", state)
+            add(f"{number}-no-authored-reference", state)
         solution = find_solution(level)
         for order, moves in (("source", solution["moves"]), ("target", solution["moves"][::-1])):
             for fraction in (0.25, 0.5, 0.75):
@@ -93,6 +93,31 @@ def prepare():
                                        {"kind": kind, "rotation": seed},
                                        {"kind": "curve", "rotation": (seed + 1) % 4}]}
                     add(f"lamp-{kind}-{len(lamps)}-{fixed}-{seed}", state)
+    for fixed in (False, True):
+        for rotation in range(4):
+            state = {"id": 0, "size": 2, "time_limit": 90, "source_index": 0, "source_port": 8,
+                     "target_index": 1, "target_port": 2, "required_nodes": [2], "cells": [
+                         {"kind": "tee", "rotation": 2, "fixed": True},
+                         {"kind": "straight", "rotation": 1, "fixed": True},
+                         {"kind": "diode", "rotation": rotation, "fixed": fixed},
+                         {"kind": "empty", "rotation": 0}]}
+            add(f"direction-branch-{fixed}-{rotation}", state)
+            state = {"id": 0, "size": 3, "time_limit": 90, "source_index": 0, "source_port": 8,
+                     "target_index": 2, "target_port": 2, "cells": [
+                         {"kind": "straight", "rotation": 1, "fixed": True},
+                         {"kind": "diode", "rotation": rotation, "fixed": fixed},
+                         {"kind": "straight", "rotation": 1, "fixed": True},
+                         *[{"kind": "empty", "rotation": 0} for _ in range(6)]]}
+            add(f"direction-path-{fixed}-{rotation}", state)
+    for source_rotation in range(4):
+        for target_rotation in range(4):
+            for fixed in (False, True):
+                state = {"id": 0, "size": 2, "time_limit": 90, "source_index": 0, "source_port": 8,
+                         "target_index": 1, "target_port": 2, "cells": [
+                             {"kind": "diode", "rotation": source_rotation, "fixed": fixed},
+                             {"kind": "diode", "rotation": target_rotation, "fixed": fixed},
+                             {"kind": "empty", "rotation": 0}, {"kind": "empty", "rotation": 0}]}
+                add(f"direction-terminals-{fixed}-{source_rotation}-{target_rotation}", state)
     INPUT.write_text(json.dumps({"cases": cases}, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Estados de dica preparados: {len(cases)}.")
 

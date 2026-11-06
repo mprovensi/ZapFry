@@ -88,6 +88,6 @@ class RequiredNodesTests(unittest.TestCase):
         from tools.create_five_by_five_levels import SPECS, make_level
         for spec in SPECS:
             data = make_level(spec)
-            self.assertEqual(bool(data.get("required_nodes")), spec["id"] in (10, 11))
+            self.assertEqual(bool(data.get("required_nodes")), spec["id"] in (10, 11, 16))
             saved = json.loads((ROOT / f"levels/level_{spec['id']:02d}.json").read_text(encoding="utf-8"))
             self.assertEqual(data, saved)

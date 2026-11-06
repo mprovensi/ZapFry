@@ -16,7 +16,7 @@ import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MASKS = {"straight": 5, "curve": 3, "tee": 11, "empty": 0, "blocker": 0}
+MASKS = {"straight": 5, "diode": 5, "curve": 3, "tee": 11, "empty": 0, "blocker": 0}
 # Porta, variação de linha, variação de coluna, porta oposta.
 DIRECTIONS = ((1, -1, 0, 4), (2, 0, 1, 8), (4, 1, 0, 1), (8, 0, -1, 2))
 SECONDS_PER_TAP = 2.0  # Hipótese de teste; não é uma medição de jogador humano.
@@ -31,12 +31,20 @@ def movable(cell: dict) -> bool:
     return cell["kind"] not in ("empty", "blocker") and not cell.get("fixed", False)
 
 
+def ports(cell: dict, rotation: int) -> tuple[int, int]:
+    if cell["kind"] == "diode":
+        outgoing = 1 << (rotation % 4)
+        return ((outgoing << 2) | (outgoing >> 2)) & 15, outgoing
+    mask = rotate(MASKS[cell["kind"]], rotation)
+    return mask, mask
+
+
 def is_solved(level: dict, rotations: list[int] | None = None) -> bool:
     cells, width = level["cells"], level["size"]
     rotations = rotations if rotations is not None else [c["rotation"] for c in cells]
-    masks = [rotate(MASKS[c["kind"]], r) for c, r in zip(cells, rotations)]
+    connections = [ports(c, r) for c, r in zip(cells, rotations)]
     source, target = level["source_index"], level["target_index"]
-    if not masks[source] & level["source_port"]:
+    if not connections[source][0] & level["source_port"]:
         return False
     seen, frontier = {source}, [source]
     while frontier:
@@ -44,13 +52,13 @@ def is_solved(level: dict, rotations: list[int] | None = None) -> bool:
         row, column = divmod(index, width)
         for port, dr, dc, opposite in DIRECTIONS:
             nr, nc = row + dr, column + dc
-            if not masks[index] & port or not (0 <= nr < width and 0 <= nc < width):
+            if not connections[index][1] & port or not (0 <= nr < width and 0 <= nc < width):
                 continue
             neighbor = nr * width + nc
-            if neighbor not in seen and masks[neighbor] & opposite:
+            if neighbor not in seen and connections[neighbor][0] & opposite:
                 seen.add(neighbor)
                 frontier.append(neighbor)
-    return (target in seen and bool(masks[target] & level["target_port"])
+    return (target in seen and bool(connections[target][1] & level["target_port"])
             and all(i in seen for i in level.get("required_nodes", [])))
 
 
@@ -106,7 +114,7 @@ def find_solution(level: dict) -> dict | None:
         from .required_nodes_solver import solve_required
     except ImportError:
         from required_nodes_solver import solve_required
-    return solve_required(level, classic, MASKS, DIRECTIONS, rotate, movable, is_solved)
+    return solve_required(level, classic, DIRECTIONS, movable, is_solved, ports)
 
 
 def _find_path(level: dict) -> dict | None:
@@ -118,10 +126,10 @@ def _find_path(level: dict) -> dict | None:
         cell = cells[index]
         if not MASKS[cell["kind"]]:
             return None
-        required = incoming | outgoing
         for turns in range(4 if movable(cell) else 1):
             rotation = (cell["rotation"] + turns) % 4
-            if rotate(MASKS[cell["kind"]], rotation) & required == required:
+            entry, exit = ports(cell, rotation)
+            if entry & incoming == incoming and exit & outgoing == outgoing:
                 return turns, rotation
         return None
 
@@ -171,11 +179,11 @@ def validate_reference(level: dict) -> int:
         raise ValueError("Caminho de referência inválido.")
     if path[0] != level["source_index"] or path[-1] != level["target_index"] or len(set(path)) != len(path):
         raise ValueError("Referência não une os terminais ou repete células.")
-    masks = [rotate(MASKS[c["kind"]], c["solution"]) for c in cells]
+    connections = [ports(c, c["solution"]) for c in cells]
     for left, right in zip(path, path[1:]):
         dr, dc = right // width - left // width, right % width - left % width
-        ports = next(((p, o) for p, r, c, o in DIRECTIONS if (r, c) == (dr, dc)), None)
-        if ports is None or not masks[left] & ports[0] or not masks[right] & ports[1]:
+        edge = next(((p, o) for p, r, c, o in DIRECTIONS if (r, c) == (dr, dc)), None)
+        if edge is None or not connections[left][1] & edge[0] or not connections[right][0] & edge[1]:
             raise ValueError(f"Referência tem conexão interrompida entre {left} e {right}.")
     rotations = [c["rotation"] for c in cells]
     taps = 0
@@ -183,7 +191,7 @@ def validate_reference(level: dict) -> int:
     for index in range(len(cells)):
         cell = cells[index]
         options = range(4) if movable(cell) else range(1)
-        turns = next((t for t in options if rotate(MASKS[cell["kind"]], rotations[index] + t) == masks[index]), None)
+        turns = next((t for t in options if ports(cell, rotations[index] + t) == connections[index]), None)
         if turns is None:
             raise ValueError(f"Referência exige girar uma peça fixa: {index}.")
         rotations[index] = (rotations[index] + turns) % 4

@@ -155,6 +155,8 @@ func _draw() -> void:
 			draw_circle(center, 15 * detail_scale, INK)
 			draw_circle(center, 10 * detail_scale, LIVE if live else Color("aec0c4"))
 			draw_circle(center, 4 * detail_scale, Color("fff2b0") if live else Color("526a75"))
+		if cell["kind"] == "diode":
+			_draw_direction(index, center, detail_scale)
 		if bool(cell.get("fixed", false)):
 			var lock_pos := rect.position + Vector2(15, 15) * detail_scale
 			if index == model.source_index:
@@ -166,7 +168,7 @@ func _draw() -> void:
 			var progress := (energy_time - float(newly_energized[index])) / 0.42
 			if progress > 0.0 and progress < 1.0:
 				for direction in range(4):
-					if model.mask_at(index) & Board.PORTS[direction]:
+					if model.ports_at(index).y & Board.PORTS[direction]:
 						var spark := center + Vector2(Board.OFFSETS[direction]) * rect.size.x * 0.45 * progress
 						draw_circle(spark, maxf(2, 3 * detail_scale), Color(1, 0.95, 0.7, 1.0 - progress))
 		if index == activated and activation_time > 0.0:
@@ -202,6 +204,23 @@ func lamp_rect(index: int) -> Rect2:
 	var rect := cell_rect(index)
 	var extent := clampf(rect.size.x * 0.30, 27, 38)
 	return Rect2(Vector2(rect.end.x - extent - 5, rect.position.y + 5), Vector2.ONE * extent)
+
+
+func _draw_direction(index: int, center: Vector2, scale_value: float) -> void:
+	var forward := Vector2.UP.rotated(float(model.cells[index]["rotation"]) * PI * 0.5)
+	var side := forward.orthogonal()
+	var points := PackedVector2Array()
+	for offset in [Vector2(-6, -20), Vector2(-6, 3), Vector2(-14, 3), Vector2(0, 25), Vector2(14, 3), Vector2(6, 3), Vector2(6, -20)]:
+		points.append(center + (side * offset.x + forward * offset.y) * scale_value)
+	var blocked := model.direction_blocked(index)
+	draw_colored_polygon(points, Color("fa8e74") if blocked else Color("fff2b0") if model.energized.has(index) else Color("6ce1c4"))
+	points.append(points[0])
+	draw_polyline(points, INK, maxf(3, 5 * scale_value), true)
+	if blocked:
+		var rect := cell_rect(index)
+		var mark := rect.end - Vector2(15, 17) * scale_value
+		draw_circle(mark, 12 * scale_value, INK)
+		draw_string(ThemeDB.fallback_font, mark + Vector2(-3, 6) * scale_value, "!", HORIZONTAL_ALIGNMENT_LEFT, -1, maxi(14, int(21 * scale_value)), Color("fa8e74"))
 
 
 func _draw_lamp(rect: Rect2, live: bool) -> void:

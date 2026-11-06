@@ -1,6 +1,6 @@
 {
   "id": 16,
-  "name": "Engenheiro do setor",
+  "name": "Seta e luz no painel",
   "size": 5,
   "time_limit": 180,
   "source_index": 0,
@@ -27,10 +27,10 @@
   "guided": false,
   "reference_taps": 24,
   "lesson": "five_by_five",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "Respeite a seta, acenda a lâmpada e ligue OUT.",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "A seta precisa apontar no sentido da corrente.",
+    "Lâmpada e OUT devem receber energia."
   ],
   "cells": [
     {
@@ -60,9 +60,9 @@
       "solution": 0
     },
     {
-      "kind": "straight",
-      "rotation": 3,
-      "solution": 0
+      "kind": "diode",
+      "rotation": 1,
+      "solution": 2
     },
     {
       "kind": "blocker",
@@ -162,5 +162,9 @@
       "solution": 1,
       "fixed": true
     }
-  ]
+  ],
+  "required_nodes": [
+    7
+  ],
+  "rules_revision": 2
 }

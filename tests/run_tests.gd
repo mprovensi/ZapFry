@@ -16,6 +16,7 @@ const CharacterRosterTests = preload("res://tests/character_roster_tests.gd")
 const EncounterTests = preload("res://tests/encounter_tests.gd")
 const AnimationTests = preload("res://tests/animation_tests.gd")
 const RequiredNodesTests = preload("res://tests/required_nodes_tests.gd")
+const DirectionalWireTests = preload("res://tests/directional_wire_tests.gd")
 var failures := 0
 var checks := 0
 var level: Dictionary
@@ -43,6 +44,7 @@ func _run() -> void:
 	_test_level()
 	_test_session()
 	RequiredNodesTests.new().run(_check)
+	DirectionalWireTests.new().run(_check)
 	_test_intro_levels()
 	ArtTests.new().run(_check)
 	ProfileTests.new().run(_check)
@@ -83,6 +85,7 @@ func _test_encounters() -> void:
 	await EncounterTests.new().run_ui(app, self, _check)
 	AnimationTests.new().run_ui(app, _check)
 	RequiredNodesTests.new().run_ui(app, _check)
+	DirectionalWireTests.new().run_ui(app, _check)
 	app.queue_free()
 	await process_frame
 
@@ -203,9 +206,9 @@ func _test_intro_levels() -> void:
 				_check(not session.board.can_rotate(index), "Célula vazia não conta como fio")
 		for index in range(session.board.cells.size()):
 			var cell: Dictionary = session.board.cells[index]
-			var goal := Board.rotate_mask(int(Board.BASE_MASKS[cell["kind"]]), int(cell["solution"]))
+			var goal := int(cell["solution"])
 			for turn in range(4):
-				if session.board.mask_at(index) == goal:
+				if session.board.matches_rotation(index, goal):
 					break
 				session.rotate_cell(index)
 		_check(session.state == Session.State.RESOLVING, "Solução da fase %d dispara vitória" % number)
@@ -367,9 +370,9 @@ func _solve_original_through_ui(app) -> void:
 	for value in level["reference_path"]:
 		var index := int(value)
 		var cell: Dictionary = app.session.board.cells[index]
-		var goal := Board.rotate_mask(int(Board.BASE_MASKS[cell["kind"]]), int(cell["solution"]))
+		var goal := int(cell["solution"])
 		for turn in range(4):
-			if app.session.board.mask_at(index) == goal:
+			if app.session.board.matches_rotation(index, goal):
 				break
 			var local := Vector2(index % 4 + 0.5, index / 4 + 0.5) * 156
 			await _touch(app.board_view.get_global_transform() * local)
@@ -653,9 +656,9 @@ func _test_hint_playability() -> void:
 		for value in after_hint.get("path", []):
 			var cell_index := int(value)
 			var cell: Dictionary = app.session.board.cells[cell_index]
-			var goal := Board.rotate_mask(int(Board.BASE_MASKS[cell["kind"]]), int(after_hint["rotations"][cell_index]))
+			var goal := int(after_hint["rotations"][cell_index])
 			for turn in range(4):
-				if app.session.board.mask_at(cell_index) == goal or app.session.state == Session.State.RESOLVING:
+				if app.session.board.matches_rotation(cell_index, goal) or app.session.state == Session.State.RESOLVING:
 					break
 				await _touch(_cell_center(app, cell_index))
 		_check(app.session.state == Session.State.RESOLVING and app.session.board.solved, "Fase %d continua solucionável após a dica" % number)
@@ -776,9 +779,9 @@ func _test_campaign_playability() -> void:
 				_check(not app.buttons["back"].visible and not app.phase_label.get_global_rect().intersects(app.buttons["pause"].get_global_rect()), "Fase %d mostra cabeçalho sem menu e sem sobrepor a pausa" % number)
 				var cell_extent: float = app.board_view.cell_rect(0).size.x * app.stage.scale.x
 				_check(cell_extent >= 48, "Fase %d mantém células com alvo confortável na dimensão testada" % number)
-				var masks_before: Array = []
+				var orientations_before: Array = []
 				for index in range(app.session.board.cells.size()):
-					masks_before.append(app.session.board.mask_at(index))
+					orientations_before.append(app.session.board.orientation_key(index, app.session.board.cells[index]["rotation"]))
 					var center := _cell_center(app, index)
 					var local: Vector2 = app.board_view.get_global_transform().affine_inverse() * center
 					_check(app.board_view.index_at(local) == index, "Fase %d mapeia o centro da célula %d corretamente" % [number, index])
@@ -793,7 +796,7 @@ func _test_campaign_playability() -> void:
 					if not app.session.board.can_rotate(index):
 						await _touch(_cell_center(app, index))
 						_check(app.session.moves == 0 and app.session.state == Session.State.READY, "Fase %d ignora toque em peça não girável" % number)
-						_check(app.session.board.mask_at(index) == masks_before[index], "Fase %d preserva peça não girável" % number)
+						_check(app.session.board.orientation_key(index, app.session.board.cells[index]["rotation"]) == orientations_before[index], "Fase %d preserva peça não girável" % number)
 				# Pausa e reinício são exercitados em cada fase pela própria interface.
 				await _click(app.buttons["pause"].get_global_rect().get_center())
 				var remaining: float = app.session.remaining
@@ -815,8 +818,8 @@ func _test_campaign_playability() -> void:
 					await _dismiss_intro(app)
 				_check(app.session.state == Session.State.READY and app.session.moves == 0, "Fase %d reinicia a tentativa" % number)
 				_check(app.phase_label.text == "FASE %02d / 24" % number, "Reiniciar preserva o número da fase")
-				for index in range(masks_before.size()):
-					_check(app.session.board.mask_at(index) == masks_before[index], "Fase %d restaura o embaralhamento" % number)
+				for index in range(orientations_before.size()):
+					_check(app.session.board.orientation_key(index, app.session.board.cells[index]["rotation"]) == orientations_before[index], "Fase %d restaura o embaralhamento" % number)
 				# Execute somente entradas de usuário, sem alterar orientações diretamente.
 				for value in report["moves"]:
 					app.session.tick(float(audit["seconds_per_tap"]))

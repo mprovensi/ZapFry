@@ -54,10 +54,58 @@ func _exercise() -> void:
 		await _test_ending_render(app, dimensions)
 		await _test_lamp_render(app, dimensions)
 		await _test_game_chrome(app, dimensions)
+		await _test_direction_render(app, dimensions)
 	app.queue_free()
 	await process_frame
 	await EncounterTests.new().run_render(self, _check)
 	await AnimationTests.new().run_render(self, _check)
+
+
+func _test_direction_render(app, dimensions: Vector2i) -> void:
+	DirAccess.make_dir_recursive_absolute("res://builds/directional-wires")
+	for number in [13, 14, 16]:
+		app.level_index = number - 1
+		app.start_game(false)
+		app.board_view.energy_time = 1.0
+		var initial := await _render(app)
+		_check(initial.save_png("res://builds/directional-wires/%dx%d-phase-%02d.png" % [dimensions.x, dimensions.y, number]) == OK, "Prévia de fase com seta salva")
+	app.level_index = 12
+	app.start_game(false)
+	var arrow := 10
+	var cell: Dictionary = app.session.board.cells[arrow]
+	var center: Vector2 = app.board_view.cell_rect(arrow).get_center()
+	var detail: float = app.board_view.size.x / app.session.board.width / 156.0
+	var transform: Transform2D = root.get_final_transform() * app.board_view.get_global_transform_with_canvas()
+	var region := _pixel_rect(transform, Rect2(center - Vector2.ONE * 26 * detail, Vector2.ONE * 52 * detail), root.get_texture().get_size())
+	var orientations: Array[Image] = []
+	for rotation in range(4):
+		cell["rotation"] = rotation
+		app.session.board.recompute()
+		app.board_view.queue_redraw()
+		var with_arrow := await _render(app)
+		orientations.append(with_arrow)
+		cell["kind"] = "straight"
+		app.board_view.queue_redraw()
+		var without_arrow := await _render(app)
+		_check(_difference(with_arrow, without_arrow, region) > 0.02, "Seta aparece sobre o sprite nas quatro orientações: " + str(dimensions))
+		cell["kind"] = "diode"
+	for rotation in range(2):
+		_check(_difference(orientations[rotation], orientations[rotation + 2], region) > 0.02, "Giro de 180 graus muda a seta renderizada")
+	for value in app.session.board.cells:
+		value["rotation"] = value["solution"]
+	cell["rotation"] = posmod(int(cell["solution"]) - 3, 4)
+	app.session.board.recompute()
+	app._on_cell_pressed(arrow)
+	_check(app.session.board.direction_blocked(arrow) and app.feedback.contains("Seta invertida"), "Bloqueio direcional tem feedback real na tela")
+	var blocked := await _render(app)
+	cell["kind"] = "straight"
+	app.board_view.queue_redraw()
+	var without_warning := await _render(app)
+	cell["kind"] = "diode"
+	var rect: Rect2 = app.board_view.cell_rect(arrow)
+	var warning := _pixel_rect(transform, Rect2(rect.end - Vector2(30, 34) * detail, Vector2(30, 34) * detail), blocked.get_size())
+	_check(_difference(blocked, without_warning, warning) > 0.02, "Exclamação de seta bloqueada é renderizada, além da cor")
+	_check(blocked.save_png("res://builds/directional-wires/%dx%d-blocked.png" % [dimensions.x, dimensions.y]) == OK, "Prévia de seta bloqueada salva")
 
 
 func _test_game_chrome(app, dimensions: Vector2i) -> void:

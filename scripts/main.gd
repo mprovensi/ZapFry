@@ -387,8 +387,8 @@ func _update_guidance() -> void:
 	for index_value in level_data["reference_path"]:
 		var index := int(index_value)
 		var cell: Dictionary = session.board.cells[index]
-		var goal := CircuitBoard.rotate_mask(int(CircuitBoard.BASE_MASKS[cell["kind"]]), int(cell["solution"]))
-		if session.board.can_rotate(index) and session.board.mask_at(index) != goal:
+		var goal := int(cell["solution"])
+		if session.board.can_rotate(index) and not session.board.matches_rotation(index, goal):
 			board_view.guide_index = index
 			return
 
@@ -570,6 +570,10 @@ func _on_cell_pressed(index: int) -> void:
 				feedback = "Este fio está preso. Gire as outras peças."
 	else:
 		feedback = str(level_data["instruction"])
+		for wire in range(session.board.cells.size()):
+			if session.board.direction_blocked(wire):
+				feedback = "Seta invertida: a corrente entra pela cauda e sai pela ponta."
+				break
 		if session.board.target_connected() and not session.board.solved and not session.board.required_nodes.is_empty():
 			feedback = "OUT conectado. Falta acender a lâmpada marcada."
 		board_view.animate_energy(previous_energy)

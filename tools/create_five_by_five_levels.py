@@ -8,7 +8,7 @@ import argparse
 import json
 from pathlib import Path
 
-from validate_levels import MASKS, audit_level, rotate
+from validate_levels import MASKS, audit_level, ports, rotate
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTH = 5
@@ -84,14 +84,15 @@ SPECS = [{'id': 9,
   'tees': {},
   'minimum_taps': 16},
  {'id': 13,
-  'name': 'Corrente dividida',
+  'name': 'Siga a seta',
+  'diodes': [10],
   'time': 180,
   'path': [0, 1, 6, 5, 10, 15, 16, 11, 12, 7, 8, 9, 14, 19, 24],
   'costs': {1: 3, 6: 2, 5: 2, 10: 1, 15: 2, 16: 1, 11: 1, 12: 1, 7: 1, 8: 1, 9: 1, 14: 1, 19: 1},
   'tees': {12: 3},
   'blockers': [2, 17],
-  'instruction': 'Ligue IN a OUT. Há fios que não levam ao destino.',
-  'tips': ['O T oferece mais de um caminho.', 'Nem todo ramo chega à saída.'],
+  'instruction': 'A corrente só passa no sentido da seta. Gire para ligar OUT.',
+  'tips': ['A seta indica a saída da corrente.', 'Girar 180° inverte o sentido.'],
   'guided': False,
   'distractors': {3: ('straight', 3),
                   4: ('straight', 0),
@@ -101,14 +102,15 @@ SPECS = [{'id': 9,
                   21: ('straight', 3)},
   'minimum_taps': 18},
  {'id': 14,
-  'name': 'Contorno duplo',
+  'name': 'Desvio no sentido certo',
+  'diodes': [9],
   'time': 180,
   'path': [0, 5, 6, 7, 2, 3, 4, 9, 14, 13, 18, 23, 24],
-  'costs': {5: 3, 6: 1, 7: 3, 2: 2, 3: 1, 4: 2, 9: 1, 14: 1, 13: 2, 18: 1, 23: 3},
+  'costs': {5: 3, 6: 1, 7: 3, 2: 2, 3: 1, 4: 2, 9: 2, 14: 1, 13: 2, 18: 1, 23: 2},
   'tees': {6: 0, 14: 3},
   'blockers': [1, 8],
-  'instruction': 'Ligue IN a OUT. Há fios que não levam ao destino.',
-  'tips': ['O T oferece mais de um caminho.', 'Nem todo ramo chega à saída.'],
+  'instruction': 'Contorne os fusíveis e faça a corrente seguir a seta.',
+  'tips': ['Contorne o fusível queimado.', 'A corrente entra pela cauda da seta.'],
   'guided': False,
   'distractors': {10: ('curve', 1),
                   11: ('straight', 0),
@@ -135,14 +137,16 @@ SPECS = [{'id': 9,
                   12: ('straight', 1)},
   'minimum_taps': 22},
  {'id': 16,
-  'name': 'Engenheiro do setor',
+  'name': 'Seta e luz no painel',
+  'diodes': [5],
+  'required_nodes': [7],
   'time': 180,
   'path': [0, 5, 10, 11, 12, 7, 8, 9, 14, 13, 18, 17, 22, 23, 24],
   'costs': {5: 1, 10: 3, 11: 1, 12: 3, 7: 2, 8: 1, 9: 1, 14: 2, 13: 1, 18: 3, 17: 3, 22: 2, 23: 1},
   'tees': {11: 2, 14: 3},
   'blockers': [6, 16],
-  'instruction': 'Ligue IN a OUT. Há fios que não levam ao destino.',
-  'tips': ['O T oferece mais de um caminho.', 'Nem todo ramo chega à saída.'],
+  'instruction': 'Respeite a seta, acenda a lâmpada e ligue OUT.',
+  'tips': ['A seta precisa apontar no sentido da corrente.', 'Lâmpada e OUT devem receber energia.'],
   'guided': False,
   'distractors': {1: ('curve', 1),
                   2: ('straight', 1),
@@ -171,8 +175,11 @@ def make_level(spec: dict, width: int = WIDTH) -> dict:
             if rotate(MASKS[kind], goal) & required != required:
                 raise ValueError(f"T incompatível: fase {spec['id']}, célula {index}.")
         else:
-            kind = "straight" if required in (5, 10) else "curve"
-            goal = next(r for r in range(4) if rotate(MASKS[kind], r) == required)
+            kind = "diode" if index in spec.get("diodes", []) else "straight" if required in (5, 10) else "curve"
+            if kind == "diode" and required not in (5, 10):
+                raise ValueError("Fio direcional precisa ser reto.")
+            goal = next(r for r in range(4) if ports({"kind": kind}, r)[0] & incoming
+                        and ports({"kind": kind}, r)[1] & outgoing)
         turns = spec["costs"].get(index, 0)
         initial = (goal - turns) % 4
         if index in fixed and turns:
@@ -192,8 +199,7 @@ def make_level(spec: dict, width: int = WIDTH) -> dict:
     for index, goal in spec.get("lamp_solutions", {}).items():
         cell = cells[index]
         cell["solution"] = goal
-        branch_taps += next(t for t in range(4) if rotate(MASKS[cell["kind"]], cell["rotation"] + t)
-                           == rotate(MASKS[cell["kind"]], goal))
+        branch_taps += next(t for t in range(4) if ports(cell, cell["rotation"] + t) == ports(cell, goal))
     result = {"id": spec["id"], "name": spec["name"], "size": width, "time_limit": spec["time"],
               "source_index": path[0], "source_port": 8, "target_index": path[-1], "target_port": 2,
               "reference_path": path, "guided": spec.get("guided", False),
@@ -201,6 +207,8 @@ def make_level(spec: dict, width: int = WIDTH) -> dict:
               "instruction": spec["instruction"], "tip_lines": spec["tips"], "cells": cells}
     if spec.get("required_nodes"):
         result.update(required_nodes=spec["required_nodes"], rules_revision=2)
+    if spec.get("diodes"):
+        result["rules_revision"] = 2
     report = audit_level(result)
     expected_minimum = spec.get("minimum_taps", result["reference_taps"])
     if report["minimum_taps"] != expected_minimum:

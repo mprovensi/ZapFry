@@ -81,7 +81,7 @@ static func sample_transition(frames: SpriteFrames, state: StringName, seconds: 
 func wire_texture(kind: String, live: bool) -> Texture2D:
 	# Cada entrada é opcional: a ausência mantém o desenho geométrico legível.
 	match kind:
-		"straight": return straight_live if live else straight
+		"straight", "diode": return straight_live if live else straight
 		"curve": return curve_live if live else curve
 		"tee": return tee_live if live else tee
 		"blocker": return blocker

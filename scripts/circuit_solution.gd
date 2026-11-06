@@ -81,7 +81,7 @@ func _orientation(index: int, incoming: int, outgoing: int) -> Vector2i:
 	if base != 0:
 		for turns in range(4 if board.can_rotate(index) else 1):
 			var rotation := (int(cell["rotation"]) + turns) % 4
-			if Board.rotate_mask(base, rotation) & (incoming | outgoing) == (incoming | outgoing):
+			if board.accepts_rotation(index, rotation, incoming, outgoing):
 				result = Vector2i(turns, rotation)
 				break
 	choices[key] = result

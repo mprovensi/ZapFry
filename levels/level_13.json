@@ -1,6 +1,6 @@
 {
   "id": 13,
-  "name": "Corrente dividida",
+  "name": "Siga a seta",
   "size": 5,
   "time_limit": 180,
   "source_index": 0,
@@ -27,10 +27,10 @@
   "guided": false,
   "reference_taps": 18,
   "lesson": "five_by_five",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "A corrente só passa no sentido da seta. Gire para ligar OUT.",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "A seta indica a saída da corrente.",
+    "Girar 180° inverte o sentido."
   ],
   "cells": [
     {
@@ -86,9 +86,9 @@
       "solution": 2
     },
     {
-      "kind": "straight",
-      "rotation": 3,
-      "solution": 0
+      "kind": "diode",
+      "rotation": 1,
+      "solution": 2
     },
     {
       "kind": "curve",
@@ -162,5 +162,6 @@
       "solution": 0,
       "fixed": true
     }
-  ]
+  ],
+  "rules_revision": 2
 }

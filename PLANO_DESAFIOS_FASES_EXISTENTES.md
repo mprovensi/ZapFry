@@ -2,7 +2,8 @@
 
 **Data:** 5 de novembro de 2026.  
 **Base:** versão 0.20.0, Godot 4.7.2 / GDScript.  
-**Status:** primeira entrega implementada, testada e instalada no S20 FE na versão 0.21.0: lâmpadas nas fases 10 e 11. As demais mecânicas continuam planejadas. Detalhes em [docs/DESAFIOS_021.md](docs/DESAFIOS_021.md).  
+**Status:** lâmpadas nas fases 10 e 11 entregues na 0.21.0. Sentido único nas fases 13 e 14 e combinação com lâmpada na 16 implementados e testados na 0.22.0; APK pronto, instalação pendente de reconexão do S20 FE. Alarmes e segundo lote continuam planejados. Detalhes em [docs/DESAFIOS_021.md](docs/DESAFIOS_021.md) e [docs/FIOS_DIRECIONAIS_022.md](docs/FIOS_DIRECIONAIS_022.md).
+
 **Objetivo:** aumentar a variedade de raciocínio da campanha atual antes de criar as fases 25–32.
 
 ## 1. Diretrizes
@@ -111,7 +112,7 @@ O resolvedor atual procura um caminho até um destino. Isso não basta para acei
 1. **Baseline:** guardar resultados atuais das 24 fases, tempos, soluções mínimas e regressões de dicas. Definir dados e invariantes do primeiro lote.
 2. **Prova do resolvedor:** criar tabuleiros pequenos com objetivos em ramificações, sentido único e terminais proibidos. Confirmar soluções e dicas por uma implementação independente antes de editar a campanha.
 3. **Lâmpada:** integrar modelo, dica, ícone e feedback; aplicar nas fases 10 e 11 e validar jogabilidade. A fase 12 permanece clássica.
-4. **Sentido único:** integrar propagação dirigida, dica e setas; aplicar nas fases 13–16.
+4. **Sentido único:** integrar propagação dirigida, dica e setas; aplicar nas fases 13, 14 e 16. A fase 15 permanece clássica.
 5. **Alarme:** integrar condição recuperável e avaliação da rede completa; aplicar nas fases 17–20.
 6. **Combinações:** ajustar fases 21–24 com regras já ensinadas e executar playtest de dificuldade.
 7. **Segundo lote:** implementar interruptor e dupla separadamente, com seus testes de ações e dicas; depois explorar o segundo equipamento usando o sistema de objetivos existente.

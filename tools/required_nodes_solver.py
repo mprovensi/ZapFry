@@ -8,7 +8,7 @@ from functools import cache
 import heapq
 
 
-def solve_required(level, classic, masks, directions, rotate, movable, is_solved):
+def solve_required(level, classic, directions, movable, is_solved, ports):
     cells, width = level["cells"], level["size"]
     source, target = level["source_index"], level["target_index"]
     goals = [target, *level["required_nodes"]]
@@ -16,14 +16,14 @@ def solve_required(level, classic, masks, directions, rotate, movable, is_solved
     expanded = 0
 
     @cache
-    def options(index, required):
+    def options(index, incoming, outgoing):
         cell = cells[index]
         found = {}
         for turns in range(4 if movable(cell) else 1):
             rotation = (cell["rotation"] + turns) % 4
-            mask = rotate(masks[cell["kind"]], rotation)
-            if mask and mask & required == required and mask not in found:
-                found[mask] = (turns, rotation)
+            entry, exit = ports(cell, rotation)
+            if (entry | exit) and entry & incoming == incoming and exit & outgoing == outgoing and (entry, exit) not in found:
+                found[entry, exit] = (turns, rotation)
         return tuple(found.values())
 
     neighbors = {}
@@ -35,7 +35,7 @@ def solve_required(level, classic, masks, directions, rotate, movable, is_solved
                             if 0 <= row + dr < width and 0 <= col + dc < width]
         for incoming in (0, 1, 2, 4, 8):
             for port, neighbor, opposite in neighbors[index]:
-                choices = options(index, incoming | port) if port != incoming else ()
+                choices = options(index, port, incoming) if port != incoming else ()
                 if choices:
                     reverse.setdefault((neighbor, opposite), []).append(
                         ((index, incoming), min(c for c, _ in choices)))
@@ -61,7 +61,7 @@ def solve_required(level, classic, masks, directions, rotate, movable, is_solved
         # Dijkstra inverso: a rede é destino fixo, nunca um atalho alterável.
         distance, heap = {}, []
         for index, rotation in network.items():
-            mask = rotate(masks[cells[index]["kind"]], rotation)
+            mask = ports(cells[index], rotation)[1]
             for port in (1, 2, 4, 8):
                 if mask & port:
                     distance[index, port] = 0
@@ -90,7 +90,7 @@ def solve_required(level, classic, masks, directions, rotate, movable, is_solved
             for port, neighbor, opposite in neighbors[index]:
                 if port == incoming or visited & (1 << neighbor):
                     continue
-                for turns, rotation in options(index, incoming | port):
+                for turns, rotation in options(index, port, incoming):
                     candidates.append((turns + distance.get((neighbor, opposite), float("inf")),
                                        turns, rotation, neighbor, opposite))
             for _, turns, rotation, neighbor, opposite in sorted(candidates):
@@ -106,7 +106,7 @@ def solve_required(level, classic, masks, directions, rotate, movable, is_solved
         # Uma solução válida que atinge o mínimo até OUT já é ótima globalmente.
         if best is not None and best[0] == classic["minimum_taps"]:
             return {**classic, "path": list(best[1]), "rotations": {str(i): r for i, r in best[1].items()}}
-    for turns, rotation in options(source, level["source_port"]):
+    for turns, rotation in options(source, level["source_port"], 0):
         complete({source: rotation}, turns)
     if best is None:
         return None
