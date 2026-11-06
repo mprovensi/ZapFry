@@ -4,7 +4,7 @@
 
 **Novidade 0.22.0:** fios de sentido único nas fases 13 e 14; na 16, seta combinada com lâmpada. A corrente entra pela cauda e sai pela ponta; girar 180° inverte o sentido. Dicas consideram a direção, com alerta de bloqueio e símbolo persistente no fio. Mantidos mínimos de 18/20/24 giros, tempo de 180 s e fases clássicas 12/15. Detalhes em [docs/FIOS_DIRECIONAIS_022.md](docs/FIOS_DIRECIONAIS_022.md).
 
-**0.22.0 pronta para instalar:** testes obrigatórios aprovados e APK/código 39 auditado. Instalação pendente porque o S20 FE não estava disponível no ADB. Última versão instalada confirmada: 0.21.4.
+**0.22.0 instalada no S20 FE:** testes obrigatórios aprovados e APK/código 39 auditado. Save preservado e inicialização sem erros. Confira as setas nas fases 13/14 e a combinação com lâmpada na 16.
 
 **Revisão 0.21.4:** música aumentada em 6 dB, de −14 para −8 dB no nível máximo dos ajustes. Durante o choque, passa de −22 para −16 dB, preservando a redução de 8 dB para destacar o zap. Preferências de volume e efeitos preservados.
 

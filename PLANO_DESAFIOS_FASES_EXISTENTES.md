@@ -2,7 +2,7 @@
 
 **Data:** 5 de novembro de 2026.  
 **Base:** versão 0.20.0, Godot 4.7.2 / GDScript.  
-**Status:** lâmpadas nas fases 10 e 11 entregues na 0.21.0. Sentido único nas fases 13 e 14 e combinação com lâmpada na 16 implementados e testados na 0.22.0; APK pronto, instalação pendente de reconexão do S20 FE. Alarmes e segundo lote continuam planejados. Detalhes em [docs/DESAFIOS_021.md](docs/DESAFIOS_021.md) e [docs/FIOS_DIRECIONAIS_022.md](docs/FIOS_DIRECIONAIS_022.md).
+**Status:** lâmpadas nas fases 10 e 11 entregues na 0.21.0. Sentido único nas fases 13 e 14 e combinação com lâmpada na 16 implementados, testados e instalados no S20 FE na 0.22.0. Alarmes e segundo lote continuam planejados. Detalhes em [docs/DESAFIOS_021.md](docs/DESAFIOS_021.md) e [docs/FIOS_DIRECIONAIS_022.md](docs/FIOS_DIRECIONAIS_022.md).
 
 **Objetivo:** aumentar a variedade de raciocínio da campanha atual antes de criar as fases 25–32.
 
