@@ -1,6 +1,8 @@
-# Zap & Fry — protótipo 0.21.0
+# Zap & Fry — protótipo 0.21.1
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Revisão 0.21.1:** cabeçalho e rodapé da partida usam a textura e o sombreamento da pausa, substituindo as faixas quase pretas. Textos com contorno, legendas maiores e botões inferiores com tamanhos iguais e margens simétricas. Detalhes em [docs/INTERFACE_PARTIDA_0211.md](docs/INTERFACE_PARTIDA_0211.md).
 
 **Novidade 0.21.0:** lâmpadas obrigatórias nas fases 10 e 11, com ícone apagado/aceso, contador no cabeçalho e aviso quando OUT está ligado mas falta a lâmpada. A fase 11 usa um ramo do T; dicas resolvem a rede completa. Mantidos os mínimos de 12/14 giros e os tempos de 150/180 s. As demais fases continuam clássicas. Recordes anteriores ficam preservados por revisão de regras no perfil v7. Detalhes em [docs/DESAFIOS_021.md](docs/DESAFIOS_021.md).
 
@@ -16,7 +18,7 @@
 
 **Revisão 0.17.1:** dois balões por encontro — Executor e condenado —, 24 conversas reescritas, cores próprias por personagem e texto 33% maior. A apresentação mantém Pular, pausa e bloqueio da matriz. Detalhes em [docs/ENCONTROS_017.md](docs/ENCONTROS_017.md).
 
-**0.21.0 instalada no S20 FE:** atualização/código 34 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Rejogue as fases 10 e 11 pelo seletor para experimentar as lâmpadas. Conferência humana da nova regra no aparelho permanece pendente.
+**0.21.1 instalada no S20 FE:** atualização/código 35 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Rejogue as fases 10 e 11 pelo seletor para experimentar as lâmpadas. Capturas da nova interface em `builds/game-chrome/`; avaliação humana do acabamento no aparelho permanece pendente.
 
 Puzzle de rotação de fios com humor macabro e visual em Cartoon 2D com sprites substituíveis.
 Desenvolvido em **Godot 4.7.2 estável, GDScript e renderer Compatibility**.

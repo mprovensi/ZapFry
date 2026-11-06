@@ -52,6 +52,7 @@ const PANEL := Color("172a37")
 const EDGE := Color("34505f")
 const CREAM := Color("f1eee1")
 const MUTED := Color("94adb8")
+const ROOM_SHADE := Color(0.015, 0.03, 0.045, 0.38)
 const YELLOW := Color("ffce49")
 const MINT := Color("6ce1c4")
 const CORAL := Color("fa8e74")
@@ -130,25 +131,29 @@ func _ready() -> void:
 	add_child(stage)
 	phase_label = Label.new()
 	phase_label.name = "CurrentPhase"
-	phase_label.position = Vector2(24, 20)
-	phase_label.size = Vector2(236, 44)
+	phase_label.position = Vector2(28, 12)
+	phase_label.size = Vector2(232, 48)
 	phase_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	phase_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	phase_label.add_theme_font_size_override("font_size", 32)
+	phase_label.add_theme_font_size_override("font_size", 30)
 	phase_label.add_theme_color_override("font_color", YELLOW)
+	phase_label.add_theme_color_override("font_outline_color", INK)
+	phase_label.add_theme_constant_override("outline_size", 4)
 	stage.add_child(phase_label)
 	feedback_label = Label.new()
 	feedback_label.name = "GameFeedback"
-	feedback_label.position = Vector2(32, 1378)
-	feedback_label.size = Vector2(656, 76)
+	feedback_label.position = Vector2(40, 1378)
+	feedback_label.size = Vector2(640, 80)
 	feedback_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	feedback_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	feedback_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	feedback_label.add_theme_font_size_override("font_size", 26)
+	feedback_label.add_theme_font_size_override("font_size", 28)
 	feedback_label.max_lines_visible = 2
 	feedback_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	feedback_label.add_theme_color_override("font_color", CREAM)
+	feedback_label.add_theme_color_override("font_outline_color", INK)
+	feedback_label.add_theme_constant_override("outline_size", 4)
 	feedback_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stage.add_child(feedback_label)
 	cable_view = PowerCableView.new()
@@ -192,12 +197,14 @@ func _ready() -> void:
 	for key in ["start", "levels", "settings"]:
 		buttons[key].add_theme_font_size_override("font_size", 28)
 	_make_button("back", "MENU", Rect2(578, 52, 110, 52), show_menu)
-	_make_button("restart", "↻ REINICIAR", Rect2(24, 1474, 320, 96), start_game.bind(false))
-	_make_button("hint", "DICA GRÁTIS", Rect2(368, 1474, 328, 96), use_free_hint, true)
+	_make_button("restart", "↻ REINICIAR", Rect2(40, 1474, 308, 96), start_game.bind(false))
+	_make_button("hint", "DICA GRÁTIS", Rect2(372, 1474, 308, 96), use_free_hint, true)
 	_make_button("pause", "Ⅱ", Rect2(600, 14, 96, 96), pause_game)
 	buttons["pause"].tooltip_text = "Pausar jogo"
 	for key in ["restart", "hint", "back"]:
 		buttons[key].add_theme_font_size_override("font_size", 26)
+	for key in ["restart", "hint"]:
+		buttons[key].add_theme_font_size_override("font_size", 28)
 	buttons["pause"].add_theme_font_size_override("font_size", 38)
 	for sector in range(3):
 		_make_button("sector_%d" % sector, "%d × %d" % [sector + 4, sector + 4], Rect2(32 + sector * 224, 176, 208, 56), _open_sector.bind(sector))
@@ -855,26 +862,42 @@ func _draw_selector() -> void:
 
 
 func _draw_game() -> void:
-	draw_rect(Rect2(0, 0, 720, 122), Color(0.025, 0.045, 0.065, 0.94))
-	draw_rect(Rect2(0, 1374, 720, 226), Color(0.025, 0.045, 0.065, 0.83))
+	_draw_game_chrome(Rect2(0, 0, 720, 122))
+	_draw_game_chrome(Rect2(0, 1374, 720, 226))
 	if session.board.required_nodes.is_empty():
-		_text("PAINEL %d × %d" % [session.board.width, session.board.width], Vector2(26, 94), 20, MUTED)
+		_hud_text("PAINEL %d × %d" % [session.board.width, session.board.width], Vector2(28, 94), 20, MUTED)
 	else:
-		_text("LÂMPADA %d/%d" % [session.board.lit_required_count(), session.board.required_nodes.size()], Vector2(26, 94), 20, YELLOW)
-	_text("TEMPO" if session.has_time_limit() else "SEM TEMPO", Vector2(296, 32), 14, MUTED)
+		_hud_text("LÂMPADA %d/%d" % [session.board.lit_required_count(), session.board.required_nodes.size()], Vector2(28, 94), 20, YELLOW)
+	_hud_text("TEMPO" if session.has_time_limit() else "SEM TEMPO", Vector2(294, 30), 18, MUTED)
 	var seconds := int(ceil(session.remaining))
 	var clock_text := "%02d:%02d" % [seconds / 60, seconds % 60]
 	if not session.has_time_limit():
 		clock_text = "LIVRE"
-	_text(clock_text, Vector2(292, 82), 40, CORAL if session.has_time_limit() and seconds <= 15 else CREAM)
-	_text("GIROS", Vector2(476, 32), 14, MUTED)
-	_text("%02d" % session.moves, Vector2(474, 82), 36, CREAM)
+	_hud_text(clock_text, Vector2(290, 84), 42, CORAL if session.has_time_limit() and seconds <= 15 else CREAM)
+	_hud_text("GIROS", Vector2(480, 30), 18, MUTED)
+	_hud_text("%02d" % session.moves, Vector2(478, 84), 38, CREAM)
 	var wire_count := 0
 	for cell in session.board.cells:
 		if cell["kind"] not in ["empty", "blocker"]:
 			wire_count += 1
 	var charge := float(session.board.energized.size()) / float(maxi(wire_count, 1))
 	_draw_charge_meter(Vector2(544, 246), charge, session.board.energized.size(), wire_count)
+
+
+func _draw_game_chrome(rect: Rect2) -> void:
+	# Mesmo recorte e sombreamento da pausa, sem herdar o tremor da sala.
+	if art_pack != null and art_pack.game_background != null:
+		var texture := art_pack.game_background
+		var ratio := texture.get_size() / GAME_DESIGN
+		draw_texture_rect_region(texture, rect, Rect2(rect.position * ratio, rect.size * ratio))
+	else:
+		draw_rect(rect, PANEL)
+	draw_rect(rect, ROOM_SHADE)
+
+
+func _hud_text(caption: String, point: Vector2, font_size: int, color: Color) -> void:
+	draw_string_outline(ThemeDB.fallback_font, point, caption, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, 4, INK)
+	_text(caption, point, font_size, color)
 
 
 func _draw_charge_meter(center: Vector2, fraction: float, active: int, total: int) -> void:
@@ -964,7 +987,7 @@ func _draw_overlay() -> void:
 	if art_pack != null and art_pack.game_background != null:
 		overlay.draw_texture_rect(art_pack.game_background, Rect2(Vector2.ZERO, GAME_DESIGN), false)
 	_draw_floor_strip(overlay, 710, 74)
-	overlay.draw_rect(Rect2(Vector2.ZERO, GAME_DESIGN), Color(0.015, 0.03, 0.045, 0.38))
+	overlay.draw_rect(Rect2(Vector2.ZERO, GAME_DESIGN), ROOM_SHADE)
 	var title := "PAUSADO"
 	var accent := YELLOW
 	var summary := "O tempo está parado."

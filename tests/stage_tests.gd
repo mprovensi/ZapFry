@@ -37,6 +37,10 @@ func run_ui(app, check: Callable) -> void:
 		check.call(not app.buttons["back"].visible, "Partida mantém acesso ao menu somente pela pausa")
 		check.call(app.feedback_label.get_global_rect().end.y < app.buttons["hint"].get_global_rect().position.y, "Feedback cabe acima dos botões do rodapé")
 		check.call(subject.end.y < app.buttons["hint"].get_global_rect().position.y, "Cadeira não sobrepõe botões de jogo")
+		check.call(app.buttons["hint"].size == app.buttons["restart"].size, "Ações do rodapé têm o mesmo tamanho")
+		check.call(app.feedback_label.get_theme_font_size("font_size") >= 28 and app.feedback_label.get_theme_constant("outline_size") >= 2, "Feedback mantém leitura e contorno sobre a textura da sala")
+		var feedback_font: Font = app.feedback_label.get_theme_font("font")
+		check.call(feedback_font.get_height(app.feedback_label.get_theme_font_size("font_size")) * 2 <= app.feedback_label.size.y, "Duas linhas de feedback cabem na faixa inferior")
 	var cells: Array = app.session.board.cells.duplicate(true)
 	var remaining: float = app.session.remaining
 	var moves: int = app.session.moves

@@ -53,10 +53,31 @@ func _exercise() -> void:
 		await _test_render(app, dimensions)
 		await _test_ending_render(app, dimensions)
 		await _test_lamp_render(app, dimensions)
+		await _test_game_chrome(app, dimensions)
 	app.queue_free()
 	await process_frame
 	await EncounterTests.new().run_render(self, _check)
 	await AnimationTests.new().run_render(self, _check)
+
+
+func _test_game_chrome(app, dimensions: Vector2i) -> void:
+	DirAccess.make_dir_recursive_absolute("res://builds/game-chrome")
+	app.level_index = 10
+	app.start_game(false)
+	app.board_view.energy_time = 1.0
+	var game := await _render(app)
+	var transform: Transform2D = root.get_final_transform() * app.stage.get_global_transform_with_canvas()
+	# Faixas livres de texto, botões e atores: comparar a textura com a pausa.
+	var regions: Array[Rect2i] = []
+	for rect in [Rect2(12, 2, 696, 8), Rect2(12, 1580, 696, 12)]:
+		regions.append(_pixel_rect(transform, rect, game.get_size()))
+	app.pause_game()
+	var paused := await _render(app)
+	for region in regions:
+		_check(region.has_area() and _difference(game, paused, region) < 0.003, "Cabeçalho e rodapé usam textura e tom da pausa: " + str(dimensions))
+	app.resume_game()
+	_check(game.save_png("res://builds/game-chrome/%dx%d-game.png" % [dimensions.x, dimensions.y]) == OK, "Prévia da interface da partida salva")
+	_check(paused.save_png("res://builds/game-chrome/%dx%d-pause.png" % [dimensions.x, dimensions.y]) == OK, "Prévia de comparação da pausa salva")
 
 
 func _test_lamp_render(app, dimensions: Vector2i) -> void:

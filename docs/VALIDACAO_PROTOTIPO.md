@@ -1,10 +1,14 @@
-# Validação do protótipo 0.21.0
+# Validação do protótipo 0.21.1
 
-**Data:** 5 de novembro de 2026.  
+**Data:** 6 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.21.1:** cabeçalho e rodapé da partida passam a usar a textura e o tom do menu de pausa. Textos com contorno, legendas maiores e botões inferiores simétricos. Comparação de pixels confirma o fundo nas três proporções; cabeçalho não se desloca durante o tremor. Regras e efeitos preservados. Detalhes em [INTERFACE_PARTIDA_0211.md](INTERFACE_PARTIDA_0211.md).
+
+Fluxo obrigatório aprovado: **41.059 verificações da engine, 49 testes Python, 761 estados de dicas, 3.601 verificações visuais/temporais e 48 de áudio**. APK/código 35 instalado no S20 FE, com save idêntico e inicialização sem erros. Fases e 83 texturas auditadas. Evidências em `builds/game-chrome/`, `builds/deploy-v0211-install.log` e `builds/android/install-20261106T144921398356Z/status.json`. SHA-256: `9865310f1b300d697eacf5ef69b656482533d906a6f7ad0b65d8dddf6c9262a5`.
 
 **0.21.0:** primeira entrega dos desafios: lâmpadas obrigatórias nas fases 10 e 11, com ramo de T na 11, ícone apagado/aceso, contador e aviso de objetivo pendente. Dicas consideram a rede inteira; mínimos de 12/14 giros e tempos de 150/180 s mantidos. Demais fases seguem clássicas. Perfil v7 arquiva recordes por revisão sem apagar desbloqueios, encontros ou preferências. Detalhes em [DESAFIOS_021.md](DESAFIOS_021.md).
 
