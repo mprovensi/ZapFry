@@ -70,15 +70,15 @@ func _test_game_chrome(app, dimensions: Vector2i) -> void:
 	# Aplicar o tom da pausa à parede logo abaixo do cabeçalho permite
 	# comparar o alinhamento real dos recortes, sem cálculos de cor em CPU.
 	var shade := ColorRect.new()
-	shade.position = Vector2(0, 122)
-	shade.size = Vector2(720, 16)
+	shade.position = Vector2(0, app.GAME_HEADER_HEIGHT)
+	shade.size = Vector2(720, 26)
 	shade.color = app.ROOM_SHADE
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	app.stage.add_child(shade)
 	var shaded := await _render(app)
 	shade.queue_free()
 	await process_frame
-	var join := _pixel_rect(transform, Rect2(8, 124, 704, 10), game.get_size())
+	var join := _pixel_rect(transform, Rect2(8, 114, 704, 20), game.get_size())
 	# Faixas livres de texto, botões e atores: comparar a textura com a pausa.
 	var regions: Array[Rect2i] = []
 	for rect in [Rect2(12, 2, 696, 8), Rect2(12, 1580, 696, 12)]:
@@ -168,7 +168,7 @@ func _test_render(app, dimensions: Vector2i) -> void:
 	var transform: Transform2D = root.get_final_transform() * app.stage.get_global_transform_with_canvas()
 	# Faixa de parede fora da matriz e dos atores; o clarão está desligado nesta comparação.
 	var wall := _pixel_rect(transform, Rect2(8, 470, 24, 500), stable.get_size())
-	var header := _pixel_rect(transform, Rect2(0, 0, 720, 120), stable.get_size())
+	var header := _pixel_rect(transform, Rect2(0, 0, 720, app.GAME_HEADER_HEIGHT), stable.get_size())
 	var board_transform: Transform2D = root.get_final_transform() * app.board_view.get_global_transform_with_canvas()
 	var plate: Rect2 = app.board_view.cell_rect(14).grow(-18)
 	var plate_pixels := _pixel_rect(board_transform, plate, stable.get_size())

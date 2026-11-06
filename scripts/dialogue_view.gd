@@ -21,14 +21,15 @@ var body: Label
 var _pointer_down := false
 var _bubble_style: StyleBoxFlat
 var _tail: Control
+var content_top := 0.0
 
 
 func _ready() -> void:
 	size = Vector2(720, 1600)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var area := ColorRect.new()
-	area.position = Vector2(0, 122)
-	area.size = Vector2(720, 1478)
+	area.position = Vector2(0, content_top)
+	area.size = Vector2(720, size.y - content_top)
 	area.color = Color(0.015, 0.025, 0.04, 0.3)
 	area.gui_input.connect(_on_pointer)
 	add_child(area)

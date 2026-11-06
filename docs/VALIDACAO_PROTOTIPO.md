@@ -1,10 +1,12 @@
-# Validação do protótipo 0.21.2
+# Validação do protótipo 0.21.3
 
 **Data:** 6 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.21.3:** fundo claro iniciado na linha divisória do cabeçalho, retirando a faixa escura restante. Limite único de 112 unidades compartilhado por cabeçalho, clarão e área da conversa. Fluxo aprovado: 41.065 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio. APK/código 37 instalado no S20 FE, com save idêntico e inicialização sem erros. Evidência em `builds/android/install-20261106T151544944704Z/status.json`; capturas em `builds/game-chrome/`.
 
 **0.21.2:** conjunto da sala elevado oito unidades e recorte do fundo alinhado ao cabeçalho, removendo a faixa duplicada. Mantidos tremor com bordas cobertas, flash, esqueleto, controles e regras. Fluxo completo aprovado: 41.062 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio. APK/código 36 instalado no S20 FE com save idêntico e inicialização sem erros. Registro em `builds/android/install-20261106T150912881772Z/status.json`; capturas em `builds/game-chrome/` e detalhes em [INTERFACE_PARTIDA_0211.md](INTERFACE_PARTIDA_0211.md).
 

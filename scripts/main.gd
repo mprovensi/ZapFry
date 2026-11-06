@@ -44,6 +44,7 @@ const LEVEL_PATHS := ["res://levels/level_01.json", "res://levels/level_02.json"
 	"res://levels/level_23.json", "res://levels/level_24.json"]
 const DESIGN := Vector2(720, 1280)
 const GAME_DESIGN := Vector2(720, 1600)
+const GAME_HEADER_HEIGHT := 112.0
 const SWITCH_PULL_TIME := 0.4
 const ZAP_END_TIME := 1.75
 const RESOLUTION_DURATION := 2.4
@@ -185,8 +186,8 @@ func _ready() -> void:
 	# Acima da matriz e dos atores; a área útil deixa cabeçalho e rodapé intactos.
 	shock_flash = ColorRect.new()
 	shock_flash.name = "ShockFlash"
-	shock_flash.position = Vector2(0, 122)
-	shock_flash.size = Vector2(720, 1252)
+	shock_flash.position = Vector2(0, GAME_HEADER_HEIGHT)
+	shock_flash.size = Vector2(720, 1374 - GAME_HEADER_HEIGHT)
 	shock_flash.color = Color(0.58, 0.84, 1.0, 0.0)
 	shock_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	shock_flash.visible = false
@@ -221,6 +222,7 @@ func _ready() -> void:
 	buttons["start_over"].add_theme_font_size_override("font_size", 22)
 	buttons["start_over"].tooltip_text = "Voltar à fase 1 e ao menu, mantendo recordes e desbloqueios"
 	dialogue = DialogueView.new()
+	dialogue.content_top = GAME_HEADER_HEIGHT
 	stage.add_child(dialogue)
 	dialogue.finished.connect(_on_intro_finished)
 	dialogue.advanced.connect(func():
@@ -867,7 +869,7 @@ func _draw_selector() -> void:
 
 
 func _draw_game() -> void:
-	_draw_game_chrome(Rect2(0, 0, 720, 122))
+	_draw_game_chrome(Rect2(0, 0, 720, GAME_HEADER_HEIGHT))
 	_draw_game_chrome(Rect2(0, 1374, 720, 226))
 	if session.board.required_nodes.is_empty():
 		_hud_text("PAINEL %d × %d" % [session.board.width, session.board.width], Vector2(28, 94), 20, MUTED)

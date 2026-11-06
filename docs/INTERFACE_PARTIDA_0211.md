@@ -23,3 +23,11 @@ Goblin, medidor, grade e condenado subiram oito unidades juntos. O piso superior
 Novo teste de pixels compara a parede imediatamente abaixo do cabeçalho com o recorte da pausa, aplicando o mesmo sombreamento na GPU. Cobertura em três proporções, além dos testes existentes de cabos, toque, tremor, flash e esqueleto. Entrega completa aprovada: 41.062 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio.
 
 Versão 0.21.2/código 36 instalada no S20 FE em 6 de novembro de 2026, com perfil idêntico antes/depois, inicialização sem erros e 83 texturas auditadas. Registro: `builds/android/install-20261106T150912881772Z/status.json`; log: `builds/deploy-v0212-install.log`. Capturas atualizadas em `builds/game-chrome/`. Nenhuma partida automatizada no aparelho.
+
+## Fundo claro na linha divisória — 0.21.3
+
+O sombreamento do cabeçalho agora termina em 112 unidades, na linha horizontal da textura. Foram retiradas as dez unidades escuras restantes abaixo da divisória. A altura do cabeçalho é definida uma vez no coordenador; clarão e início da área de conversa recebem o mesmo limite. A posição dos atores e da grade é a da revisão 0.21.2.
+
+A comparação de pixels passou a incluir a parede a partir de 114 unidades para detectar uma eventual faixa escura indevida nessa região. Entrega completa aprovada: 41.065 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio, sem falhas.
+
+Versão 0.21.3/código 37 instalada no S20 FE em 6 de novembro de 2026, com save idêntico antes/depois, inicialização sem erros e 83 texturas auditadas. Registro: `builds/android/install-20261106T151544944704Z/status.json`; log: `builds/deploy-v0213-install.log`. Nenhuma partida automatizada no aparelho.

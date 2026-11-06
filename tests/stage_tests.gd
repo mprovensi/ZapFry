@@ -35,6 +35,7 @@ func run_ui(app, check: Callable) -> void:
 			check.call(extent.x >= 48 and extent.y >= 48, "Ação %s tem alvo de pelo menos 48 unidades na dimensão testada" % key)
 		check.call(app.buttons["pause"].get_global_rect().end.y < operator.position.y, "Pausa fica no cabeçalho")
 		check.call(operator.position.y - app.buttons["pause"].get_global_rect().end.y <= 4 * app.stage.scale.y + 0.01, "Sala começa junto ao cabeçalho, sem faixa vazia")
+		check.call(app.buttons["pause"].get_rect().end.y <= app.GAME_HEADER_HEIGHT and app.shock_flash.position.y == app.GAME_HEADER_HEIGHT and app.dialogue.content_top == app.GAME_HEADER_HEIGHT, "Cabeçalho, clarão e conversa compartilham o limite da sala")
 		check.call(not app.buttons["back"].visible, "Partida mantém acesso ao menu somente pela pausa")
 		check.call(app.feedback_label.get_global_rect().end.y < app.buttons["hint"].get_global_rect().position.y, "Feedback cabe acima dos botões do rodapé")
 		check.call(subject.end.y < app.buttons["hint"].get_global_rect().position.y, "Cadeira não sobrepõe botões de jogo")
