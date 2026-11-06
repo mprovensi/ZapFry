@@ -23,4 +23,4 @@ A tela Ajustes oferece ganhos independentes de música e efeitos entre 0 e 100%.
 
 Fluxo obrigatório aprovado: 49 testes Python, 41.065 verificações da engine, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio, incluindo três ciclos completos do OGG. APK/código 38 exportado e auditado, com fases idênticas às fontes e 83 texturas. Log: `builds/deploy-v0214-install.log`.
 
-A instalação não foi realizada: o S20 FE não estava disponível no ADB. O fluxo parou na seleção do aparelho, antes de alterar sua instalação ou perfil. A escuta do novo volume no celular permanece pendente.
+A primeira tentativa parou na seleção do aparelho porque o S20 FE não estava disponível no ADB. Após a reconexão, o fluxo completo foi repetido e a versão 0.21.4/código 38 foi instalada: perfil idêntico antes/depois e inicialização sem erros. Registro em `builds/android/install-20261106T153815939863Z/status.json`; log: `builds/deploy-v0214-install-reconnected.log`. Não foram automatizadas partidas no aparelho. A escuta do novo volume no celular permanece pendente.

@@ -4,7 +4,7 @@
 
 **Revisão 0.21.4:** música aumentada em 6 dB, de −14 para −8 dB no nível máximo dos ajustes. Durante o choque, passa de −22 para −16 dB, preservando a redução de 8 dB para destacar o zap. Preferências de volume e efeitos preservados.
 
-**0.21.4 pronta para instalar:** suítes obrigatórias e auditoria do APK/código 38 aprovadas. A instalação ficou pendente porque o celular não apareceu no ADB; última instalação confirmada: 0.21.3.
+**0.21.4 instalada no S20 FE:** suítes obrigatórias e auditoria do APK/código 38 aprovadas. Música com ganho de 6 dB aplicado, progresso e ajustes preservados, inicialização sem erros. Evidência em `builds/android/install-20261106T153815939863Z/status.json`.
 
 **Revisão 0.21.3:** o fundo claro da sala começa na linha divisória do cabeçalho, em 112 unidades, retirando a faixa escura restante. Clarão e área de conversa usam esse mesmo limite.
 
