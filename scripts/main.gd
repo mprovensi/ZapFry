@@ -169,13 +169,13 @@ func _ready() -> void:
 	operator_view.is_operator = true
 	operator_view.embedded = true
 	operator_view.art_pack = art_pack
-	operator_view.position = Vector2(64, 122)
+	operator_view.position = Vector2(64, 114)
 	operator_view.size = Vector2(336, 290)
 	stage.add_child(operator_view)
 	board_view = BoardView.new()
 	board_view.name = "Board"
 	board_view.art_pack = art_pack
-	board_view.position = Vector2(48, 416)
+	board_view.position = Vector2(48, 408)
 	board_view.size = Vector2(624, 624)
 	board_view.cell_pressed.connect(_on_cell_pressed)
 	stage.add_child(board_view)
@@ -797,11 +797,16 @@ func _draw() -> void:
 		_draw_selector()
 	else:
 		if art_pack != null and art_pack.game_background != null:
-			var background := Rect2(Vector2.ZERO, GAME_DESIGN).grow(8)
-			background.position += background_shake_offset()
+			# Mesmo enquadramento do cabeçalho. A base cobre as bordas quando
+			# o cenário se desloca durante o choque, sem ampliar a textura.
+			var background := Rect2(Vector2.ZERO, GAME_DESIGN)
 			draw_texture_rect(art_pack.game_background, background, false)
-		_draw_floor_strip(self, 352, 64)
-		_draw_floor_strip(self, 1306, 68)
+			var offset := background_shake_offset()
+			if offset != Vector2.ZERO:
+				background.position += offset
+				draw_texture_rect(art_pack.game_background, background, false)
+		_draw_floor_strip(self, 344, 64)
+		_draw_floor_strip(self, 1298, 76)
 		_draw_game()
 	draw_set_transform(Vector2.ZERO)
 
@@ -881,7 +886,7 @@ func _draw_game() -> void:
 		if cell["kind"] not in ["empty", "blocker"]:
 			wire_count += 1
 	var charge := float(session.board.energized.size()) / float(maxi(wire_count, 1))
-	_draw_charge_meter(Vector2(544, 246), charge, session.board.energized.size(), wire_count)
+	_draw_charge_meter(Vector2(544, 238), charge, session.board.energized.size(), wire_count)
 
 
 func _draw_game_chrome(rect: Rect2) -> void:
@@ -922,7 +927,7 @@ func _update_room() -> void:
 		return
 	room_view.visible = screen in ["menu", "game"]
 	room_view.embedded = true
-	room_view.position = Vector2(150, 420) if screen == "menu" else Vector2(198, 1046)
+	room_view.position = Vector2(150, 420) if screen == "menu" else Vector2(198, 1038)
 	room_view.size = Vector2(420, 410) if screen == "menu" else Vector2(324, 324)
 	operator_view.visible = screen == "game"
 	cable_view.visible = screen == "game"

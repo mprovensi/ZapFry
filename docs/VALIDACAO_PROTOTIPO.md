@@ -1,10 +1,12 @@
-# Validação do protótipo 0.21.1
+# Validação do protótipo 0.21.2
 
 **Data:** 6 de novembro de 2026.  
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.21.2:** conjunto da sala elevado oito unidades e recorte do fundo alinhado ao cabeçalho, removendo a faixa duplicada. Mantidos tremor com bordas cobertas, flash, esqueleto, controles e regras. Fluxo completo aprovado: 41.062 verificações da engine, 49 testes Python, 761 estados de dicas, 3.604 verificações visuais/temporais e 48 de áudio. APK/código 36 instalado no S20 FE com save idêntico e inicialização sem erros. Registro em `builds/android/install-20261106T150912881772Z/status.json`; capturas em `builds/game-chrome/` e detalhes em [INTERFACE_PARTIDA_0211.md](INTERFACE_PARTIDA_0211.md).
 
 **0.21.1:** cabeçalho e rodapé da partida passam a usar a textura e o tom do menu de pausa. Textos com contorno, legendas maiores e botões inferiores simétricos. Comparação de pixels confirma o fundo nas três proporções; cabeçalho não se desloca durante o tremor. Regras e efeitos preservados. Detalhes em [INTERFACE_PARTIDA_0211.md](INTERFACE_PARTIDA_0211.md).
 

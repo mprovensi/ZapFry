@@ -67,12 +67,25 @@ func _test_game_chrome(app, dimensions: Vector2i) -> void:
 	app.board_view.energy_time = 1.0
 	var game := await _render(app)
 	var transform: Transform2D = root.get_final_transform() * app.stage.get_global_transform_with_canvas()
+	# Aplicar o tom da pausa à parede logo abaixo do cabeçalho permite
+	# comparar o alinhamento real dos recortes, sem cálculos de cor em CPU.
+	var shade := ColorRect.new()
+	shade.position = Vector2(0, 122)
+	shade.size = Vector2(720, 16)
+	shade.color = app.ROOM_SHADE
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	app.stage.add_child(shade)
+	var shaded := await _render(app)
+	shade.queue_free()
+	await process_frame
+	var join := _pixel_rect(transform, Rect2(8, 124, 704, 10), game.get_size())
 	# Faixas livres de texto, botões e atores: comparar a textura com a pausa.
 	var regions: Array[Rect2i] = []
 	for rect in [Rect2(12, 2, 696, 8), Rect2(12, 1580, 696, 12)]:
 		regions.append(_pixel_rect(transform, rect, game.get_size()))
 	app.pause_game()
 	var paused := await _render(app)
+	_check(join.has_area() and _difference(shaded, paused, join) < 0.003, "Parede abaixo do cabeçalho mantém o mesmo recorte, sem faixa duplicada: " + str(dimensions))
 	for region in regions:
 		_check(region.has_area() and _difference(game, paused, region) < 0.003, "Cabeçalho e rodapé usam textura e tom da pausa: " + str(dimensions))
 	app.resume_game()

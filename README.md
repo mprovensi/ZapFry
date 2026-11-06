@@ -1,6 +1,8 @@
-# Zap & Fry — protótipo 0.21.1
+# Zap & Fry — protótipo 0.21.2
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Revisão 0.21.2:** sala, grade e atores elevados em 8 unidades; fundo alinhado ao recorte do cabeçalho para remover a faixa duplicada. O tremor usa uma base fixa para cobrir as bordas, sem ampliar a textura. Controles, regras e progresso mantidos.
 
 **Revisão 0.21.1:** cabeçalho e rodapé da partida usam a textura e o sombreamento da pausa, substituindo as faixas quase pretas. Textos com contorno, legendas maiores e botões inferiores com tamanhos iguais e margens simétricas. Detalhes em [docs/INTERFACE_PARTIDA_0211.md](docs/INTERFACE_PARTIDA_0211.md).
 
@@ -18,7 +20,7 @@
 
 **Revisão 0.17.1:** dois balões por encontro — Executor e condenado —, 24 conversas reescritas, cores próprias por personagem e texto 33% maior. A apresentação mantém Pular, pausa e bloqueio da matriz. Detalhes em [docs/ENCONTROS_017.md](docs/ENCONTROS_017.md).
 
-**0.21.1 instalada no S20 FE:** atualização/código 35 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Rejogue as fases 10 e 11 pelo seletor para experimentar as lâmpadas. Capturas da nova interface em `builds/game-chrome/`; avaliação humana do acabamento no aparelho permanece pendente.
+**0.21.2 instalada no S20 FE:** atualização/código 36 conferida, save preservado e inicialização sem erros. Testes obrigatórios e auditoria das 83 texturas do APK aprovados. Rejogue as fases 10 e 11 pelo seletor para experimentar as lâmpadas. Capturas da nova interface em `builds/game-chrome/`; avaliação humana do acabamento no aparelho permanece pendente.
 
 Puzzle de rotação de fios com humor macabro e visual em Cartoon 2D com sprites substituíveis.
 Desenvolvido em **Godot 4.7.2 estável, GDScript e renderer Compatibility**.
