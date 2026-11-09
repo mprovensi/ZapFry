@@ -1,6 +1,6 @@
 {
   "id": 23,
-  "name": "Último desvio",
+  "name": "Dupla da manutenção",
   "size": 6,
   "time_limit": 225,
   "source_index": 0,
@@ -35,10 +35,10 @@
   "guided": false,
   "reference_taps": 38,
   "lesson": "six_by_six",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "Os fios com o mesmo número giram juntos. Ligue OUT.",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "Toque em qualquer fio da dupla.",
+    "Os dois giram juntos por um toque."
   ],
   "cells": [
     {
@@ -134,12 +134,12 @@
     },
     {
       "kind": "curve",
-      "rotation": 3,
+      "rotation": 2,
       "solution": 0
     },
     {
       "kind": "curve",
-      "rotation": 0,
+      "rotation": 3,
       "solution": 2
     },
     {
@@ -225,5 +225,12 @@
       "solution": 1,
       "fixed": true
     }
-  ]
+  ],
+  "linked_groups": [
+    [
+      2,
+      22
+    ]
+  ],
+  "rules_revision": 2
 }

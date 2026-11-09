@@ -1,6 +1,6 @@
 {
   "id": 20,
-  "name": "Atalho interditado",
+  "name": "Luz acesa, alarme apagado",
   "size": 6,
   "time_limit": 210,
   "source_index": 0,
@@ -33,10 +33,10 @@
   "guided": false,
   "reference_taps": 32,
   "lesson": "six_by_six",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "Acenda a lâmpada e ligue OUT com o alarme desligado.",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "A lâmpada precisa acender.",
+    "O alarme precisa ficar apagado."
   ],
   "cells": [
     {
@@ -223,5 +223,12 @@
       "solution": 0,
       "fixed": true
     }
+  ],
+  "required_nodes": [
+    8
+  ],
+  "rules_revision": 2,
+  "forbidden_nodes": [
+    26
   ]
 }

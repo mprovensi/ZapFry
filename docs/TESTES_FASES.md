@@ -21,13 +21,13 @@ Relatório gerado por `python tools/validate_levels.py`. O resolvedor procura a 
 | 15 | Fios e distrações | 22 | 22 | 180 s | 44 s |
 | 16 | Seta e luz no painel | 24 | 24 | 180 s | 48 s |
 | 17 | Setor de alta tensão | 26 | 26 | 210 s | 52 s |
-| 18 | Curvas sob pressão | 28 | 28 | 210 s | 56 s |
-| 19 | Ramificação oculta | 30 | 30 | 210 s | 60 s |
-| 20 | Atalho interditado | 32 | 32 | 210 s | 64 s |
-| 21 | Corrente em dois rumos | 34 | 34 | 225 s | 68 s |
+| 18 | Não acorde o alarme | 28 | 28 | 210 s | 56 s |
+| 19 | Seta longe da sirene | 30 | 30 | 210 s | 60 s |
+| 20 | Luz acesa, alarme apagado | 32 | 32 | 210 s | 64 s |
+| 21 | Uma chave, dois caminhos | 34 | 34 | 225 s | 68 s |
 | 22 | Rede cruzada | 36 | 36 | 225 s | 72 s |
-| 23 | Último desvio | 38 | 38 | 225 s | 76 s |
-| 24 | A chave geral | 40 | 40 | 225 s | 80 s |
+| 23 | Dupla da manutenção | 38 | 38 | 225 s | 76 s |
+| 24 | Ventilação da fortaleza | 40 | 40 | 225 s | 80 s |
 
 O cenário temporal é uma hipótese de teste, não uma garantia de facilidade para todas as pessoas. Os testes na engine executam as sequências descobertas usando cliques e toques reais de entrada; não alteram diretamente a orientação das peças.
 
@@ -52,12 +52,12 @@ Coordenadas em linha/coluna, começando em 1. Coordenadas repetidas significam t
 - **Fase 15:** L1 C2 → L1 C2 → L1 C2 → L2 C2 → L2 C2 → L2 C1 → L2 C1 → L2 C1 → L3 C1 → L4 C1 → L4 C1 → L4 C1 → L4 C2 → L4 C3 → L4 C4 → L4 C4 → L3 C4 → L3 C4 → L3 C5 → L3 C5 → L3 C5 → L4 C5.
 - **Fase 16:** L2 C1 → L3 C1 → L3 C1 → L3 C1 → L3 C2 → L3 C3 → L3 C3 → L3 C3 → L2 C3 → L2 C3 → L2 C4 → L2 C5 → L3 C5 → L3 C5 → L3 C4 → L4 C4 → L4 C4 → L4 C4 → L4 C3 → L4 C3 → L4 C3 → L5 C3 → L5 C3 → L5 C4.
 - **Fase 17:** L1 C2 → L1 C2 → L2 C2 → L3 C2 → L3 C1 → L3 C1 → L4 C1 → L5 C1 → L5 C2 → L5 C2 → L4 C2 → L4 C3 → L4 C3 → L3 C3 → L2 C3 → L2 C3 → L2 C3 → L2 C4 → L2 C5 → L3 C5 → L4 C5 → L5 C5 → L5 C5 → L5 C6 → L5 C6 → L5 C6.
-- **Fase 18:** L2 C1 → L3 C1 → L3 C1 → L3 C2 → L3 C2 → L3 C2 → L2 C2 → L1 C2 → L1 C3 → L1 C4 → L1 C4 → L2 C4 → L3 C4 → L3 C4 → L3 C3 → L3 C3 → L3 C3 → L4 C3 → L5 C3 → L5 C3 → L5 C3 → L5 C4 → L5 C5 → L4 C5 → L4 C5 → L4 C6 → L4 C6 → L5 C6.
-- **Fase 19:** L1 C2 → L2 C2 → L2 C2 → L2 C1 → L2 C1 → L3 C1 → L4 C1 → L4 C2 → L3 C2 → L3 C2 → L3 C3 → L2 C3 → L1 C3 → L1 C4 → L1 C5 → L2 C5 → L3 C5 → L3 C5 → L3 C5 → L3 C6 → L4 C6 → L5 C6 → L5 C6 → L5 C6 → L5 C5 → L5 C4 → L6 C4 → L6 C4 → L6 C4 → L6 C5.
-- **Fase 20:** L2 C1 → L3 C1 → L4 C1 → L5 C1 → L5 C1 → L5 C2 → L5 C2 → L4 C2 → L3 C2 → L3 C2 → L3 C3 → L3 C3 → L3 C3 → L2 C3 → L2 C3 → L2 C3 → L2 C4 → L2 C5 → L2 C5 → L1 C5 → L1 C6 → L1 C6 → L2 C6 → L3 C6 → L3 C6 → L3 C5 → L3 C5 → L3 C5 → L4 C5 → L5 C5 → L5 C5 → L5 C6.
+- **Fase 18:** L1 C2 → L1 C3 → L1 C4 → L1 C4 → L1 C5 → L2 C1 → L2 C2 → L2 C4 → L3 C1 → L3 C1 → L3 C2 → L3 C2 → L3 C3 → L3 C3 → L3 C3 → L3 C4 → L3 C4 → L4 C3 → L4 C5 → L4 C5 → L4 C6 → L4 C6 → L5 C3 → L5 C3 → L5 C3 → L5 C4 → L5 C5 → L5 C6.
+- **Fase 19:** L1 C2 → L1 C3 → L1 C4 → L1 C5 → L2 C1 → L2 C1 → L2 C2 → L2 C3 → L2 C5 → L2 C6 → L3 C1 → L3 C2 → L3 C2 → L3 C3 → L3 C5 → L3 C5 → L3 C5 → L3 C6 → L4 C1 → L4 C2 → L4 C6 → L5 C4 → L5 C5 → L5 C6 → L5 C6 → L5 C6 → L6 C4 → L6 C4 → L6 C4 → L6 C5.
+- **Fase 20:** L1 C5 → L1 C6 → L1 C6 → L2 C1 → L2 C3 → L2 C3 → L2 C3 → L2 C4 → L2 C5 → L2 C5 → L2 C6 → L3 C1 → L3 C2 → L3 C2 → L3 C3 → L3 C3 → L3 C3 → L3 C5 → L3 C5 → L3 C5 → L3 C6 → L3 C6 → L4 C1 → L4 C2 → L4 C5 → L5 C1 → L5 C1 → L5 C2 → L5 C2 → L5 C5 → L5 C5 → L5 C6.
 - **Fase 21:** L1 C2 → L1 C3 → L1 C3 → L2 C3 → L2 C3 → L2 C2 → L2 C2 → L3 C2 → L4 C2 → L4 C1 → L4 C1 → L5 C1 → L6 C1 → L6 C1 → L6 C1 → L6 C2 → L6 C3 → L6 C3 → L5 C3 → L4 C3 → L4 C3 → L4 C4 → L4 C4 → L3 C4 → L2 C4 → L2 C4 → L2 C5 → L2 C5 → L2 C5 → L3 C5 → L4 C5 → L5 C5 → L5 C5 → L5 C6.
 - **Fase 22:** L2 C1 → L2 C1 → L2 C2 → L2 C2 → L2 C2 → L1 C2 → L1 C2 → L1 C3 → L1 C4 → L2 C4 → L2 C4 → L2 C3 → L2 C3 → L3 C3 → L3 C3 → L3 C2 → L3 C1 → L3 C1 → L4 C1 → L5 C1 → L5 C1 → L5 C2 → L5 C3 → L5 C3 → L6 C3 → L6 C3 → L6 C4 → L6 C5 → L6 C5 → L6 C5 → L5 C5 → L4 C5 → L4 C5 → L4 C6 → L4 C6 → L5 C6.
-- **Fase 23:** L1 C2 → L1 C3 → L1 C3 → L2 C3 → L2 C3 → L2 C3 → L2 C2 → L2 C1 → L2 C1 → L2 C1 → L3 C1 → L4 C1 → L4 C2 → L4 C2 → L5 C2 → L6 C2 → L6 C3 → L6 C4 → L6 C4 → L6 C4 → L5 C4 → L4 C4 → L4 C4 → L4 C4 → L4 C5 → L4 C5 → L3 C5 → L3 C5 → L3 C6 → L3 C6 → L4 C6 → L5 C6 → L5 C6 → L5 C5 → L5 C5 → L6 C5 → L6 C5 → L6 C5.
+- **Fase 23:** L1 C2 → L1 C3 → L1 C3 → L2 C1 → L2 C1 → L2 C1 → L2 C2 → L2 C3 → L2 C3 → L2 C3 → L3 C1 → L3 C5 → L3 C5 → L3 C6 → L3 C6 → L4 C1 → L4 C1 → L4 C2 → L4 C2 → L4 C2 → L4 C4 → L4 C4 → L4 C4 → L4 C6 → L5 C2 → L5 C4 → L5 C5 → L5 C5 → L5 C6 → L5 C6 → L6 C2 → L6 C3 → L6 C4 → L6 C4 → L6 C4 → L6 C5 → L6 C5 → L6 C5.
 - **Fase 24:** L1 C2 → L2 C2 → L2 C2 → L2 C1 → L2 C1 → L2 C1 → L3 C1 → L4 C1 → L4 C2 → L4 C2 → L3 C2 → L3 C2 → L3 C3 → L3 C3 → L3 C3 → L2 C3 → L1 C3 → L1 C3 → L1 C4 → L1 C5 → L1 C6 → L1 C6 → L2 C6 → L2 C6 → L2 C6 → L2 C5 → L2 C5 → L3 C5 → L3 C5 → L3 C6 → L3 C6 → L4 C6 → L5 C6 → L5 C6 → L5 C5 → L5 C4 → L5 C4 → L6 C4 → L6 C4 → L6 C5.
 
 ## Resultado na interface da engine
@@ -101,8 +101,8 @@ Quatro cenários por fase: mouse e toque nas dimensões 720×1280 e 360×800. Ca
 
 ## Dicas em partidas parciais e com erros
 
-**806 estados aprovados**, com conferência independente em Python antes e depois da dica realmente aplicada pelo Godot.
-Inclui 25 regressões com T já conectado, rota montada a partir da entrada/saída, rotações incorretas, simetrias e tabuleiros impossíveis.
+**831 estados aprovados**, com conferência independente em Python antes e depois da dica realmente aplicada pelo Godot.
+Inclui 24 regressões com T já conectado, rota montada a partir da entrada/saída, rotações incorretas, simetrias e tabuleiros impossíveis.
 Toda dica concedida reduz os giros mínimos restantes e permite concluir pela engine; a simulação parte do estado de teste com o cronômetro integral e usa dois segundos por giro restante.
 
 | Fase | Estados com dica útil e conclusão |
@@ -114,10 +114,10 @@ Toda dica concedida reduz os giros mínimos restantes e permite concluir pela en
 | 15 | 41 |
 | 16 | 42 |
 | 17 | 40 |
-| 18 | 41 |
-| 19 | 41 |
-| 20 | 41 |
-| 21 | 41 |
+| 18 | 42 |
+| 19 | 42 |
+| 20 | 42 |
+| 21 | 42 |
 | 22 | 41 |
-| 23 | 41 |
+| 23 | 42 |
 | 24 | 42 |

@@ -75,7 +75,7 @@ func hint_candidate() -> int:
 		_hint_revision = board.revision
 	for value in _hint_plan.get("path", []):
 		var index := int(value)
-		if board.can_rotate(index) and not board.matches_rotation(index, int(_hint_plan["rotations"][index])):
+		if board.can_rotate(index) and board.steps_to_plan(index, _hint_plan["rotations"]) > 0:
 			return index
 	return -1
 
@@ -84,14 +84,9 @@ func use_hint() -> int:
 	var index := hint_candidate()
 	if index < 0:
 		return -1
-	var cell: Dictionary = board.cells[index]
-	var goal := board.orientation_key(index, int(_hint_plan["rotations"][index]))
-	var turns := 1
-	while turns < 4 and board.orientation_key(index, int(cell["rotation"]) + turns) != goal:
-		turns += 1
-	cell["rotation"] = (int(cell["rotation"]) + turns) % 4
-	cell["fixed"] = true
-	board.recompute()
+	var turns := board.steps_to_plan(index, _hint_plan["rotations"])
+	if turns <= 0 or not board.apply_hint(index, turns):
+		return -1
 	moves += turns
 	hints_used = 1
 	state = State.RESOLVING if board.solved else State.PLAYING

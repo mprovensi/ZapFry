@@ -1,0 +1,337 @@
+[
+  {
+    "name": "alarm-off-path",
+    "state": {
+      "id": 0,
+      "size": 2,
+      "time_limit": 90,
+      "source_index": 0,
+      "source_port": 8,
+      "target_index": 1,
+      "target_port": 2,
+      "forbidden_nodes": [
+        2
+      ],
+      "cells": [
+        {
+          "kind": "tee",
+          "rotation": 2,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 0,
+          "fixed": false
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        }
+      ]
+    }
+  },
+  {
+    "name": "alarm-impossible",
+    "state": {
+      "id": 0,
+      "size": 2,
+      "time_limit": 90,
+      "source_index": 0,
+      "source_port": 8,
+      "target_index": 1,
+      "target_port": 2,
+      "forbidden_nodes": [
+        2
+      ],
+      "cells": [
+        {
+          "kind": "tee",
+          "rotation": 2,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 0,
+          "fixed": true
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        }
+      ]
+    }
+  },
+  {
+    "name": "switch",
+    "state": {
+      "id": 0,
+      "size": 2,
+      "time_limit": 90,
+      "source_index": 0,
+      "source_port": 8,
+      "target_index": 3,
+      "target_port": 2,
+      "cells": [
+        {
+          "kind": "curve",
+          "rotation": 2,
+          "fixed": true
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "switch",
+          "rotation": 1,
+          "switch_masks": [
+            3,
+            9
+          ]
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "linked-pair",
+    "state": {
+      "id": 0,
+      "size": 3,
+      "time_limit": 90,
+      "source_index": 0,
+      "source_port": 8,
+      "target_index": 8,
+      "target_port": 2,
+      "linked_groups": [
+        [
+          3,
+          5
+        ]
+      ],
+      "cells": [
+        {
+          "kind": "curve",
+          "rotation": 2,
+          "fixed": true
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "curve",
+          "rotation": 3,
+          "fixed": false
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": true
+        },
+        {
+          "kind": "curve",
+          "rotation": 1,
+          "fixed": false
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "curve",
+          "rotation": 0,
+          "fixed": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "equipment",
+    "state": {
+      "id": 0,
+      "size": 2,
+      "time_limit": 90,
+      "source_index": 0,
+      "source_port": 8,
+      "target_index": 1,
+      "target_port": 2,
+      "cells": [
+        {
+          "kind": "tee",
+          "rotation": 2,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": true
+        },
+        {
+          "kind": "curve",
+          "rotation": 0
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        }
+      ],
+      "required_outputs": [
+        {
+          "index": 2,
+          "port": 8
+        }
+      ]
+    }
+  },
+  {
+    "name": "alarm-and-lamp",
+    "state": {
+      "id": 0,
+      "size": 3,
+      "time_limit": 90,
+      "source_index": 0,
+      "source_port": 8,
+      "target_index": 2,
+      "target_port": 2,
+      "required_nodes": [
+        6
+      ],
+      "forbidden_nodes": [
+        4
+      ],
+      "cells": [
+        {
+          "kind": "tee",
+          "rotation": 2,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": true
+        },
+        {
+          "kind": "tee",
+          "rotation": 1,
+          "fixed": false
+        },
+        {
+          "kind": "straight",
+          "rotation": 1,
+          "fixed": false
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "straight",
+          "rotation": 0,
+          "fixed": true
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        }
+      ]
+    }
+  },
+  {
+    "name": "two-pairs",
+    "state": {
+      "id": 0,
+      "size": 3,
+      "time_limit": 90,
+      "source_index": 0,
+      "source_port": 1,
+      "target_index": 8,
+      "target_port": 2,
+      "linked_groups": [
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "cells": [
+        {
+          "kind": "tee",
+          "rotation": 1,
+          "fixed": true
+        },
+        {
+          "kind": "straight",
+          "rotation": 0,
+          "fixed": false
+        },
+        {
+          "kind": "curve",
+          "rotation": 1,
+          "fixed": false
+        },
+        {
+          "kind": "curve",
+          "rotation": 3,
+          "fixed": false
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "straight",
+          "rotation": 3,
+          "fixed": false
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "empty",
+          "rotation": 0
+        },
+        {
+          "kind": "curve",
+          "rotation": 0,
+          "fixed": true
+        }
+      ]
+    }
+  }
+]

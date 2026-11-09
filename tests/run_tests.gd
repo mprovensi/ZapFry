@@ -17,6 +17,7 @@ const EncounterTests = preload("res://tests/encounter_tests.gd")
 const AnimationTests = preload("res://tests/animation_tests.gd")
 const RequiredNodesTests = preload("res://tests/required_nodes_tests.gd")
 const DirectionalWireTests = preload("res://tests/directional_wire_tests.gd")
+const AdvancedChallengeTests = preload("res://tests/advanced_challenge_tests.gd")
 var failures := 0
 var checks := 0
 var level: Dictionary
@@ -45,6 +46,7 @@ func _run() -> void:
 	_test_session()
 	RequiredNodesTests.new().run(_check)
 	DirectionalWireTests.new().run(_check)
+	AdvancedChallengeTests.new().run(_check)
 	_test_intro_levels()
 	ArtTests.new().run(_check)
 	ProfileTests.new().run(_check)
@@ -86,6 +88,7 @@ func _test_encounters() -> void:
 	AnimationTests.new().run_ui(app, _check)
 	RequiredNodesTests.new().run_ui(app, _check)
 	DirectionalWireTests.new().run_ui(app, _check)
+	AdvancedChallengeTests.new().run_ui(app, _check)
 	app.queue_free()
 	await process_frame
 

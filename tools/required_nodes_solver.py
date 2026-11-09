@@ -8,10 +8,11 @@ from functools import cache
 import heapq
 
 
-def solve_required(level, classic, directions, movable, is_solved, ports):
+def solve_required(level, classic, directions, movable, is_solved, ports, allowed):
     cells, width = level["cells"], level["size"]
     source, target = level["source_index"], level["target_index"]
-    goals = [target, *level["required_nodes"]]
+    required_outputs = {item["index"]: item["port"] for item in level.get("required_outputs", [])}
+    goals = [target, *level.get("required_nodes", []), *required_outputs]
     best = None
     expanded = 0
 
@@ -19,9 +20,13 @@ def solve_required(level, classic, directions, movable, is_solved, ports):
     def options(index, incoming, outgoing):
         cell = cells[index]
         found = {}
-        for turns in range(4 if movable(cell) else 1):
-            rotation = (cell["rotation"] + turns) % 4
+        period = 2 if cell["kind"] == "switch" else 4
+        for turns in range(period if movable(cell) else 1):
+            rotation = (cell["rotation"] + turns) % period
+            if index in allowed and rotation not in allowed[index]:
+                continue
             entry, exit = ports(cell, rotation)
+            outgoing |= required_outputs.get(index, 0)
             if (entry | exit) and entry & incoming == incoming and exit & outgoing == outgoing and (entry, exit) not in found:
                 found[entry, exit] = (turns, rotation)
         return tuple(found.values())
@@ -98,7 +103,7 @@ def solve_required(level, classic, directions, movable, is_solved, ports):
                 attach(neighbor, opposite, path, visited | (1 << index), current_cost + turns)
             path.pop(index, None)
 
-        attach(goal, level["target_port"] if goal == target else 0, {}, 0, cost)
+        attach(goal, level["target_port"] if goal == target else required_outputs.get(goal, 0), {}, 0, cost)
 
     if classic:
         seed = {int(i): r for i, r in classic["rotations"].items()}
@@ -110,6 +115,6 @@ def solve_required(level, classic, directions, movable, is_solved, ports):
         complete({source: rotation}, turns)
     if best is None:
         return None
-    moves = [i for i, r in best[1].items() for _ in range((r - cells[i]["rotation"]) % 4)]
+    moves = [i for i, r in best[1].items() for _ in range((r - cells[i]["rotation"]) % (2 if cells[i]["kind"] == "switch" else 4))]
     return {"minimum_taps": best[0], "moves": moves, "path": list(best[1]),
             "rotations": {str(i): r for i, r in best[1].items()}, "expanded_states": expanded}

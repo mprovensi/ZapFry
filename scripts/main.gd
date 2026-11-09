@@ -351,6 +351,7 @@ func start_game(show_intro: bool = true) -> void:
 	board_view.hint_index = -1
 	board_view.newly_energized.clear()
 	board_view.energy_time = 1.0
+	board_view.equipment_time = 0.0
 	_update_guidance()
 	board_view.queue_redraw()
 	if show_intro and not profile.appearance["intro_seen"]:
@@ -539,6 +540,8 @@ func use_free_hint() -> void:
 		_sync_controls()
 		return
 	feedback = "Dica: linha %d, coluna %d. Fio marcado em verde e preso." % [index / session.board.width + 1, index % session.board.width + 1]
+	if session.board.action_members(index).size() > 1:
+		feedback = "Dica: linha %d, coluna %d. Dupla corrigida e presa." % [index / session.board.width + 1, index % session.board.width + 1]
 	board_view.hint_index = index
 	board_view.activated = index
 	board_view.activation_time = 0.3
@@ -546,6 +549,8 @@ func use_free_hint() -> void:
 	_cue("hint")
 	if session.state == Session.State.RESOLVING:
 		feedback = "CIRCUITO FECHADO. Segure o penteado!"
+		if session.board.action_members(index).size() > 1:
+			feedback = "CIRCUITO FECHADO. Dupla corrigida!"
 		resolution_elapsed = 0.0
 	_update_guidance()
 	board_view.queue_redraw()
@@ -575,7 +580,9 @@ func _on_cell_pressed(index: int) -> void:
 				feedback = "Seta invertida: a corrente entra pela cauda e sai pela ponta."
 				break
 		if session.board.target_connected() and not session.board.solved and not session.board.required_nodes.is_empty():
-			feedback = "OUT conectado. Falta acender a lâmpada marcada."
+			feedback = "OUT conectado. Falta ligar a saída do ventilador." if not session.board.required_ports.is_empty() else "OUT conectado. Falta acender a lâmpada marcada."
+		if session.board.active_alarm_count() > 0:
+			feedback = "Alarme ligado. Desvie a corrente para fechar o circuito."
 		board_view.animate_energy(previous_energy)
 		_cue("rotate")
 		if session.state == Session.State.RESOLVING:
@@ -875,7 +882,19 @@ func _draw_selector() -> void:
 func _draw_game() -> void:
 	_draw_game_chrome(Rect2(0, 0, 720, GAME_HEADER_HEIGHT))
 	_draw_game_chrome(Rect2(0, 1374, 720, 226))
-	if session.board.required_nodes.is_empty():
+	if not session.board.forbidden_nodes.is_empty():
+		var alarm := "!" if session.board.active_alarm_count() > 0 else "✓"
+		var status := "ALARME ATIVO" if alarm == "!" else "ALARME OK"
+		if not session.board.required_nodes.is_empty():
+			status = "LUZ %d/%d · ALARME %s" % [session.board.lit_required_count(), session.board.required_nodes.size(), alarm]
+		_hud_text(status, Vector2(28, 94), 18, CORAL if alarm == "!" else YELLOW)
+	elif not session.board.required_ports.is_empty():
+		_hud_text("VENTILADOR %d/%d" % [session.board.lit_required_count(), session.board.required_nodes.size()], Vector2(28, 94), 18, YELLOW)
+	elif not session.board.linked_groups.is_empty():
+		_hud_text("DUPLA VINCULADA", Vector2(28, 94), 18, MINT)
+	elif session.board.cells.any(func(cell: Dictionary): return cell["kind"] == "switch"):
+		_hud_text("INTERRUPTOR A/B", Vector2(28, 94), 18, YELLOW)
+	elif session.board.required_nodes.is_empty():
 		_hud_text("PAINEL %d × %d" % [session.board.width, session.board.width], Vector2(28, 94), 20, MUTED)
 	else:
 		_hud_text("LÂMPADA %d/%d" % [session.board.lit_required_count(), session.board.required_nodes.size()], Vector2(28, 94), 20, YELLOW)

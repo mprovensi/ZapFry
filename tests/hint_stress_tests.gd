@@ -27,18 +27,18 @@ func run(check: Callable) -> void:
 		snapshot["cells"] = session.board.cells.duplicate(true)
 		var unchanged := true
 		for other in range(cells.size()):
-			if other != index and cells[other] != session.board.cells[other]:
+			if not session.board.action_members(index).has(other) and cells[other] != session.board.cells[other]:
 				unchanged = false
-		check.call(unchanged, "Dica altera somente um fio: " + case["name"])
+		check.call(unchanged, "Dica altera somente a ação escolhida: " + case["name"])
 		if expected < 0:
 			check.call(index == -1 and session.hints_used == 0, "Estado impossível não gasta dica")
 			results.append({"name": case["name"], "index": index, "state_after_hint": snapshot})
 			continue
-		check.call(index >= 0 and session.hints_used == 1 and not session.board.can_rotate(index), "Dica útil fixa exatamente um fio")
+		check.call(index >= 0 and session.hints_used == 1 and not session.board.can_rotate(index), "Dica útil fixa todos os membros da ação")
 		if index < 0:
 			continue
 		check.call(index != int(case["valid_tee"]), "Dica preserva T já conectado")
-		var actual_turns := posmod(int(session.board.cells[index]["rotation"]) - int(cells[index]["rotation"]), 4)
+		var actual_turns := posmod(int(session.board.cells[index]["rotation"]) - int(cells[index]["rotation"]), session.board.rotation_period(index))
 		check.call(session.moves == actual_turns and actual_turns > 0, "Dica contabiliza giros reais")
 		var after := Solution.new().solve(session.board)
 		check.call(not after.is_empty() and int(after["taps"]) < expected, "Dica reduz os giros restantes: " + case["name"])
@@ -46,8 +46,7 @@ func run(check: Callable) -> void:
 			continue
 		for value in after["path"]:
 			var cell_index := int(value)
-			var goal: int = after["rotations"][cell_index]
-			var turns := posmod(goal - int(session.board.cells[cell_index]["rotation"]), 4)
+			var turns := session.board.steps_to_plan(cell_index, after["rotations"])
 			for turn in range(turns):
 				session.tick(2.0)
 				check.call(session.rotate_cell(cell_index), "Plano após dica usa rotações permitidas")

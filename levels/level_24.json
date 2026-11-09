@@ -1,6 +1,6 @@
 {
   "id": 24,
-  "name": "A chave geral",
+  "name": "Ventilação da fortaleza",
   "size": 6,
   "time_limit": 225,
   "source_index": 0,
@@ -37,10 +37,10 @@
   "guided": false,
   "reference_taps": 40,
   "lesson": "six_by_six",
-  "instruction": "Último painel: encontre a rota até a chave geral!",
+  "instruction": "Último painel: ligue a cadeira e o ventilador!",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "O ventilador tem uma saída própria.",
+    "Os dois equipamentos precisam de energia."
   ],
   "cells": [
     {
@@ -227,5 +227,12 @@
       "solution": 1,
       "fixed": true
     }
-  ]
+  ],
+  "required_outputs": [
+    {
+      "index": 5,
+      "port": 2
+    }
+  ],
+  "rules_revision": 2
 }

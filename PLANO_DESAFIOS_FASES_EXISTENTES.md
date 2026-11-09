@@ -2,7 +2,7 @@
 
 **Data:** 5 de novembro de 2026.  
 **Base:** versão 0.20.0, Godot 4.7.2 / GDScript.  
-**Status:** lâmpadas nas fases 10 e 11 entregues na 0.21.0. Sentido único nas fases 13 e 14 e combinação com lâmpada na 16 implementados, testados e instalados no S20 FE na 0.22.0. Alarmes e segundo lote continuam planejados. Detalhes em [docs/DESAFIOS_021.md](docs/DESAFIOS_021.md) e [docs/FIOS_DIRECIONAIS_022.md](docs/FIOS_DIRECIONAIS_022.md).
+**Status:** todas as seis mecânicas implementadas e aprovadas no fluxo completo de testes e exportação da versão 0.23.0. Instalada no S20 FE em 9 de novembro de 2026, com perfil preservado e inicialização sem erros. Distribuição e detalhes em [docs/DESAFIOS_COMPLETOS_023.md](docs/DESAFIOS_COMPLETOS_023.md).
 
 **Objetivo:** aumentar a variedade de raciocínio da campanha atual antes de criar as fases 25–32.
 
@@ -58,12 +58,12 @@ Os intervalos abaixo não tornam os desafios obrigatórios em todas as fases daq
 | 18 | Apresentar um alarme recuperável, com pouco ruído visual. |
 | 19 | Alarme e fio direcional. |
 | 20 | Alarme e lâmpada. |
-| 21 | Nova disposição de lâmpada e fios direcionais. |
+| 21 | Apresentar interruptor A/B, sem outra regra nova. |
 | 22 | Fase clássica com rotas alternativas, sem os novos desafios. |
-| 23 | Revisão de duas regras já aprendidas, priorizando leitura do painel. |
-| 24 | Encerramento clássico ou combinação de duas regras já aprendidas, conforme o playtest, seguido da tela de agradecimento existente. |
+| 23 | Apresentar uma dupla vinculada, identificada por número e corrente. |
+| 24 | Alimentar cadeira e ventilador por terminais próprios, seguido da tela de agradecimento existente. |
 
-No segundo lote, avaliar substituir exercícios de revisão por um interruptor na fase 14, uma dupla vinculada na 21 e um segundo equipamento na 23. A primeira ocorrência de cada um apresenta a regra isoladamente; o encaixe definitivo depende da dificuldade medida no primeiro lote. Preservar fases clássicas entre essas introduções.
+Na entrega completa solicitada em 9 de novembro de 2026, o segundo lote ocupa as fases 21, 23 e 24. Cada primeira ocorrência apresenta sua regra isoladamente; a fase 22 continua clássica entre essas introduções. Os mínimos de ações e tempos anteriores foram preservados; a avaliação humana de dificuldade continua pendente.
 
 ## 4. Responsabilidades no código
 
@@ -113,10 +113,10 @@ O resolvedor atual procura um caminho até um destino. Isso não basta para acei
 2. **Prova do resolvedor:** criar tabuleiros pequenos com objetivos em ramificações, sentido único e terminais proibidos. Confirmar soluções e dicas por uma implementação independente antes de editar a campanha.
 3. **Lâmpada:** integrar modelo, dica, ícone e feedback; aplicar nas fases 10 e 11 e validar jogabilidade. A fase 12 permanece clássica.
 4. **Sentido único:** integrar propagação dirigida, dica e setas; aplicar nas fases 13, 14 e 16. A fase 15 permanece clássica.
-5. **Alarme:** integrar condição recuperável e avaliação da rede completa; aplicar nas fases 17–20.
+5. **Alarme:** integrar condição recuperável e avaliação da rede completa; aplicar nas fases 18–20. A fase 17 permanece clássica.
 6. **Combinações:** ajustar fases 21–24 com regras já ensinadas e executar playtest de dificuldade.
 7. **Segundo lote:** implementar interruptor e dupla separadamente, com seus testes de ações e dicas; depois explorar o segundo equipamento usando o sistema de objetivos existente.
-8. **Entrega:** executar o fluxo obrigatório, auditar o pacote e instalar como atualização, preservando o perfil. Registrar a confirmação humana no aparelho.
+8. **Entrega atual:** executar o fluxo obrigatório, auditar o APK e instalar preservando o perfil, conforme solicitação posterior do usuário em 9 de novembro de 2026. Registrar a confirmação humana quando houver playtest.
 
 Cada entrega deve ser pequena o suficiente para identificar qual regra causou uma dificuldade ou regressão. Não introduzir todas as mecânicas simultaneamente.
 

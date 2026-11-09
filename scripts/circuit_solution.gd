@@ -3,23 +3,32 @@ extends RefCounted
 
 const Board = preload("res://scripts/circuit_board.gd")
 const RequiredSolution = preload("res://scripts/required_circuit_solution.gd")
+const ConstrainedSolution = preload("res://scripts/constrained_circuit_solution.gd")
 var board: CircuitBoard
 var choices: Dictionary = {}
 var heap: Array = []
 var serial := 0
+var allowed: Dictionary = {}
 
 
 func solve(model: CircuitBoard) -> Dictionary:
 	if not model.objectives_valid:
 		return {}
+	if not model.forbidden_nodes.is_empty() or not model.linked_groups.is_empty():
+		return ConstrainedSolution.new().solve(model, _solve_positive)
+	return _solve_positive(model, {})
+
+
+func _solve_positive(model: CircuitBoard, domains: Dictionary) -> Dictionary:
+	allowed = domains
 	var classic := _solve_path(model)
 	if model.required_nodes.is_empty() or classic.is_empty():
 		return classic
 	# O mínimo até OUT é um limite inferior para qualquer rede completa.
 	var rotations: Dictionary = classic["rotations"]
-	if model.objectives_met(model.energized_for(rotations), rotations):
+	if model.required_objectives_met(model.energized_for(rotations), rotations):
 		return classic
-	return RequiredSolution.new().solve(model, classic)
+	return RequiredSolution.new().solve(model, classic, domains)
 
 
 func _solve_path(model: CircuitBoard) -> Dictionary:
@@ -79,8 +88,10 @@ func _orientation(index: int, incoming: int, outgoing: int) -> Vector2i:
 	var base: int = Board.BASE_MASKS[cell["kind"]]
 	var result := Vector2i(-1, -1)
 	if base != 0:
-		for turns in range(4 if board.can_rotate(index) else 1):
-			var rotation := (int(cell["rotation"]) + turns) % 4
+		for turns in range(board.rotation_period(index) if board.can_rotate(index) else 1):
+			var rotation := (int(cell["rotation"]) + turns) % board.rotation_period(index)
+			if allowed.has(index) and not allowed[index].has(rotation):
+				continue
 			if board.accepts_rotation(index, rotation, incoming, outgoing):
 				result = Vector2i(turns, rotation)
 				break

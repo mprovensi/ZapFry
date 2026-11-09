@@ -10,10 +10,12 @@ var neighbors: Array = []
 var reverse: Dictionary = {}
 var best: Dictionary = {}
 var goals: Array = []
+var allowed: Dictionary = {}
 
 
-func solve(model: CircuitBoard, classic: Dictionary) -> Dictionary:
+func solve(model: CircuitBoard, classic: Dictionary, domains: Dictionary = {}) -> Dictionary:
 	board = model
+	allowed = domains
 	options.clear()
 	neighbors.clear()
 	reverse.clear()
@@ -36,8 +38,10 @@ func _options(index: int, incoming: int, outgoing: int) -> Array:
 		return options[key]
 	var found: Dictionary = {}
 	var cell: Dictionary = board.cells[index]
-	for turns in range(4 if board.can_rotate(index) else 1):
-		var rotation := (int(cell["rotation"]) + turns) % 4
+	for turns in range(board.rotation_period(index) if board.can_rotate(index) else 1):
+		var rotation := (int(cell["rotation"]) + turns) % board.rotation_period(index)
+		if allowed.has(index) and not allowed[index].has(rotation):
+			continue
 		var identity := board.orientation_key(index, rotation)
 		if board.accepts_rotation(index, rotation, incoming, outgoing) and not found.has(identity):
 			found[identity] = Vector2i(turns, rotation)
@@ -73,7 +77,7 @@ func _build_graph() -> void:
 func _complete(network: Dictionary, cost: int) -> void:
 	if not best.is_empty() and cost >= int(best["taps"]):
 		return
-	if board.objectives_met(board.energized_for(network), network):
+	if board.required_objectives_met(board.energized_for(network), network):
 		best = {"taps": cost, "path": network.keys(), "rotations": network.duplicate()}
 		return
 	var goal := -1
@@ -84,7 +88,7 @@ func _complete(network: Dictionary, cost: int) -> void:
 	if goal < 0:
 		return
 	var distances := _distances(network)
-	_attach(goal, board.target_port if goal == board.target_index else 0, {}, 0, cost, network, distances)
+	_attach(goal, board.target_port if goal == board.target_index else int(board.required_ports.get(goal, 0)), {}, 0, cost, network, distances)
 
 
 func _distances(network: Dictionary) -> Dictionary:

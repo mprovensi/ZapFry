@@ -8,7 +8,7 @@ import argparse
 import json
 from pathlib import Path
 
-from validate_levels import MASKS, audit_level, ports, rotate
+from validate_levels import MASKS, action_indices, action_members, action_period, audit_level, ports, rotate
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTH = 5
@@ -170,7 +170,9 @@ def make_level(spec: dict, width: int = WIDTH) -> dict:
         incoming = port_between(index, path[position - 1], width) if position else 8
         outgoing = port_between(index, path[position + 1], width) if position + 1 < len(path) else 2
         required = incoming | outgoing
-        if index in spec.get("tees", {}):
+        if index in spec.get("switches", {}):
+            kind, goal = "switch", 1
+        elif index in spec.get("tees", {}):
             kind, goal = "tee", spec["tees"][index]
             if rotate(MASKS[kind], goal) & required != required:
                 raise ValueError(f"T incompatível: fase {spec['id']}, célula {index}.")
@@ -181,10 +183,12 @@ def make_level(spec: dict, width: int = WIDTH) -> dict:
             goal = next(r for r in range(4) if ports({"kind": kind}, r)[0] & incoming
                         and ports({"kind": kind}, r)[1] & outgoing)
         turns = spec["costs"].get(index, 0)
-        initial = (goal - turns) % 4
+        initial = (goal - turns) % (2 if kind == "switch" else 4)
         if index in fixed and turns:
             raise ValueError("Peça fixa não pode estar embaralhada.")
         cells[index] = {"kind": kind, "rotation": initial, "solution": goal}
+        if kind == "switch":
+            cells[index]["switch_masks"] = [spec["switches"][index], required]
         if index in fixed:
             cells[index]["fixed"] = True
     for index in spec.get("blockers", []):
@@ -195,20 +199,29 @@ def make_level(spec: dict, width: int = WIDTH) -> dict:
         if cells[index]["kind"] != "empty":
             raise ValueError("Distração sobrescreve outro componente.")
         cells[index] = {"kind": kind, "rotation": rotation, "solution": rotation}
-    branch_taps = 0
-    for index, goal in spec.get("lamp_solutions", {}).items():
+    for index, goal in {**spec.get("lamp_solutions", {}), **spec.get("reference_overrides", {})}.items():
         cell = cells[index]
         cell["solution"] = goal
-        branch_taps += next(t for t in range(4) if ports(cell, cell["rotation"] + t) == ports(cell, goal))
     result = {"id": spec["id"], "name": spec["name"], "size": width, "time_limit": spec["time"],
               "source_index": path[0], "source_port": 8, "target_index": path[-1], "target_port": 2,
               "reference_path": path, "guided": spec.get("guided", False),
-              "reference_taps": sum(spec["costs"].values()) + branch_taps, "lesson": "five_by_five" if width == 5 else "six_by_six",
+              "reference_taps": 0, "lesson": "five_by_five" if width == 5 else "six_by_six",
               "instruction": spec["instruction"], "tip_lines": spec["tips"], "cells": cells}
     if spec.get("required_nodes"):
         result.update(required_nodes=spec["required_nodes"], rules_revision=2)
     if spec.get("diodes"):
         result["rules_revision"] = 2
+    for field in ("forbidden_nodes", "linked_groups", "required_outputs"):
+        if spec.get(field):
+            result[field] = spec[field]
+            result["rules_revision"] = 2
+    if spec.get("switches"):
+        result["rules_revision"] = 2
+    for index in action_indices(result):
+        turns = next(t for t in range(action_period(result, index)) if all(
+            ports(cells[j], cells[j]["rotation"] + t) == ports(cells[j], cells[j]["solution"])
+            for j in action_members(result, index)))
+        result["reference_taps"] += turns
     report = audit_level(result)
     expected_minimum = spec.get("minimum_taps", result["reference_taps"])
     if report["minimum_taps"] != expected_minimum:

@@ -1,6 +1,6 @@
 {
   "id": 21,
-  "name": "Corrente em dois rumos",
+  "name": "Uma chave, dois caminhos",
   "size": 6,
   "time_limit": 225,
   "source_index": 0,
@@ -35,10 +35,10 @@
   "guided": false,
   "reference_taps": 34,
   "lesson": "six_by_six",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "Toque no interruptor para alternar A/B e ligar OUT.",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "O interruptor tem só duas posições.",
+    "Cada toque troca o caminho."
   ],
   "cells": [
     {
@@ -110,9 +110,13 @@
       "solution": 1
     },
     {
-      "kind": "straight",
-      "rotation": 3,
-      "solution": 0
+      "kind": "switch",
+      "rotation": 0,
+      "solution": 1,
+      "switch_masks": [
+        6,
+        5
+      ]
     },
     {
       "kind": "curve",
@@ -225,5 +229,6 @@
       "solution": 0,
       "fixed": true
     }
-  ]
+  ],
+  "rules_revision": 2
 }

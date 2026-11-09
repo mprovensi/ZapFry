@@ -1,6 +1,6 @@
 {
   "id": 19,
-  "name": "Ramificação oculta",
+  "name": "Seta longe da sirene",
   "size": 6,
   "time_limit": 210,
   "source_index": 0,
@@ -35,10 +35,10 @@
   "guided": false,
   "reference_taps": 30,
   "lesson": "six_by_six",
-  "instruction": "Ligue IN a OUT. Há fios que não levam ao destino.",
+  "instruction": "Siga a seta e ligue OUT sem alimentar o alarme.",
   "tip_lines": [
-    "O T oferece mais de um caminho.",
-    "Nem todo ramo chega à saída."
+    "Respeite o sentido da corrente.",
+    "A sirene deve continuar apagada."
   ],
   "cells": [
     {
@@ -79,7 +79,7 @@
     },
     {
       "kind": "curve",
-      "rotation": 1,
+      "rotation": 2,
       "solution": 3
     },
     {
@@ -95,18 +95,18 @@
     },
     {
       "kind": "tee",
-      "rotation": 2,
-      "solution": 3
-    },
-    {
-      "kind": "curve",
-      "rotation": 1,
+      "rotation": 0,
       "solution": 1
     },
     {
       "kind": "straight",
-      "rotation": 3,
+      "rotation": 1,
       "solution": 0
+    },
+    {
+      "kind": "diode",
+      "rotation": 1,
+      "solution": 2
     },
     {
       "kind": "curve",
@@ -225,5 +225,9 @@
       "solution": 1,
       "fixed": true
     }
+  ],
+  "rules_revision": 2,
+  "forbidden_nodes": [
+    11
   ]
 }

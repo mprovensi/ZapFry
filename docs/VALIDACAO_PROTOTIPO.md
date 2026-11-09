@@ -1,10 +1,14 @@
-# Validação do protótipo 0.22.0
+# Validação do protótipo 0.23.0
 
-**Data:** 6 de novembro de 2026.  
+**Data:** 9 de novembro de 2026.
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.23.0:** todas as mecânicas restantes implementadas: alarmes nas fases 18–20, interruptor A/B na 21, dupla vinculada na 23 e ventilador obrigatório na 24. Mantidas fases clássicas, tempos e mínimos de ações. Dicas verificam alarmes, ações conjuntas e a porta do equipamento, sem consultar a referência autoral. Detalhes em [DESAFIOS_COMPLETOS_023.md](DESAFIOS_COMPLETOS_023.md).
+
+Exportação Android aprovada pelo fluxo obrigatório: **42.330 verificações da engine, 64 testes Python, 831 estados de dicas, 3.685 verificações visuais/temporais e 48 de áudio**. APK/código 40 auditado com fases idênticas e 83 texturas. As 24 fases continuam solucionáveis por mouse e toque. Instalada no S20 FE após repetir o fluxo completo: versão confirmada, perfil idêntico antes/depois e inicialização sem erros. Evidência em `builds/android/install-20261109T144435536290Z/status.json`; log em `builds/install-v0230-delivery.log`. Avaliação humana das novas regras permanece pendente.
 
 **0.22.0:** fios de sentido único nas fases 13 e 14 e combinação com lâmpada na fase 16. Entrada e saída distintas no modelo, dicas com correção de 180°, seta persistente e aviso de bloqueio. Fases clássicas preservadas; mínimos de 18/20/24 giros e tempos de 180 s mantidos. Revisão de regras 2 nas fases alteradas usa o histórico existente dos recordes. Detalhes em [FIOS_DIRECIONAIS_022.md](FIOS_DIRECIONAIS_022.md).
 

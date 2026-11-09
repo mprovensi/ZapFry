@@ -1,6 +1,10 @@
-# Zap & Fry — protótipo 0.22.0
+# Zap & Fry — protótipo 0.23.0
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Novidade 0.23.0:** alarmes recuperáveis nas fases 18–20, interruptor A/B na 21, dupla vinculada na 23 e segundo equipamento na 24. Dicas consideram a rede completa e ações conjuntas. As fases 17 e 22 continuam clássicas, com os mínimos e tempos anteriores preservados. APK exportado e auditado; 64 testes Python, 42.330 verificações da engine, 831 estados de dicas, 3.685 verificações visuais/temporais e 48 de áudio aprovados. Detalhes em [docs/DESAFIOS_COMPLETOS_023.md](docs/DESAFIOS_COMPLETOS_023.md).
+
+**0.23.0 instalada no S20 FE:** código 40 confirmado, perfil preservado e inicialização sem erros após repetir todos os testes obrigatórios. Registro em `builds/android/install-20261109T144435536290Z/status.json`.
 
 **Novidade 0.22.0:** fios de sentido único nas fases 13 e 14; na 16, seta combinada com lâmpada. A corrente entra pela cauda e sai pela ponta; girar 180° inverte o sentido. Dicas consideram a direção, com alerta de bloqueio e símbolo persistente no fio. Mantidos mínimos de 18/20/24 giros, tempo de 180 s e fases clássicas 12/15. Detalhes em [docs/FIOS_DIRECIONAIS_022.md](docs/FIOS_DIRECIONAIS_022.md).
 
@@ -91,13 +95,13 @@ A vitória dispara automaticamente o zap e oferece **Próxima fase**. O menu per
 | 15 | Resolver sob maior pressão | 22 | 180 s |
 | 16 | Combinar seta e lâmpada | 24 | 180 s |
 | 17 | Continuar o desafio em 6×6 | 26 | 210 s |
-| 18 | Interpretar curvas sob pressão | 28 | 210 s |
-| 19 | Encontrar a ramificação útil | 30 | 210 s |
-| 20 | Evitar atalhos interrompidos | 32 | 210 s |
-| 21 | Selecionar a rota da corrente | 34 | 225 s |
+| 18 | Conectar OUT mantendo o alarme apagado | 28 | 210 s |
+| 19 | Combinar alarme e seta direcional | 30 | 210 s |
+| 20 | Acender a lâmpada sem energizar o alarme | 32 | 210 s |
+| 21 | Alternar o interruptor A/B | 34 | 225 s |
 | 22 | Desfazer a rede cruzada | 36 | 225 s |
-| 23 | Encontrar o último desvio | 38 | 225 s |
-| 24 | Fechar a chave geral | 40 | 225 s |
+| 23 | Girar a dupla vinculada | 38 | 225 s |
+| 24 | Alimentar cadeira e ventilador | 40 | 225 s |
 
 **Pausa:** botão na tela ou Escape. O aplicativo também pausa ao perder o foco ou ir para segundo plano. Retomar pelo botão Continuar. O botão Voltar do Android pausa/retoma durante a tentativa, retorna ao menu no resultado e fecha o aplicativo no menu.
 
@@ -111,7 +115,7 @@ Som e redução de flashes ficam no menu. Flashes suaves são o padrão. Recorde
 - Busca de energia por portas recíprocas, com suporte a ciclos e rotas alternativas.
 - Tutorial com destaque do próximo fio, treino sem tempo, temporizador nas fases seguintes, giros, pausa, reinício, pontuação, estrelas e progressão persistente.
 - Seletor de fases por tamanho de grade, recordes individuais, migração dos saves anteriores e recuperação por backup.
-- Uma dica gratuita por tentativa, corrigindo e travando um fio sem impedir a conclusão das 24 fases.
+- Uma dica gratuita por tentativa, corrigindo e travando um fio ou a dupla vinculada sem impedir a conclusão das 24 fases.
 - Pacote visual substituível: PNGs derivados dos conceitos, com placa metálica, fios normais/energizados, fusível, reinício, botão vermelho, laboratório, goblin engenheiro e cavaleiro/cadeira em três poses. Os pacotes SVG anteriores continuam disponíveis.
 - Desenho geométrico quando uma camada/textura não foi atribuída, sons sintetizados e animação própria para flashes suaves.
 - Acabamento de laboratório industrial, iluminação suave, antecipação do choque, vibração visual, recuperação com fumaça e faíscas nos fios recém-energizados.

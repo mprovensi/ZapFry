@@ -49,7 +49,7 @@ func run(check: Callable) -> void:
 		var has_arrow := false
 		for cell in data["cells"]:
 			has_arrow = has_arrow or cell["kind"] == "diode"
-		check.call(has_arrow == (number in [13, 14, 16]), "Seta aparece somente onde foi definida: fase %d" % number)
+		check.call(has_arrow == (number in [13, 14, 16, 19]), "Seta aparece somente onde foi definida: fase %d" % number)
 
 
 func run_ui(app, check: Callable) -> void:

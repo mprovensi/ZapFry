@@ -7,7 +7,7 @@ import random
 from collections import Counter
 from pathlib import Path
 
-from validate_levels import MASKS, find_solution, is_solved, movable, rotate
+from validate_levels import MASKS, action_indices, action_members, action_period, apply_action, find_solution, is_solved, movable, rotate
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT = ROOT / "builds/hint-states-input.json"
@@ -29,7 +29,7 @@ def prepare():
         level = json.loads(file.read_text(encoding="utf-8"))
         number = level["id"]
         add(f"{number}-initial", copy.deepcopy(level))
-        if number in (11, 13, 14, 16):
+        if number in (11, 13, 14, 16, 18, 19, 20, 21, 23, 24):
             state = copy.deepcopy(level)
             state.pop("reference_path")
             state.pop("reference_taps")
@@ -40,15 +40,21 @@ def prepare():
         for order, moves in (("source", solution["moves"]), ("target", solution["moves"][::-1])):
             for fraction in (0.25, 0.5, 0.75):
                 state = copy.deepcopy(level)
+                rotations = [c["rotation"] for c in state["cells"]]
                 for index in moves[:int(len(moves) * fraction)]:
-                    state["cells"][index]["rotation"] = (state["cells"][index]["rotation"] + 1) % 4
+                    apply_action(state, rotations, index)
+                for cell, rotation in zip(state["cells"], rotations):
+                    cell["rotation"] = rotation
                 add(f"{number}-partial-{order}-{fraction}", state)
         for seed in range(32 if number >= 11 else 8):
             state = copy.deepcopy(level)
             rng = random.Random(number * 1000 + seed)
-            for cell in state["cells"]:
-                if movable(cell):
-                    cell["rotation"] = rng.randrange(4)
+            rotations = [c["rotation"] for c in state["cells"]]
+            for index in action_indices(state):
+                for _ in range(rng.randrange(action_period(state, index))):
+                    apply_action(state, rotations, index)
+            for cell, rotation in zip(state["cells"], rotations):
+                cell["rotation"] = rotation
             add(f"{number}-mistakes-{seed}", state)
         # Regressão: T em outra orientação que já une entrada e saída da rota.
         path, width = level["reference_path"], level["size"]
@@ -67,8 +73,12 @@ def prepare():
                 if not is_solved(level, reference):
                     continue  # Servir ao caminho OUT não basta se o ramo alimenta uma lâmpada.
                 state = copy.deepcopy(level)
+                rotations = [c["rotation"] for c in state["cells"]]
                 for previous in path[:position]:
-                    state["cells"][previous]["rotation"] = state["cells"][previous]["solution"]
+                    for _ in range((state["cells"][previous]["solution"] - rotations[previous]) % action_period(state, previous)):
+                        apply_action(state, rotations, previous)
+                for cell, rotation in zip(state["cells"], rotations):
+                    cell["rotation"] = rotation
                 state["cells"][index]["rotation"] = orientation
                 add(f"{number}-valid-tee-{index}", state, index)
     # Sem referência autoral; inclui curvas, T, simetrias e estados impossíveis.
@@ -118,6 +128,16 @@ def prepare():
                              {"kind": "diode", "rotation": target_rotation, "fixed": fixed},
                              {"kind": "empty", "rotation": 0}, {"kind": "empty", "rotation": 0}]}
                 add(f"direction-terminals-{fixed}-{source_rotation}-{target_rotation}", state)
+    for fixture in json.loads((ROOT / "tests/fixtures/advanced_challenges.json").read_text(encoding="utf-8")):
+        for seed in range(4):
+            state = copy.deepcopy(fixture["state"])
+            rotations = [c["rotation"] for c in state["cells"]]
+            for index in action_indices(state):
+                for _ in range(seed % action_period(state, index)):
+                    apply_action(state, rotations, index)
+            for cell, rotation in zip(state["cells"], rotations):
+                cell["rotation"] = rotation
+            add(f"advanced-{fixture['name']}-{seed}", state)
     INPUT.write_text(json.dumps({"cases": cases}, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Estados de dica preparados: {len(cases)}.")
 

@@ -55,10 +55,78 @@ func _exercise() -> void:
 		await _test_lamp_render(app, dimensions)
 		await _test_game_chrome(app, dimensions)
 		await _test_direction_render(app, dimensions)
+		await _test_advanced_render(app, dimensions)
 	app.queue_free()
 	await process_frame
 	await EncounterTests.new().run_render(self, _check)
 	await AnimationTests.new().run_render(self, _check)
+
+
+func _test_advanced_render(app, dimensions: Vector2i) -> void:
+	DirAccess.make_dir_recursive_absolute("res://builds/advanced-challenges")
+	for number in [18, 19, 20, 21, 23, 24]:
+		app.level_index = number - 1
+		app.start_game(false)
+		var picture := await _render(app)
+		_check(picture.save_png("res://builds/advanced-challenges/%dx%d-phase-%02d.png" % [dimensions.x, dimensions.y, number]) == OK, "Prévia de desafio avançado salva")
+	var transform: Transform2D = root.get_final_transform() * app.board_view.get_global_transform_with_canvas()
+	app.level_index = 17
+	app.start_game(false)
+	var alarm_off := await _render(app)
+	var alarm_region := _pixel_rect(transform, app.board_view.lamp_rect(4), alarm_off.get_size())
+	for cell in app.session.board.cells:
+		cell["rotation"] = cell["solution"]
+	app.session.board.cells[4]["rotation"] = 2
+	app.session.board.recompute()
+	app._on_cell_pressed(4)
+	var alarm_on := await _render(app)
+	_check(_difference(alarm_off, alarm_on, alarm_region) > 0.02 and not app.shock_flash.visible, "Alarme ativo muda o símbolo sem disparar clarão")
+	_check(alarm_on.save_png("res://builds/advanced-challenges/%dx%d-alarm-on.png" % [dimensions.x, dimensions.y]) == OK, "Prévia de alarme ligado salva")
+	app.level_index = 20
+	app.start_game(false)
+	var state_a := await _render(app)
+	var switch_region := _pixel_rect(transform, app.board_view.lamp_rect(13), state_a.get_size())
+	app.session.board.cells[13]["rotation"] = 1
+	app.session.board.recompute()
+	app.board_view.queue_redraw()
+	var state_b := await _render(app)
+	_check(_difference(state_a, state_b, switch_region) > 0.003, "Interruptor mostra identificação A/B diferente no renderer")
+	app.level_index = 22
+	app.start_game(false)
+	for cell in app.session.board.cells:
+		cell["rotation"] = cell["solution"]
+	for index in [2, 22]:
+		app.session.board.cells[index]["rotation"] = posmod(int(app.session.board.cells[index]["solution"]) - 2, 4)
+	app.session.board.recompute()
+	app.use_free_hint()
+	var pair_hint := await _render(app)
+	app.board_view.hint_index = -1
+	app.board_view.queue_redraw()
+	var no_hint := await _render(app)
+	for index in [2, 22]:
+		var region := _pixel_rect(transform, app.board_view.cell_rect(index), pair_hint.get_size())
+		_check(_difference(pair_hint, no_hint, region) > 0.005, "Dica da dupla destaca ambos os fios no renderer")
+	_check(pair_hint.save_png("res://builds/advanced-challenges/%dx%d-pair-hint.png" % [dimensions.x, dimensions.y]) == OK, "Prévia de dica da dupla salva")
+	app.level_index = 23
+	app.start_game(false)
+	for cell in app.session.board.cells:
+		cell["rotation"] = cell["solution"]
+	app.session.board.cells[5]["rotation"] = 3
+	app.session.board.recompute()
+	app._sync_controls()
+	app.board_view.queue_redraw()
+	var fan_off := await _render(app)
+	var fan_region := _pixel_rect(transform, app.board_view.lamp_rect(5), fan_off.get_size())
+	app.use_free_hint()
+	app.board_view.activation_time = 0
+	app.board_view.energy_time = 1
+	app.board_view.queue_redraw()
+	var fan_on := await _render(app)
+	_check(_difference(fan_off, fan_on, fan_region) > 0.01, "Segundo equipamento indica que a saída recebeu energia")
+	app.board_view._process(0.2)
+	var spinning := await _render(app)
+	_check(_difference(fan_on, spinning, fan_region) > 0.005, "Ventilador energizado gira no renderer")
+	_check(spinning.save_png("res://builds/advanced-challenges/%dx%d-fan-on.png" % [dimensions.x, dimensions.y]) == OK, "Prévia de segundo equipamento ligado salva")
 
 
 func _test_direction_render(app, dimensions: Vector2i) -> void:

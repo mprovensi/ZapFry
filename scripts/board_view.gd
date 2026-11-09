@@ -17,6 +17,7 @@ var activation_time := 0.0
 var guide_index := -1
 var hint_index := -1
 var energy_time := 1.0
+var equipment_time := 0.0
 var newly_energized: Dictionary = {}
 var _styles: Array[StyleBoxFlat] = []
 
@@ -29,6 +30,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if model != null and not model.required_ports.is_empty() and model.lit_required_count() > 0:
+		equipment_time += maxf(delta, 0)
+		queue_redraw()
 	if activation_time > 0.0:
 		activation_time = maxf(0.0, activation_time - delta)
 		queue_redraw()
@@ -135,9 +139,18 @@ func _draw() -> void:
 			else:
 				_draw_blocker(center, step)
 			continue
-		var texture: Texture2D = art_pack.wire_texture(str(cell["kind"]), live) if art_pack != null else null
+		var visual_kind := str(cell["kind"])
+		var visual_rotation := int(cell["rotation"])
+		if visual_kind == "switch":
+			var switch_mask := model.mask_at(index)
+			visual_kind = "straight" if switch_mask in [5, 10] else "curve"
+			for turns in range(4):
+				if Board.rotate_mask(Board.BASE_MASKS[visual_kind], turns) == switch_mask:
+					visual_rotation = turns
+					break
+		var texture: Texture2D = art_pack.wire_texture(visual_kind, live) if art_pack != null else null
 		if texture != null:
-			draw_set_transform(center, float(cell["rotation"]) * PI * 0.5)
+			draw_set_transform(center, float(visual_rotation) * PI * 0.5)
 			draw_texture_rect(texture, Rect2(-rect.size * 0.5, rect.size), false)
 			draw_set_transform(Vector2.ZERO)
 		else:
@@ -157,6 +170,8 @@ func _draw() -> void:
 			draw_circle(center, 4 * detail_scale, Color("fff2b0") if live else Color("526a75"))
 		if cell["kind"] == "diode":
 			_draw_direction(index, center, detail_scale)
+		if cell["kind"] == "switch":
+			_draw_switch(index, center, detail_scale)
 		if bool(cell.get("fixed", false)):
 			var lock_pos := rect.position + Vector2(15, 15) * detail_scale
 			if index == model.source_index:
@@ -171,9 +186,9 @@ func _draw() -> void:
 					if model.ports_at(index).y & Board.PORTS[direction]:
 						var spark := center + Vector2(Board.OFFSETS[direction]) * rect.size.x * 0.45 * progress
 						draw_circle(spark, maxf(2, 3 * detail_scale), Color(1, 0.95, 0.7, 1.0 - progress))
-		if index == activated and activation_time > 0.0:
+		if model.action_members(activated).has(index) and activation_time > 0.0:
 			draw_arc(center, step * 0.30, -1.3, 0.3, 16, LIVE, 3, true)
-		if index == hint_index:
+		if model.action_members(hint_index).has(index):
 			var hint_style := StyleBoxFlat.new()
 			hint_style.draw_center = false
 			hint_style.border_color = Color("6ce1c4")
@@ -181,7 +196,8 @@ func _draw() -> void:
 			hint_style.set_corner_radius_all(maxi(8, int(15 * detail_scale)))
 			_styles.append(hint_style)
 			draw_style_box(hint_style, rect.grow(-2))
-			draw_string(ThemeDB.fallback_font, rect.position + Vector2(8, rect.size.y - 8), "✓", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("6ce1c4"))
+			if model.action_members(index).size() == 1:
+				draw_string(ThemeDB.fallback_font, rect.position + Vector2(8, rect.size.y - 8), "✓", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("6ce1c4"))
 		if index == guide_index and interactive:
 			var guide_style := StyleBoxFlat.new()
 			guide_style.draw_center = false
@@ -195,9 +211,68 @@ func _draw() -> void:
 			draw_arc(arrow, 10 * detail_scale, -2.4, 1.1, 20, LIVE, maxf(2, 3 * detail_scale), true)
 			draw_colored_polygon(PackedVector2Array([arrow + Vector2(-1, 4) * detail_scale, arrow + Vector2(8, 11) * detail_scale, arrow + Vector2(10, 0) * detail_scale]), LIVE)
 		if model.required_nodes.has(index):
-			_draw_lamp(lamp_rect(index), live)
+			if model.required_ports.has(index):
+				_draw_fan(lamp_rect(index), live and (model.ports_at(index).y & int(model.required_ports[index])) != 0)
+			else:
+				_draw_lamp(lamp_rect(index), live)
+		if model.forbidden_nodes.has(index):
+			_draw_alarm(lamp_rect(index), live)
+		for group_number in range(model.linked_groups.size()):
+			if model.linked_groups[group_number].has(index):
+				_draw_link(rect, group_number + 1)
 	_draw_terminal(model.source_index, Vector2.LEFT, "IN", live_color)
 	_draw_terminal(model.target_index, Vector2.RIGHT, "OUT", Color("6ce1c4") if model.target_connected() else Color("93a8b1"))
+	for index: int in model.required_ports:
+		var direction := Board.PORTS.find(int(model.required_ports[index]))
+		_draw_terminal(index, Vector2(Board.OFFSETS[direction]), "VENT", Color("6ce1c4") if model.energized.has(index) and (model.ports_at(index).y & int(model.required_ports[index])) != 0 else Color("93a8b1"))
+
+
+func _draw_switch(index: int, center: Vector2, detail: float) -> void:
+	var state := int(model.cells[index]["rotation"])
+	draw_circle(center, 18 * detail, INK)
+	draw_line(center + Vector2(0, 10) * detail, center + Vector2(11 if state else -11, -12) * detail, Color("f1eee1"), 6 * detail, true)
+	draw_circle(center + Vector2(11 if state else -11, -12) * detail, 6 * detail, Color("ffce49"))
+	var badge := lamp_rect(index)
+	draw_circle(badge.get_center(), badge.size.x * 0.5, INK)
+	draw_string(ThemeDB.fallback_font, badge.get_center() + Vector2(-6, 7), "B" if state else "A", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("ffce49"))
+
+
+func _draw_link(rect: Rect2, number: int) -> void:
+	var badge := Rect2(rect.position + Vector2(4, rect.size.y - 31), Vector2(38, 27))
+	var style := StyleBoxFlat.new()
+	style.bg_color = INK
+	style.set_corner_radius_all(8)
+	_styles.append(style)
+	draw_style_box(style, badge)
+	var point := badge.position + Vector2(13, 13)
+	for offset in [-4, 4]:
+		draw_arc(point + Vector2(offset, 0), 5, -0.4, TAU - 1.2, 16, Color("6ce1c4"), 2, true)
+	draw_string(ThemeDB.fallback_font, badge.position + Vector2(25, 20), str(number), HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("f1eee1"))
+
+
+func _draw_alarm(rect: Rect2, live: bool) -> void:
+	var center := rect.get_center()
+	var scale_value := rect.size.x / 38.0
+	draw_circle(center, 19 * scale_value, INK)
+	var triangle := PackedVector2Array([center + Vector2(0, -14) * scale_value, center + Vector2(-14, 12) * scale_value, center + Vector2(14, 12) * scale_value])
+	draw_colored_polygon(triangle, Color("fa8e74") if live else Color("b7c5ce"))
+	draw_line(center + Vector2(0, -5) * scale_value, center + Vector2(0, 3) * scale_value, INK, maxf(2, 3 * scale_value), true)
+	draw_circle(center + Vector2(0, 7) * scale_value, maxf(1.5, 2 * scale_value), INK)
+	if live:
+		for sign_value in [-1, 1]:
+			draw_line(center + Vector2(sign_value * 14, -9) * scale_value, center + Vector2(sign_value * 17, -14) * scale_value, Color("fa8e74"), 2, true)
+
+
+func _draw_fan(rect: Rect2, live: bool) -> void:
+	var center := rect.get_center()
+	var unit := rect.size.x / 38.0
+	draw_circle(center, 19 * unit, INK)
+	draw_arc(center, 14 * unit, 0, TAU, 24, Color("6ce1c4") if live else Color("b7c5ce"), 2, true)
+	var angle := equipment_time * 4.0 if live else 0.0
+	for blade in range(3):
+		var direction := Vector2.from_angle(angle + blade * TAU / 3)
+		draw_line(center + direction * 3 * unit, center + direction * 10 * unit, Color("6ce1c4") if live else Color("b7c5ce"), 6 * unit, true)
+	draw_circle(center, 4 * unit, Color("f1eee1"))
 
 
 func lamp_rect(index: int) -> Rect2:

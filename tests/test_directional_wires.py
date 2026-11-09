@@ -83,7 +83,7 @@ class DirectionalWireTests(unittest.TestCase):
         for number in range(1, 25):
             data = json.loads((ROOT / f"levels/level_{number:02d}.json").read_text(encoding="utf-8"))
             validate_structure(data)
-            self.assertEqual(any(c["kind"] == "diode" for c in data["cells"]), number in (13, 14, 16))
+            self.assertEqual(any(c["kind"] == "diode" for c in data["cells"]), number in (13, 14, 16, 19))
             if number in (13, 14, 16):
                 self.assertEqual(data["rules_revision"], 2)
                 self.assertEqual(data["time_limit"], 180)
