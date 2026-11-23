@@ -76,6 +76,9 @@ var stage: Control
 var board_view: Control
 var phase_label: Label
 var feedback_label: Label
+var menu_premise: Label
+var case_outcome: Label
+var case_replay := false
 var room_view: Control
 var operator_view: Control
 var cable_view: Node2D
@@ -157,6 +160,18 @@ func _ready() -> void:
 	feedback_label.add_theme_constant_override("outline_size", 4)
 	feedback_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stage.add_child(feedback_label)
+	menu_premise = Label.new()
+	menu_premise.name = "NarrativePremise"
+	menu_premise.position = Vector2(64, 836)
+	menu_premise.size = Vector2(592, 72)
+	menu_premise.text = Stories.narrative["premise"]
+	menu_premise.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	menu_premise.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	menu_premise.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	menu_premise.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	menu_premise.add_theme_font_size_override("font_size", 26)
+	menu_premise.add_theme_color_override("font_color", CREAM)
+	stage.add_child(menu_premise)
 	cable_view = PowerCableView.new()
 	cable_view.name = "PowerCables"
 	stage.add_child(cable_view)
@@ -242,6 +257,17 @@ func _ready() -> void:
 	result_portrait.position = Vector2(150, 352)
 	result_portrait.size = Vector2(420, 420)
 	overlay.add_child(result_portrait)
+	case_outcome = Label.new()
+	case_outcome.name = "CaseOutcome"
+	case_outcome.position = Vector2(48, 918)
+	case_outcome.size = Vector2(624, 72)
+	case_outcome.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	case_outcome.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	case_outcome.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	case_outcome.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	case_outcome.add_theme_font_size_override("font_size", 26)
+	case_outcome.add_theme_color_override("font_color", CREAM)
+	overlay.add_child(case_outcome)
 	_make_campaign_ending()
 	_make_button("continue", "CONTINUAR", Rect2(112, 1098, 496, 104), _overlay_primary, true, overlay)
 	_make_button("exit", "MENU", Rect2(112, 1226, 496, 96), show_menu, false, overlay)
@@ -275,11 +301,11 @@ func _make_campaign_ending() -> void:
 	ending_title.add_theme_font_size_override("font_size", 44)
 	ending_message = Label.new()
 	ending_message.name = "MoreLevels"
-	ending_message.position = Vector2(64, 982)
-	ending_message.size = Vector2(592, 92)
-	ending_message.text = "Mais fases virão pela frente.\nAté a próxima descarga!"
+	ending_message.position = Vector2(64, 998)
+	ending_message.size = Vector2(592, 76)
+	ending_message.text = "24 fases concluídas.\nMais fases virão pela frente."
 	ending_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	ending_message.add_theme_font_size_override("font_size", 28)
+	ending_message.add_theme_font_size_override("font_size", 26)
 	for label in [ending_title, ending_message]:
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -332,6 +358,7 @@ func _advance_clock() -> void:
 
 func start_game(show_intro: bool = true) -> void:
 	settings.hide()
+	case_replay = profile.level_record(level_index + 1).get("completed", false) == true
 	var selected := character_roster.select(level_index, profile.appearance)
 	execution_character = selected["character"]
 	profile.appearance = selected["snapshot"]
@@ -355,7 +382,7 @@ func start_game(show_intro: bool = true) -> void:
 	_update_guidance()
 	board_view.queue_redraw()
 	if show_intro and not profile.appearance["intro_seen"]:
-		dialogue.begin(Stories.CASES[profile.appearance["story"]], execution_character.display_name, execution_character.dialogue_color)
+		dialogue.begin(Stories.lines_for(profile.appearance["story"], execution_character.character_id), execution_character.display_name, execution_character.dialogue_color)
 	else:
 		dialogue.close()
 	_sync_controls()
@@ -659,6 +686,7 @@ func _sync_controls() -> void:
 	_apply_art_icons()
 	_sync_audio()
 	var in_game := screen == "game"
+	menu_premise.visible = screen == "menu" and not settings.visible
 	var introducing: bool = in_game and dialogue.active
 	dialogue.visible = introducing and session.state != Session.State.PAUSED and not settings.visible
 	var flash := shock_flash_alpha()
@@ -687,6 +715,8 @@ func _sync_controls() -> void:
 	board_view.interactive = in_game and not introducing and session.state in [Session.State.READY, Session.State.PLAYING]
 	overlay.visible = in_game and not settings.visible and session.state in [Session.State.PAUSED, Session.State.WON, Session.State.LOST]
 	campaign_ending.visible = overlay.visible and _is_final_result()
+	case_outcome.visible = overlay.visible and session.state in [Session.State.WON, Session.State.LOST]
+	case_outcome.text = Stories.outcome_for(level_index) if session.state == Session.State.WON else "Procedimento cancelado. Nenhuma multa aplicada."
 	buttons["continue"].text = "CONTINUAR" if session.state == Session.State.PAUSED else "REPETIR FASE"
 	if session.state == Session.State.WON:
 		buttons["continue"].text = "PRÓXIMA FASE" if level_index < levels.size() - 1 else "JOGAR DO INÍCIO"
@@ -861,8 +891,7 @@ func shock_flash_alpha() -> float:
 func _draw_menu() -> void:
 	draw_rect(Rect2(Vector2.ZERO, GAME_DESIGN), Color(0.015, 0.03, 0.045, 0.2))
 	_center("ZAP & FRY", 326, 86, YELLOW)
-	_center("UM PUZZLE DE ALTA TENSÃO", 372, 22, CREAM)
-	_center("Gire os fios. Feche o circuito.", 876, 26, CREAM)
+	_center("FORTALEZA DO CURTO", 372, 22, CREAM)
 
 
 func _draw_selector() -> void:
@@ -1037,6 +1066,8 @@ func _draw_overlay() -> void:
 		summary = "O tempo acabou."
 		next = "Mais uma tentativa?"
 	var heading := "MISSÃO CUMPRIDA" if _is_final_result() else "FASE %02d / %02d" % [level_index + 1, levels.size()]
+	if session.state == Session.State.WON and case_replay:
+		heading = "PROCESSO ARQUIVADO · FASE %02d" % (level_index + 1)
 	_center(heading, 240, 24, accent, overlay)
 	if not _is_final_result():
 		_center(title, 310, 50, CREAM, overlay)
@@ -1048,7 +1079,8 @@ func _draw_overlay() -> void:
 		for index in range(3):
 			_draw_star(Vector2(280 + index * 80, 824), 28, YELLOW if index < session.stars() else EDGE, overlay)
 	_center(summary, 904, 28, CREAM, overlay)
-	_center(next, 964, 24, MUTED, overlay)
+	if not _is_final_result():
+		_center(next, 1056, 24, MUTED, overlay)
 
 
 func _bolt(center: Vector2, scale_factor: float, color: Color, canvas: CanvasItem = null) -> void:

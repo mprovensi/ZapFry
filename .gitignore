@@ -2,6 +2,7 @@
 builds/*
 !builds/.gdignore
 .tools/
+android/
 *.apk
 *.aab
 *.exe

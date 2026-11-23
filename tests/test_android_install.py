@@ -1,5 +1,6 @@
 """Valida seleção do alvo, integridade e save sem usar ADB real."""
 
+import configparser
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
@@ -125,12 +126,31 @@ class AndroidInstallTests(unittest.TestCase):
         self.assertEqual((self.root / "result/startup.log").read_text(encoding="utf-8"), self.startup_error.decode())
 
     def test_apk_identity_and_vibration_permission_are_required(self):
-        identity = "package: name='com.zapfry.prototype' versionCode='25' versionName='0.15.0'\n"
+        identity = "package: name='com.mprovensi.zapfry' versionCode='25' versionName='0.15.0'\n"
         permission = "uses-permission: name='android.permission.VIBRATE'\n"
         self.assertEqual(installer.apk_identity(identity + permission), (25, "0.15.0"))
-        for invalid in [identity, (identity + permission).replace("com.zapfry.prototype", "other.app")]:
+        for invalid in [identity,
+                        (identity + permission).replace("com.mprovensi.zapfry", "other.app"),
+                        (identity + permission).replace("com.mprovensi.zapfry", "com.zapfry.prototype")]:
             with self.assertRaises(RuntimeError):
                 installer.apk_identity(invalid)
+
+    def test_export_and_installer_use_the_production_package(self):
+        presets = configparser.ConfigParser()
+        presets.read(installer.ROOT / "export_presets.cfg", encoding="utf-8")
+        android = next(section for section in presets.sections()
+                       if presets[section].get("name") == '"Android"')
+        package = presets[android + ".options"]["package/unique_name"].strip('"')
+        self.assertEqual(package, "com.mprovensi.zapfry")
+        self.assertEqual(installer.PACKAGE, package)
+        store = presets["preset.2.options"]
+        for key in ("package/unique_name", "version/code", "version/name",
+                    "architectures/arm64-v8a", "architectures/x86_64", "permissions/vibrate"):
+            self.assertEqual(store[key], presets[android + ".options"][key], key)
+        self.assertEqual(store["gradle_build/use_gradle_build"], "true")
+        self.assertEqual(store["gradle_build/export_format"], "1")
+        self.assertEqual(store["gradle_build/min_sdk"], '"24"')
+        self.assertEqual(store["gradle_build/target_sdk"], '"36"')
 
     def test_missing_installed_vibration_permission_fails_delivery(self):
         self.package_info = self.package_info.replace(b"granted=true", b"granted=false")

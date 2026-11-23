@@ -22,7 +22,7 @@ func run(check: Callable) -> void:
 		for template in Roster.TEMPLATES:
 			check.call((story_id in Stories.eligible(template.character_id)) == (Stories.RESTRICTIONS[story_id] == template.character_id), "Conversa específica só aparece para a base compatível")
 	var last_story := roster.select(0, {"level": 0, "id": "elfa", "name": "Líria Faísca", "palette": 0, "story": 47, "intro_seen": true})
-	check.call(last_story["snapshot"]["story"] == 47 and last_story["snapshot"]["intro_seen"], "Último caso novo pode ser restaurado sem trocar a conversa")
+	check.call(last_story["snapshot"]["story"] == 48 and not last_story["snapshot"]["intro_seen"] and last_story["snapshot"]["name"] == "Líria Faísca", "Conversa antiga é atualizada para a fase, preservando a identidade e reapresentando a história")
 	var combinations: Dictionary = {}
 	var speaker_colors := {DialogueView.EXECUTOR_COLOR: true}
 	for template in Roster.TEMPLATES:
@@ -30,7 +30,7 @@ func run(check: Callable) -> void:
 		speaker_colors[template.dialogue_color] = true
 		for name in template.aliases:
 			for palette in range(4):
-				var selected := roster.select(0, {"level": 0, "id": template.character_id, "name": name, "palette": palette, "story": 0, "intro_seen": true})
+				var selected := roster.select(0, {"level": 0, "id": template.character_id, "name": name, "palette": palette, "story": 48, "intro_seen": true})
 				var snapshot: Dictionary = selected["snapshot"]
 				combinations[str([snapshot["id"], snapshot["name"], snapshot["palette"]])] = true
 				check.call(selected["character"].palette_index == palette and snapshot["intro_seen"], "Nome e paleta selecionados chegam à instância")
@@ -40,7 +40,7 @@ func run(check: Callable) -> void:
 	for level in range(24):
 		var selected := roster.select(level, {})
 		var snapshot: Dictionary = selected["snapshot"]
-		check.call(snapshot["story"] in Stories.eligible(snapshot["id"]) and snapshot["story"] != prior, "História sorteada é compatível e evita repetição imediata")
+		check.call(snapshot["story"] in Stories.eligible(snapshot["id"], level) and snapshot["story"] == 48 + level and snapshot["story"] != prior, "A fase determina o acontecimento e o sorteio não altera a ordem da história")
 		prior = snapshot["story"]
 	var profile := Profile.new()
 	profile.appearance = roster.select(0, {})["snapshot"]
@@ -52,7 +52,52 @@ func run(check: Callable) -> void:
 	var old := roster.select(0, {"level": 0, "id": "cavaleira", "name": "Zefa do Trovão"})
 	check.call(old["snapshot"]["palette"] == 0 and not old["snapshot"]["intro_seen"], "Perfil v5 conserva cor original e recebe uma introdução")
 	var bad := roster.select(0, {"level": 0, "id": "pirata", "name": "Zeca Maré", "palette": 99, "story": 3, "intro_seen": true})
-	check.call(bad["snapshot"]["palette"] in range(4) and bad["snapshot"]["story"] in Stories.eligible("pirata") and not bad["snapshot"]["intro_seen"], "Dados inválidos recebem fallback compatível sem pular introdução nova")
+	check.call(bad["snapshot"]["palette"] in range(4) and bad["snapshot"]["story"] in Stories.eligible("pirata", 0) and not bad["snapshot"]["intro_seen"], "Dados inválidos recebem fallback compatível sem pular introdução nova")
+	_test_campaign(check)
+	_test_campaign_migration(check)
+
+
+func _test_campaign(check: Callable) -> void:
+	check.call(Stories.narrative["phases"].size() == 24, "Roteiro cobre exatamente as 24 fases")
+	var outcomes: Dictionary = {}
+	for level_index in range(24):
+		var phase: Dictionary = Stories.narrative["phases"][level_index]
+		check.call(phase["id"] == level_index + 1, "Acontecimentos seguem a ordem da campanha")
+		check.call(not Stories.outcome_for(level_index).is_empty() and not outcomes.has(Stories.outcome_for(level_index)), "Cada fase tem consequência própria")
+		outcomes[Stories.outcome_for(level_index)] = true
+		for id in phase["replies"]:
+			check.call(Roster.TEMPLATES.any(func(character): return character.character_id == id), "Variações só usam bases existentes")
+		for template in Roster.TEMPLATES:
+			var lines := Stories.lines_for(48 + level_index, template.character_id)
+			check.call(lines.size() == 2 and lines.all(func(line): return line is String and not line.is_empty()), "Todos os personagens têm somente duas falas válidas por fase")
+			check.call(lines[0] == phase["lines"][0] and lines[1] == phase["replies"].get(template.character_id, phase["lines"][1]), "Pergunta da fase e resposta do arquétipo permanecem coerentes")
+			lines[0] = "alteração de teste"
+			check.call(Stories.lines_for(48 + level_index, template.character_id)[0] == phase["lines"][0], "A apresentação não modifica o roteiro compartilhado")
+	check.call(Stories.outcome_for(23).contains("Bônus negado") and Stories.outcome_for(23).contains("Desvio registrado"), "Último resultado fecha a fraude e a piada do bônus")
+	check.call(Stories.outcome_for(-1).is_empty() and Stories.lines_for(999, "elfa").is_empty(), "IDs inválidos não revelam uma fase diferente")
+
+
+func _test_campaign_migration(check: Callable) -> void:
+	var profile := Profile.new()
+	profile.record_win(10, 1750, 2, 21.0)
+	profile.current_level = 10
+	profile.music_volume = 0.35
+	profile.vibration_enabled = false
+	profile.appearance = {"level": 10, "id": "elfa", "name": "Líria Faísca", "palette": 3, "story": 36, "intro_seen": true}
+	var path := "res://builds/lore-migration.cfg"
+	check.call(profile.save_profile(path) == OK, "Perfil v7 anterior pode ser preparado sem migração destrutiva")
+	var loaded := Profile.new()
+	loaded.load_profile(path)
+	var records := loaded.records.duplicate(true)
+	var selected := Roster.new(24).select(10, loaded.appearance)
+	loaded.appearance = selected["snapshot"]
+	check.call(loaded.appearance["name"] == "Líria Faísca" and loaded.appearance["palette"] == 3 and loaded.appearance["story"] == 58 and not loaded.appearance["intro_seen"], "Atualização conserva condenado e cor, corrige a história e reapresenta as duas falas")
+	check.call(loaded.records == records and loaded.unlocked_level == 10 and loaded.current_level == 10 and loaded.music_volume == 0.35 and not loaded.vibration_enabled, "A narrativa não altera recordes, desbloqueios, continuação ou preferências")
+	loaded.appearance["intro_seen"] = true
+	loaded.save_profile(path)
+	var reopened := Profile.new()
+	reopened.load_profile(path)
+	check.call(Roster.new(99).select(10, reopened.appearance)["snapshot"] == loaded.appearance, "Nova conversa vista e aparência sobrevivem à reabertura")
 
 
 func run_ui(app, tree: SceneTree, check: Callable) -> void:
@@ -63,6 +108,7 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	var cells: Array = app.session.board.cells.duplicate(true)
 	var snapshot: Dictionary = app.profile.appearance.duplicate()
 	check.call(app.dialogue.active and app.dialogue.visible and not app.board_view.interactive, "Conversa abre antes do puzzle e bloqueia a grade")
+	check.call(app.profile.appearance["story"] == 51 and app.dialogue.lines == Stories.narrative["phases"][3]["lines"], "Partida usa o roteiro da fase atual ao atualizar um encontro antigo")
 	check.call(app.dialogue.speaker.text == "Executor" and not _has_step_labels(app.dialogue), "Primeiro balão identifica o Executor sem contador de passos")
 	check.call(app.dialogue.speaker.get_theme_font_size("font_size") >= 32 and not _has_name_background(app.dialogue), "Nome permanece destacado sem fundo próprio")
 	check.call(app.dialogue.body.get_theme_font_size("font_size") == 36, "Falas usam fonte reduzida de 36 unidades")
@@ -142,10 +188,16 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 			check.call(Rect2(Vector2.ZERO, app.dialogue.bubble.size).encloses(app.dialogue.speaker.get_rect()) and not _has_name_background(app.dialogue), "Nome cabe no papel do balão sem fundo adicional")
 		app.dialogue.finish()
 		await tree.process_frame
+	var conversations: Array = Stories.CASES.duplicate(true)
+	for level_index in range(24):
+		for template in Roster.TEMPLATES:
+			var lines := Stories.lines_for(48 + level_index, template.character_id)
+			if not conversations.has(lines):
+				conversations.append(lines)
 	for dimensions in [Vector2(360, 800), Vector2(720, 1280), Vector2(720, 1600)]:
 		app.size = dimensions
 		app._layout_stage()
-		for story in Stories.CASES:
+		for story in conversations:
 			app.dialogue.begin(story, "Zefa do Trovão", app.execution_character.dialogue_color)
 			for step in range(2):
 				await tree.process_frame
@@ -157,7 +209,57 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 			await tree.process_frame
 	app.dialogue.close()
 	app.start_game(false)
-	print("Encontros: 48 histórias, 140 combinações, navegação, toque e texto em três proporções verificados.")
+	await _test_outcomes(app, tree, check)
+	print("Encontros: campanha em 24 fases, 48 conversas atuais, legado, 140 aparências e resultados em três proporções verificados.")
+
+
+func _test_outcomes(app, tree: SceneTree, check: Callable) -> void:
+	for dimensions in [Vector2(360, 800), Vector2(720, 1280), Vector2(720, 1600)]:
+		app.size = dimensions
+		app.show_menu()
+		await tree.process_frame
+		check.call(app.menu_premise.visible and not app.case_outcome.visible, "Menu apresenta a premissa, sem consequência de outro processo")
+		_check_label_fits(app, app.menu_premise, check)
+		for level_index in range(24):
+			app.level_index = level_index
+			app.start_game(false)
+			check.call(not app.case_outcome.visible and not app.menu_premise.visible, "Narrativa de resultado não aparece durante a partida")
+			app.session.state = Session.State.RESOLVING
+			app._sync_controls()
+			check.call(not app.case_outcome.visible, "Consequência aguarda descarga e recuperação")
+			app.session.state = Session.State.WON
+			app._sync_controls()
+			await tree.process_frame
+			check.call(app.case_outcome.visible and app.case_outcome.text == Stories.outcome_for(level_index), "Resultado mostra a consequência daquela fase")
+			_check_label_fits(app, app.case_outcome, check)
+			check.call(not app.case_outcome.get_rect().intersects(app.result_portrait.get_rect()) and not app.case_outcome.get_rect().intersects(app.buttons["continue"].get_rect()), "Consequência não cobre personagem nem botões")
+			if level_index == 23:
+				check.call(not app.case_outcome.get_rect().intersects(app.ending_message.get_rect()), "Desfecho e agradecimento têm espaços distintos")
+			app.session.state = Session.State.PAUSED
+			app._sync_controls()
+			check.call(not app.case_outcome.visible, "Pausa não mostra multa quitada")
+			app.session.state = Session.State.LOST
+			app._sync_controls()
+			await tree.process_frame
+			check.call(app.case_outcome.visible and app.case_outcome.text.contains("Nenhuma multa aplicada") and not app.campaign_ending.visible, "Derrota cancela o procedimento sem revelar vitória ou encerramento")
+			_check_label_fits(app, app.case_outcome, check)
+	app.profile.records.erase("1")
+	app.level_index = 0
+	app.start_game(false)
+	check.call(not app.case_replay, "Primeiro processo não é marcado como reconstituição")
+	app._on_cell_pressed(1)
+	app._process(app.RESOLUTION_DURATION)
+	check.call(app.case_outcome.visible and app.profile.level_record(1).get("completions", 0) == 1, "Consequência real aparece somente após a conclusão e o registro da vitória")
+	app.start_game(false)
+	check.call(app.case_replay and not app.case_outcome.visible and app.profile.level_record(1)["completions"] == 1, "Reconstituição reconhece processo arquivado sem registrar nova multa ao entrar")
+	app.show_menu()
+	check.call(not app.case_outcome.visible, "Voltar ao menu remove consequência anterior")
+
+
+func _check_label_fits(app, label: Label, check: Callable) -> void:
+	var font: Font = label.get_theme_font("font")
+	var height := font.get_height(label.get_theme_font_size("font_size")) * label.get_line_count()
+	check.call(app.get_global_rect().encloses(label.get_global_rect()) and height <= label.size.y + 1, "Texto narrativo cabe inteiro na tela: " + label.text)
 
 
 func _has_step_labels(dialogue) -> bool:

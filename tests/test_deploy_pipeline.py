@@ -23,6 +23,11 @@ class DeploymentPipelineTests(unittest.TestCase):
         (self.root / "bin").mkdir()
         (self.root / "scripts").mkdir()
         (self.root / "scripts/runtime.gd").write_text("extends Node\n", encoding="utf-8")
+        signing = self.root / ".tools/signing"
+        signing.mkdir(parents=True)
+        (signing / "test.jks").write_bytes(b"fake test key")
+        (signing / "upload.json").write_text(json.dumps(dict(keystore=str(signing / "test.jks"),
+                                                            alias="test-upload", password="test-only-password")), encoding="utf-8")
         shutil.copy2(ROOT / "tools/dev.ps1", self.root / "tools/dev.ps1")
         self.log = self.root / "calls.jsonl"
         self.env = dict(os.environ, ZAP_TEST_LOG=str(self.log), ZAP_TEST_FAIL="")
@@ -45,17 +50,42 @@ class DeploymentPipelineTests(unittest.TestCase):
             "  Set-Content -LiteralPath $args[$logIndex + 1] -Value $text\n"
             "}\n"
             "if ($env:ZAP_TEST_MUTATE -and ((-not $env:ZAP_TEST_MUTATE_EXPORT_ONLY -and ($args -contains 'res://tests/run_audio_tests.gd')) -or ($args -contains '--export-debug'))) { Add-Content -LiteralPath $env:ZAP_TEST_MUTATE -Value '# changed' }\n"
-            "if ($args -contains '--export-debug') { Set-Content -LiteralPath $args[-1] -Value 'fake package' }\n"
+            "if (($args -contains '--export-debug') -or ($args -contains '--export-release')) { Set-Content -LiteralPath $args[-1] -Value 'fake package' }\n"
             "exit 0\n", encoding="utf-8-sig")
 
-    def run_pipeline(self, action, fail=""):
+    def run_pipeline(self, action, fail="", release=False):
         self.env["ZAP_TEST_FAIL"] = fail
-        result = subprocess.run([SHELL, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+        command = [SHELL, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
                                  str(self.root / "tools/dev.ps1"), "-Action", action,
-                                 "-GodotPath", str(self.godot)], cwd=self.root, env=self.env,
+                                 "-GodotPath", str(self.godot)]
+        if release:
+            command.append("-Release")
+        result = subprocess.run(command, cwd=self.root, env=self.env,
                                 capture_output=True, timeout=45)
         calls = [json.loads(line.lstrip("\ufeff")) for line in self.log.read_text(encoding="utf-8-sig").splitlines()] if self.log.exists() else []
         return result, [" ".join(call) for call in calls]
+
+    def test_release_checks_suites_both_packages_and_signatures_without_installing(self):
+        result, calls = self.run_pipeline("android", release=True)
+        self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
+        markers = ["run_tests.gd", "run_effect_tests.gd", "run_audio_tests.gd",
+                   "--export-release Android", "check_android_package.py", "--export-release Google Play",
+                   "check_android_release.py"]
+        indices = [next(i for i, call in enumerate(calls) if marker in call) for marker in markers]
+        self.assertEqual(indices, sorted(indices))
+        self.assertEqual(sum("check_android_package.py" in call for call in calls), 2)
+        self.assertFalse(any("--export-debug" in call or "install_android.py" in call
+                             or "test-only-password" in call for call in calls))
+
+    def test_failed_release_audit_blocks_delivery(self):
+        result, calls = self.run_pipeline("android", "check_android_release.py", release=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any("install_android.py" in call for call in calls))
+
+    def test_release_test_failure_blocks_all_exports(self):
+        result, calls = self.run_pipeline("android", "run_effect_tests.gd", release=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any("--export-release" in call for call in calls))
 
     def test_required_suites_precede_export_and_install(self):
         result, calls = self.run_pipeline("install")

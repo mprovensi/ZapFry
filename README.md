@@ -1,6 +1,16 @@
-# Zap & Fry — protótipo 0.23.0
+# Zap & Fry — protótipo 0.24.0
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
+
+**Novidade 0.24.0 — O último plantão:** as 24 fases contam a história da Fortaleza do Curto. Multas elétricas, um contrato de eternidade e o desvio de energia para o spa da Diretoria conectam as conversas aos desafios. Há duas falas por fase, 24 respostas alternativas por arquétipo e uma consequência curta no resultado. A aparência continua aleatória; o enredo segue a ordem da campanha. A reabertura de um save anterior conserva seu perfil e reapresenta a conversa atualizada da fase. Rejogar é reconstituir um processo arquivado. Plano e critérios em [PLANO_ATUALIZACAO_LORE.md](PLANO_ATUALIZACAO_LORE.md); roteiro em `assets/narrative/campaign.json`.
+
+**Entrega 0.24.0 aprovada:** 75 testes Python, 44.079 verificações da engine, 831 estados de dicas, 3.772 verificações visuais/temporais e 48 de áudio. APK e AAB/código 41 em `builds/release/ZapFry-0.24.0.apk` e `builds/release/ZapFry-0.24.0.aab`, com roteiro, assinatura e recursos auditados. Capturas em `builds/lore/`. A entrega não foi instalada nem enviada à loja.
+
+**Pacote Android:** `com.mprovensi.zapfry`, usado no APK e AAB de release gerados em 13 de novembro de 2026. O Android o trata como um app separado do antigo `com.zapfry.prototype`; os dados da instalação antiga permanecem no pacote anterior e não são migrados automaticamente. A instalação histórica registrada abaixo usa o identificador anterior.
+
+**Publicação:** `./tools/dev.ps1 android -Release` gera AAB para a Google Play e APK de release assinado, após todos os testes obrigatórios. Procedimento e backup da chave em [docs/PUBLICACAO_ANDROID.md](docs/PUBLICACAO_ANDROID.md).
+
+**Release de 13/11/2026 pronta:** APK e AAB 0.23.0/código 40 assinados com chave de upload, API 36, sem debug, recursos auditados e alinhamento de 16 KB aprovado. Fluxo completo: 71 testes Python, 42.330 verificações da engine, 831 estados de dicas, 3.685 verificações visuais/temporais e 48 de áudio. Arquivos em `builds/release/`; nenhum envio à loja ou instalação foi realizado nesta entrega.
 
 **Novidade 0.23.0:** alarmes recuperáveis nas fases 18–20, interruptor A/B na 21, dupla vinculada na 23 e segundo equipamento na 24. Dicas consideram a rede completa e ações conjuntas. As fases 17 e 22 continuam clássicas, com os mínimos e tempos anteriores preservados. APK exportado e auditado; 64 testes Python, 42.330 verificações da engine, 831 estados de dicas, 3.685 verificações visuais/temporais e 48 de áudio aprovados. Detalhes em [docs/DESAFIOS_COMPLETOS_023.md](docs/DESAFIOS_COMPLETOS_023.md).
 

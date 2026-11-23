@@ -47,11 +47,12 @@ func select(level_index: int, saved: Dictionary) -> Dictionary:
 		name = template.aliases[_rng.randi_range(0, template.aliases.size() - 1)] if not template.aliases.is_empty() else template.display_name
 	var restore: bool = saved.get("level", -1) == level_index and saved.get("id", "") == TEMPLATES[index].character_id
 	var palette := clampi(int(saved.get("palette", 0)), 0, 3) if restore and saved.get("palette", 0) is int else _rng.randi_range(0, 3)
-	var eligible := Stories.eligible(TEMPLATES[index].character_id)
+	var eligible := Stories.eligible(TEMPLATES[index].character_id, level_index)
 	var story := int(saved.get("story", -1)) if saved.get("story", -1) is int else -1
 	var restored_story: bool = restore and story in eligible
 	if not restored_story:
-		eligible.erase(_last_story)
+		if eligible.size() > 1:
+			eligible.erase(_last_story)
 		story = eligible[_rng.randi_range(0, eligible.size() - 1)]
 	var snapshot := {"level": level_index, "id": TEMPLATES[index].character_id, "name": name,
 		"palette": palette, "story": story, "intro_seen": restored_story and saved.get("intro_seen", false) == true}

@@ -52,11 +52,32 @@ const CASES := [
 	["Marcou reunião na hora do almoço!", "Era o horário com mais gente acordada."]
 ]
 const RESTRICTIONS := {3: "bardo", 4: "vampiro", 17: "alquimista", 35: "pirata", 36: "elfa", 37: "zumbi", 38: "bardo", 39: "vampiro", 40: "alquimista", 41: "cavaleira"}
+## O catálogo anterior mantém seus IDs; a campanha usa IDs 48–71.
+static var narrative: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/narrative/campaign.json"))
 
 
-static func eligible(character_id: String) -> Array[int]:
+static func eligible(character_id: String, level_index: int = -1) -> Array[int]:
 	var result: Array[int] = []
+	if level_index >= 0 and level_index < narrative["phases"].size():
+		result.append(CASES.size() + level_index)
+		return result
 	for index in range(CASES.size()):
 		if not RESTRICTIONS.has(index) or RESTRICTIONS[index] == character_id:
 			result.append(index)
 	return result
+
+
+static func lines_for(story_id: int, character_id: String) -> Array:
+	if story_id >= 0 and story_id < CASES.size():
+		return CASES[story_id].duplicate()
+	var index := story_id - CASES.size()
+	if index < 0 or index >= narrative["phases"].size():
+		return []
+	var phase: Dictionary = narrative["phases"][index]
+	return [phase["lines"][0], phase["replies"].get(character_id, phase["lines"][1])]
+
+
+static func outcome_for(level_index: int) -> String:
+	if level_index < 0 or level_index >= narrative["phases"].size():
+		return ""
+	return narrative["phases"][level_index]["outcome"]

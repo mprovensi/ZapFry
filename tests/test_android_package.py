@@ -23,15 +23,22 @@ class AndroidPackageTests(unittest.TestCase):
             self.entries["assets/" + texture + ".import"] = f'[remap]\npath="res://{target}"'.encode()
             self.entries["assets/" + target] = b"compiled texture"
 
-    def check(self):
-        apk = self.root / "game.apk"
+    def check(self, bundle=False, module="base"):
+        apk = self.root / ("game.aab" if bundle else "game.apk")
         with ZipFile(apk, "w") as archive:
             for name, data in self.entries.items():
-                archive.writestr(name, data)
+                archive.writestr((module + "/" if bundle else "") + name, data)
         return checker.check_package(apk, self.root)
 
     def test_valid_package(self):
         self.assertEqual(self.check(), len(checker.CRITICAL_TEXTURES))
+
+    def test_bundle_resources_use_the_same_audit(self):
+        self.assertEqual(self.check(bundle=True), len(checker.CRITICAL_TEXTURES))
+        self.assertEqual(self.check(bundle=True, module="assetPackInstallTime"), len(checker.CRITICAL_TEXTURES))
+        del self.entries["assets/.godot/imported/texture_1.ctex"]
+        with self.assertRaisesRegex(RuntimeError, "compilada ausente"):
+            self.check(bundle=True)
 
     def test_missing_level_is_blocked(self):
         del self.entries["assets/levels/level_01.json"]
@@ -59,3 +66,19 @@ class AndroidPackageTests(unittest.TestCase):
         (folder / "zap.png").write_bytes(b"new sprite source")
         with self.assertRaisesRegex(RuntimeError, "Textura crítica ausente"):
             self.check()
+
+    def test_narrative_bytes_are_required_in_apk_and_bundle(self):
+        folder = self.root / "assets/narrative"
+        folder.mkdir(parents=True)
+        source = folder / "campaign.json"
+        source.write_bytes(b'{"phases":[]}')
+        for bundle in [False, True]:
+            with self.subTest(bundle=bundle):
+                self.entries.pop("assets/assets/narrative/campaign.json", None)
+                with self.assertRaisesRegex(RuntimeError, "Narrativa ausente"):
+                    self.check(bundle=bundle)
+                self.entries["assets/assets/narrative/campaign.json"] = b'{"wrong":true}'
+                with self.assertRaisesRegex(RuntimeError, "Narrativa ausente"):
+                    self.check(bundle=bundle)
+                self.entries["assets/assets/narrative/campaign.json"] = source.read_bytes()
+                self.check(bundle=bundle)

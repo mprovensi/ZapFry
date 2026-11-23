@@ -52,6 +52,7 @@ func _exercise() -> void:
 		app._layout_stage()
 		await _test_render(app, dimensions)
 		await _test_ending_render(app, dimensions)
+		await _test_lore_render(app, dimensions)
 		await _test_lamp_render(app, dimensions)
 		await _test_game_chrome(app, dimensions)
 		await _test_direction_render(app, dimensions)
@@ -60,6 +61,40 @@ func _exercise() -> void:
 	await process_frame
 	await EncounterTests.new().run_render(self, _check)
 	await AnimationTests.new().run_render(self, _check)
+
+
+func _test_lore_render(app, dimensions: Vector2i) -> void:
+	DirAccess.make_dir_recursive_absolute("res://builds/lore")
+	var prefix := "res://builds/lore/%dx%d" % [dimensions.x, dimensions.y]
+	app.show_menu()
+	var menu := await _render(app)
+	_check(menu.save_png(prefix + "-menu.png") == OK, "Premissa do menu capturada")
+	for level_index in [0, 10, 17, 23]:
+		app.level_index = level_index
+		app.profile.records.erase(str(level_index + 1))
+		app.profile.appearance = {"level": level_index, "id": "zumbi", "name": "Zeca Soneca", "palette": 0, "story": 48 + level_index, "intro_seen": false}
+		app.start_game()
+		app.dialogue.advance_presentation(0.3)
+		var introduction := await _render(app)
+		_check(app.dialogue.lines.size() == 2 and app.dialogue.active, "Introdução narrativa mantém somente dois balões no renderer")
+		_check(app.dialogue.bubble.modulate.a == 1.0 and not app.case_replay, "Prévia da primeira execução mostra balão totalmente apresentado")
+		_check(introduction.save_png(prefix + "-phase-%02d-intro.png" % (level_index + 1)) == OK, "Conversa da campanha capturada")
+		app.dialogue.advance()
+		app.dialogue.advance_presentation(0.3)
+		var response := await _render(app)
+		_check(app.dialogue.bubble.modulate.a == 1.0, "Resposta é capturada após a animação de entrada")
+		_check(response.save_png(prefix + "-phase-%02d-reply.png" % (level_index + 1)) == OK, "Resposta do condenado capturada")
+		app.dialogue.finish()
+		app.session.state = Session.State.WON
+		app._sync_controls()
+		var result := await _render(app)
+		var transform: Transform2D = root.get_final_transform() * app.case_outcome.get_global_transform_with_canvas()
+		var region := _pixel_rect(transform, Rect2(Vector2.ZERO, app.case_outcome.size), result.get_size())
+		app.case_outcome.hide()
+		var without_text := await _render(app)
+		_check(_difference(result, without_text, region) > 0.005, "Consequência é renderizada após o processo")
+		app.case_outcome.show()
+		_check(result.save_png(prefix + "-phase-%02d-result.png" % (level_index + 1)) == OK, "Resultado narrativo capturado")
 
 
 func _test_advanced_render(app, dimensions: Vector2i) -> void:

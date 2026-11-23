@@ -11,7 +11,7 @@ import subprocess
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = "com.zapfry.prototype"
+PACKAGE = "com.mprovensi.zapfry"
 
 
 def native(args, timeout=60):

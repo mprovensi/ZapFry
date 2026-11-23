@@ -1,10 +1,14 @@
-# Validação do protótipo 0.23.0
+# Validação do protótipo 0.24.0
 
-**Data:** 9 de novembro de 2026.
+**Data:** 23 de novembro de 2026.
 **Projeto:** Zap & Fry.  
 **Engine:** Godot 4.7.2 estável, GDScript, Compatibility.
 
 ## Resultado
+
+**0.24.0 — narrativa:** 24 acontecimentos encadeados e 24 respostas alternativas por arquétipo conectam as multas, os desafios e a descoberta do desvio de energia para o spa da Diretoria. Mantidas duas falas por fase. Menu apresenta a Fortaleza do Curto; vitórias têm consequência própria, derrota cancela o procedimento e a fase 24 encerra a fraude com a negativa do bônus. Saves v7 preservam aparência, recordes e preferências, recebendo IDs de história 48–71; reconstituições usam o progresso já existente, sem um segundo estado narrativo persistido.
+
+Fluxo `tools/dev.ps1 android -Release` aprovado: **44.079 verificações da engine, 75 testes Python, 831 estados de dicas, 3.772 verificações visuais/temporais e 48 de áudio**. APK e AAB 0.24.0/código 41 assinados e auditados; JSON do roteiro e fases idênticos às fontes, 83 texturas, API 36 e alinhamento de 16 KB. Capturas nas três proporções em `builds/lore/`. Nenhuma alteração nas regras ou arquivos das 24 fases. Plano, compatibilidade e hashes em [PLANO_ATUALIZACAO_LORE.md](../PLANO_ATUALIZACAO_LORE.md). Sem instalação ou envio à loja nesta entrega.
 
 **0.23.0:** todas as mecânicas restantes implementadas: alarmes nas fases 18–20, interruptor A/B na 21, dupla vinculada na 23 e ventilador obrigatório na 24. Mantidas fases clássicas, tempos e mínimos de ações. Dicas verificam alarmes, ações conjuntas e a porta do equipamento, sem consultar a referência autoral. Detalhes em [DESAFIOS_COMPLETOS_023.md](DESAFIOS_COMPLETOS_023.md).
 
