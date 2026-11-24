@@ -1,5 +1,21 @@
 # Próximo upgrade: condenados e conversas
 
+## Ampliação atual — presidiário louco
+
+O catálogo passa de sete para oito bases com o presidiário `presidiario`, cujo nome principal é **Dito Pavio**. O formato vigente continua sendo exatamente dois balões por encontro, com acontecimento determinado pela fase e resposta pelo arquétipo. As seções históricas abaixo registram a produção original de cinco bases e não substituem esse formato.
+
+- **Aparência:** homem adulto magro, pele oliva, rosto anguloso, cabelo preto desalinhado, sobrancelhas assimétricas e sorriso exagerado; uniforme de listras largas roxas e marfim, sapatos escuros e a cadeira atual.
+- **Personalidade:** excêntrico e autoconfiante, transforma multas, recibos e falhas elétricas em planos de fuga absurdos. O humor vem dos planos e da burocracia da fortaleza, sem diagnóstico médico ou violência realista.
+- **Nomes:** Dito Pavio, Zeca Tranca, Neco Faísca, Tito Parafuso e Beto Fagulha.
+- **Poses:** espera com sorriso conspirador; choque com crânio, costelas e ossos cartunescos em ciano/marfim; recuperação com olhar vesgo, cabelo desalinhado e pequenas marcas de fuligem. Os oito estados reutilizam essas três poses conforme o padrão atual, incluindo esqueleto no modo suave.
+- **Paletas:** roxo original, verde, vermelho e azul nas faixas coloridas do uniforme. Marfim, pele, cabelo, madeira, metal e ossos preservam as cores pelo shader e máscara existentes. Balão de resposta lilás próprio.
+- **Narrativa:** 24 respostas próprias em `assets/narrative/campaign.json`, acompanhando multas, contrato eterno, investigação do spa e encerramento do plantão. Mantidos os IDs 0–71, perguntas, consequências e duas falas por encontro.
+- **Integração:** recurso `assets/characters/presidiario.tres`, três PNGs em `assets/characters/presidiario/`, sorteio na mesma fila embaralhada e persistência no perfil v7 existente. O conjunto passa a 40 nomes e 160 combinações de nome/paleta.
+
+Arte e prompts: [PRESIDIARIO.md](PRESIDIARIO.md).
+
+**Validação em 24/11/2026:** `tools/dev.ps1 verify` aprovado com 80 testes Python, 44.598 verificações da engine, 831 estados de dicas, 3.808 verificações visuais/temporais e 48 de áudio, sem falhas. Cobertos sorteio entre oito bases, retomada de todos os personagens, balões nas três proporções, quatro paletas e ambos os modos de choque. A regressão de empacotamento exige as três poses e seus arquivos compilados em APK e AAB, rejeitando ausência de qualquer uma. Capturas de partida em `builds/characters/presidiario-{idle,zap,recover}.png`; paletas em `builds/encounters/presidiario-{idle,zap,recover}-palettes.png`. Conferidas visualmente espera, choque, recuperação e paletas no renderer real. Não houve nova exportação ou instalação; os pacotes históricos permanecem anteriores a este personagem.
+
 **Data:** 5 de novembro de 2026.  
 **Base:** Zap & Fry 0.15.0, Godot 4.7.2.  
 **Status:** cinco bases, 15 poses e 25 nomes entregues na 0.16.0; paletas e diálogos na 0.17.0. A revisão 0.17.1 substitui o roteiro original de três falas por exatamente dois balões: Executor e condenado. Os 24 casos foram reescritos, a fonte das falas passou a 40 e cada base ganhou sua cor de balão. Esta revisão substitui o formato planejado abaixo; detalhes em [ENCONTROS_017.md](ENCONTROS_017.md).

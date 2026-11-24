@@ -4,145 +4,145 @@
     {
       "id": 1,
       "lines": ["Paçoca roubada. Sua multa é um choque.", "Sou imortal, não sou à prova de cobrança!"],
-      "replies": {"zumbi": "Já morri. A multa veio mesmo assim."},
+      "replies": {"zumbi": "Já morri. A multa veio mesmo assim.", "presidiario": "Foi isca! Meu plano de fuga começa na paçoca."},
       "outcome": "Multa quitada. Paçocas não recuperadas."
     },
     {
       "id": 2,
       "lines": ["Voltou ao trabalho depois do choque?", "Contrato eterno. Nem a morte me dá folga."],
-      "replies": {"vampiro": "Eternidade garantida. Férias, nem por decreto."},
+      "replies": {"vampiro": "Eternidade garantida. Férias, nem por decreto.", "presidiario": "Fugi ontem. O contrato me trouxe antes do café."},
       "outcome": "Contrato confirmado: a pena termina; o expediente, não."
     },
     {
       "id": 3,
       "lines": ["Sua descarga abastece a fortaleza. Próximo!", "Então por que só a sala da chefia tem luz?"],
-      "replies": {"alquimista": "Minha magia acaba no café da chefia."},
+      "replies": {"alquimista": "Minha magia acaba no café da chefia.", "presidiario": "Chamei a tomada de cúmplice. Ela me entregou."},
       "outcome": "Energia devolvida à rede. O apagão continua."
     },
     {
       "id": 4,
       "lines": ["Se eu zerar a fila, recebo meu bônus.", "Leu a parte em letras pequenas?"],
-      "replies": {"pirata": "Promessa da chefia vale menos que mapa falso."},
+      "replies": {"pirata": "Promessa da chefia vale menos que mapa falso.", "presidiario": "Meu plano de fuga também prometia um bônus."},
       "outcome": "Bônus prometido para o fim do plantão."
     },
     {
       "id": 5,
       "lines": ["Multa por ensaiar depois do expediente!", "No contrato eterno, que horas o expediente acaba?"],
-      "replies": {"bardo": "Queriam música. A multa veio no bis."},
+      "replies": {"bardo": "Queriam música. A multa veio no bis.", "presidiario": "Meu ensaio de fuga tem hora extra?"},
       "outcome": "A Diretoria cobra até depois do expediente."
     },
     {
       "id": 6,
       "lines": ["Desviou a energia da cantina?", "Meu almoço esfriou. O spa continua quente."],
-      "replies": {"elfa": "Minha estufa apagou. No spa parece verão."},
+      "replies": {"elfa": "Minha estufa apagou. No spa parece verão.", "presidiario": "Tentei fugir pela sopa. Estava fria demais."},
       "outcome": "Cantina no escuro. Spa da Diretoria funcionando."
     },
     {
       "id": 7,
       "lines": ["O relatório diz que você queimou o fusível.", "Ele queimou antes de eu entrar na sala."],
-      "replies": {"cavaleira": "Meu escudo segurou a faísca. O fusível já era velho."},
+      "replies": {"cavaleira": "Meu escudo segurou a faísca. O fusível já era velho.", "presidiario": "O fusível pediu folga antes de mim!"},
       "outcome": "Fusível contornado. O relatório não explica a pane."
     },
     {
       "id": 8,
       "lines": ["Oito multas e o painel segue caindo!", "Quem assina as multas não toma choque."],
-      "replies": {"zumbi": "Nem depois de morto eu vi fila tão comprida."},
+      "replies": {"zumbi": "Nem depois de morto eu vi fila tão comprida.", "presidiario": "Oito multas? Minha coleção precisa de um álbum."},
       "outcome": "Primeira fila encerrada. A Diretoria envia outra."
     },
     {
       "id": 9,
       "lines": ["A fila cresceu. E ampliaram o painel.", "Reduziram o pessoal. Sobrou você."],
-      "replies": {"pirata": "O capitão do orçamento sumiu com a tripulação."},
+      "replies": {"pirata": "O capitão do orçamento sumiu com a tripulação.", "presidiario": "Ótimo! Meu mapa de fuga precisava de mais papel."},
       "outcome": "Painel ampliado. Plantão prorrogado sem reajuste."
     },
     {
       "id": 10,
       "lines": ["A multa só vale com a lâmpada acesa.", "O recibo tem mais direitos que eu."],
-      "replies": {"vampiro": "Meu caixão fica escuro. O recibo tem luz própria."},
+      "replies": {"vampiro": "Meu caixão fica escuro. O recibo tem luz própria.", "presidiario": "Apaga a luz! O recibo está vigiando meu plano."},
       "outcome": "Lâmpada acesa. Primeiro recibo de multa emitido."
     },
     {
       "id": 11,
       "lines": ["Sem acender a lâmpada, sua multa não consta.", "Finalmente uma vantagem nesse apagão."],
-      "replies": {"alquimista": "Posso tornar esse recibo invisível?"},
+      "replies": {"alquimista": "Posso tornar esse recibo invisível?", "presidiario": "Sem recibo, minha fuga conta como passeio?"},
       "outcome": "Multa registrada. Uma cópia foi enviada à Diretoria."
     },
     {
       "id": 12,
       "lines": ["Pegou o carregador da enfermaria?", "Devolvi. A chefia levou a tomada inteira."],
-      "replies": {"cavaleira": "Era pra enfermaria. Ferido não carrega sozinho."},
+      "replies": {"cavaleira": "Era pra enfermaria. Ferido não carrega sozinho.", "presidiario": "Peguei emprestado. A tomada tentou fugir comigo."},
       "outcome": "Acusação contraditória anexada ao processo."
     },
     {
       "id": 13,
       "lines": ["Esta seta manda a corrente para onde?", "Para o andar onde nunca falta café."],
-      "replies": {"bardo": "No andar de cima. Ouço a cafeteira no ensaio."},
+      "replies": {"bardo": "No andar de cima. Ouço a cafeteira no ensaio.", "presidiario": "Meu túnel dá na cafeteira. Agora tudo faz sentido."},
       "outcome": "Ramal da Diretoria identificado."
     },
     {
       "id": 14,
       "lines": ["A seta foi instalada ao contrário!", "A ordem veio pronta. Eu só obedeci."],
-      "replies": {"elfa": "Desviou a luz da estufa. A ordem veio de cima."},
+      "replies": {"elfa": "Desviou a luz da estufa. A ordem veio de cima.", "presidiario": "Eu disse ao fio: a saída é pro outro lado!"},
       "outcome": "Ordem de instalação assinada pela Diretoria."
     },
     {
       "id": 15,
       "lines": ["Todas as multas têm a mesma assinatura.", "E as reclamações somem na mesma gaveta."],
-      "replies": {"vampiro": "Reconheço o carimbo. Cobram meu caixão com ele."},
+      "replies": {"vampiro": "Reconheço o carimbo. Cobram meu caixão com ele.", "presidiario": "A assinatura é deles! Meu rabisco tem um túnel."},
       "outcome": "Indício de multas fabricadas registrado pelo Executor."
     },
     {
       "id": 16,
       "lines": ["A luz do recibo apagou. O spa segue ligado.", "Até o meu choque tem verba desviada."],
-      "replies": {"pirata": "Me chamam de pirata. Olha o saque da chefia."},
+      "replies": {"pirata": "Me chamam de pirata. Olha o saque da chefia.", "presidiario": "Até minha faísca fugiu para o spa!"},
       "outcome": "Desvio confirmado: falta luz aqui, sobra energia no spa."
     },
     {
       "id": 17,
       "lines": ["Painel maior. Nenhuma verba pra fio novo.", "Olha o dourado no cabo do spa."],
-      "replies": {"alquimista": "Laboratório com barbante. Spa com cabo dourado."},
+      "replies": {"alquimista": "Laboratório com barbante. Spa com cabo dourado.", "presidiario": "No meu túnel só tem barro. Quero esse orçamento."},
       "outcome": "Instalação central aberta para inspeção."
     },
     {
       "id": 18,
       "lines": ["Por que o alarme está no relógio de ponto?", "Tente registrar uma hora extra."],
-      "replies": {"zumbi": "Sou morto-vivo. Até eu tenho hora de sair."},
+      "replies": {"zumbi": "Sou morto-vivo. Até eu tenho hora de sair.", "presidiario": "Tentei bater a saída. O relógio chamou a guarda."},
       "outcome": "Alarme isolado. Reclamação trabalhista pendente."
     },
     {
       "id": 19,
       "lines": ["Ligaram a sirene no ramal da Diretoria.", "A água esfria e eles chamam a guarda."],
-      "replies": {"bardo": "Minha flauta faz menos barulho que o banho deles."},
+      "replies": {"bardo": "Minha flauta faz menos barulho que o banho deles.", "presidiario": "Então minha fuga precisa esperar o banho acabar?"},
       "outcome": "Ramal rastreado sem acionar a sirene."
     },
     {
       "id": 20,
       "lines": ["Hoje sai um recibo sem avisar a chefia.", "Guarda uma cópia. A gaveta deles engole papel."],
-      "replies": {"elfa": "Guardo nas raízes. A chefia não põe a mão lá."},
+      "replies": {"elfa": "Guardo nas raízes. A chefia não põe a mão lá.", "presidiario": "Escondo no mapa da fuga. Ninguém entende aquilo."},
       "outcome": "Prova do desvio guardada fora do arquivo da Diretoria."
     },
     {
       "id": 21,
       "lines": ["A chave alterna entre o spa e a fortaleza.", "Dessa vez, escolhe quem está pagando a conta."],
-      "replies": {"cavaleira": "Protejo a fortaleza. O spa que use uma toalha."},
+      "replies": {"cavaleira": "Protejo a fortaleza. O spa que use uma toalha.", "presidiario": "Escolhe a fortaleza! Meu túnel fica desse lado."},
       "outcome": "Chave comutada: prioridade para a fortaleza."
     },
     {
       "id": 22,
       "lines": ["Multas falsas, recibos sumidos, spa ligado...", "Vai prender a Diretoria ou pedir aumento?"],
-      "replies": {"pirata": "Essa prova vale mais que meu último tesouro."},
+      "replies": {"pirata": "Essa prova vale mais que meu último tesouro.", "presidiario": "Tenho uma cela vaga no meu plano de fuga!"},
       "outcome": "Investigação pronta para encerrar o desvio."
     },
     {
       "id": 23,
       "lines": ["Sua cela e o spa usam o mesmo circuito?", "Eu recebo o choque. Eles, a hidromassagem."],
-      "replies": {"vampiro": "Meu caixão sem luz paga as bolhas da chefia."},
+      "replies": {"vampiro": "Meu caixão sem luz paga as bolhas da chefia.", "presidiario": "Eu pedi banho de sol. Mandaram minhas faíscas."},
       "outcome": "Ligação compartilhada com o spa corrigida."
     },
     {
       "id": 24,
       "lines": ["Última multa. Ventilador ligado, spa desligado.", "Fecha o circuito. Depois cobra seu bônus."],
-      "replies": {"zumbi": "Se negarem, eu volto pra assombrar o financeiro."},
+      "replies": {"zumbi": "Se negarem, eu volto pra assombrar o financeiro.", "presidiario": "Liga o vento! Meu pedido de fuga vai de avião."},
       "outcome": "Desvio registrado. Fortaleza abastecida.\nBônus negado: o spa era ‘essencial’."
     }
   ]

@@ -27,14 +27,18 @@ class AndroidInstallTests(unittest.TestCase):
         self.profiles = [self.save, self.save]
         self.remote_digest = self.digest
         self.read_failure = False
+        self.installed_packages = ("package:" + installer.PACKAGE + "\n").encode()
+        self.package_query_failure = False
         self.package_info = b" versionCode=25 minSdk=24\r\n versionName=0.15.0\r\n android.permission.VIBRATE: granted=true\r\n"
         self.startup_error = b""
 
     def fake_native(self, args, timeout=60):
         cmd = list(map(str, args[3:]))
         self.calls.append(cmd)
-        if cmd[:3] == ["shell", "pm", "path"]:
-            return b"package:/data/app/game.apk\n"
+        if cmd[:4] == ["shell", "pm", "list", "packages"]:
+            if self.package_query_failure:
+                raise RuntimeError("ADB indisponível")
+            return self.installed_packages
         if cmd[:2] == ["exec-out", "run-as"]:
             if self.read_failure:
                 raise RuntimeError("run-as indisponível")
@@ -75,6 +79,32 @@ class AndroidInstallTests(unittest.TestCase):
     def test_wrong_transfer_hash_blocks_install(self):
         self.remote_digest = "0" * 64
         with self.assertRaisesRegex(RuntimeError, "transferido"):
+            self.perform_install()
+        self.assertFalse(any(cmd[:3] == ["shell", "pm", "install"] for cmd in self.calls))
+
+    def test_first_install_does_not_try_to_read_a_nonexistent_profile(self):
+        self.installed_packages = b""
+        result = self.perform_install()
+        self.assertTrue(result["installed"])
+        self.assertFalse(result["existing_install"])
+        self.assertFalse(any(cmd[:2] == ["exec-out", "run-as"] for cmd in self.calls))
+
+    def test_similar_package_does_not_count_as_the_target_app(self):
+        self.installed_packages = ("package:" + installer.PACKAGE + ".other\n").encode()
+        result = self.perform_install()
+        self.assertTrue(result["installed"])
+        self.assertFalse(result["existing_install"])
+        self.assertFalse(any(cmd[:2] == ["exec-out", "run-as"] for cmd in self.calls))
+
+    def test_package_query_failure_blocks_install_without_assuming_absence(self):
+        self.package_query_failure = True
+        with self.assertRaisesRegex(RuntimeError, "ADB indisponível"):
+            self.perform_install()
+        self.assertFalse(any(cmd[:3] == ["shell", "pm", "install"] for cmd in self.calls))
+
+    def test_unexpected_package_response_blocks_install(self):
+        self.installed_packages = b"Error: query failed\n"
+        with self.assertRaisesRegex(RuntimeError, "Resposta inválida"):
             self.perform_install()
         self.assertFalse(any(cmd[:3] == ["shell", "pm", "install"] for cmd in self.calls))
 

@@ -2,6 +2,8 @@
 
 [Repositório público](https://github.com/mprovensi/ZapFry).
 
+**Ampliação local — novo condenado:** o presidiário **Dito Pavio** entra no sorteio como oitava base, com cinco nomes, quatro paletas, três poses e 24 respostas próprias para a campanha, mantendo dois balões por encontro. O catálogo passa a 40 nomes, 160 combinações de nome/cor e 72 conversas atuais. Aparência, personalidade e integração em [docs/PLANO_CONDENADOS_E_DIALOGOS.md](docs/PLANO_CONDENADOS_E_DIALOGOS.md); arte e prompts em [docs/PRESIDIARIO.md](docs/PRESIDIARIO.md). Esta ampliação está nas fontes e não integra os pacotes 0.24.0 históricos citados abaixo.
+
 **Novidade 0.24.0 — O último plantão:** as 24 fases contam a história da Fortaleza do Curto. Multas elétricas, um contrato de eternidade e o desvio de energia para o spa da Diretoria conectam as conversas aos desafios. Há duas falas por fase, 24 respostas alternativas por arquétipo e uma consequência curta no resultado. A aparência continua aleatória; o enredo segue a ordem da campanha. A reabertura de um save anterior conserva seu perfil e reapresenta a conversa atualizada da fase. Rejogar é reconstituir um processo arquivado. Plano e critérios em [PLANO_ATUALIZACAO_LORE.md](PLANO_ATUALIZACAO_LORE.md); roteiro em `assets/narrative/campaign.json`.
 
 **Entrega 0.24.0 aprovada:** 75 testes Python, 44.079 verificações da engine, 831 estados de dicas, 3.772 verificações visuais/temporais e 48 de áudio. APK e AAB/código 41 em `builds/release/ZapFry-0.24.0.apk` e `builds/release/ZapFry-0.24.0.aab`, com roteiro, assinatura e recursos auditados. Capturas em `builds/lore/`. A entrega não foi instalada nem enviada à loja.

@@ -35,7 +35,7 @@ func run(check: Callable) -> void:
 				combinations[str([snapshot["id"], snapshot["name"], snapshot["palette"]])] = true
 				check.call(selected["character"].palette_index == palette and snapshot["intro_seen"], "Nome e paleta selecionados chegam à instância")
 		check.call(template.palette_index == 0, "Templates não são recoloridos pelo sorteio")
-	check.call(combinations.size() == 140, "Sete bases, cinco nomes e quatro cores geram 140 combinações")
+	check.call(combinations.size() == 160, "Oito bases, cinco nomes e quatro cores geram 160 combinações")
 	var prior := -1
 	for level in range(24):
 		var selected := roster.select(level, {})
@@ -210,7 +210,7 @@ func run_ui(app, tree: SceneTree, check: Callable) -> void:
 	app.dialogue.close()
 	app.start_game(false)
 	await _test_outcomes(app, tree, check)
-	print("Encontros: campanha em 24 fases, 48 conversas atuais, legado, 140 aparências e resultados em três proporções verificados.")
+	print("Encontros: campanha em 24 fases, 72 conversas atuais, legado, 160 aparências e resultados em três proporções verificados.")
 
 
 func _test_outcomes(app, tree: SceneTree, check: Callable) -> void:

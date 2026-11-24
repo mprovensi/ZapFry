@@ -43,7 +43,7 @@ func _capture_all() -> void:
 	app.queue_free()
 	await process_frame
 	await _pose_sheet()
-	print("Sete condenados: 21 capturas da partida e prancha de poses salvas.")
+	print("%d condenados: %d capturas da partida e prancha de poses salvas." % [Roster.TEMPLATES.size(), Roster.TEMPLATES.size() * 3])
 
 
 func _game_image(app, name: String) -> void:

@@ -28,7 +28,16 @@ class NarrativeContentTests(unittest.TestCase):
                     self.assertLessEqual(len(line), 72)
                 for character in entry["replies"]:
                     self.assertTrue((ROOT / "assets/characters" / (character + ".tres")).is_file())
-        self.assertEqual(sum(len(entry["replies"]) for entry in self.story["phases"]), 24)
+        self.assertEqual(sum(len(entry["replies"]) for entry in self.story["phases"]), 48)
+
+    def test_prisoner_has_a_distinct_reply_for_every_campaign_phase(self):
+        replies = []
+        for entry in self.story["phases"]:
+            with self.subTest(phase=entry["id"]):
+                reply = entry["replies"]["presidiario"]
+                self.assertNotEqual(reply, entry["lines"][1])
+                replies.append(reply)
+        self.assertEqual(len(set(replies)), 24)
 
     def test_premise_and_distinct_outcomes_are_complete(self):
         self.assertTrue(self.story["premise"].strip())

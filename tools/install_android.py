@@ -68,7 +68,13 @@ def install(apk, adb, serial, version, version_code, destination):
         return None if value == b"__ZAPFRY_NO_PROFILE__" else value
 
     try:
-        existed = bool(call("shell", "pm", "path", PACKAGE).strip())
+        # pm path retorna 1 (sem mensagem) quando o pacote ainda não existe.
+        # A listagem filtrada retorna 0 também na primeira instalação; erros continuam bloqueando.
+        packages = [value.strip() for value in call("shell", "pm", "list", "packages", PACKAGE).decode().splitlines()
+                    if value.strip()]
+        if any(not value.startswith("package:") for value in packages):
+            raise RuntimeError("Resposta inválida ao consultar os pacotes. Instalação bloqueada.")
+        existed = "package:" + PACKAGE in packages
         if existed:
             call("shell", "am", "force-stop", PACKAGE)
         # Falha de leitura de um save existente interrompe a atualização.

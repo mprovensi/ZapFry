@@ -61,11 +61,24 @@ class AndroidPackageTests(unittest.TestCase):
             self.check()
 
     def test_new_character_texture_is_required_in_apk(self):
-        folder = self.root / "assets/characters/new_character"
+        folder = self.root / "assets/characters/presidiario"
         folder.mkdir(parents=True)
-        (folder / "zap.png").write_bytes(b"new sprite source")
-        with self.assertRaisesRegex(RuntimeError, "Textura crítica ausente"):
-            self.check()
+        for pose in ["idle", "zap", "recover"]:
+            (folder / (pose + ".png")).write_bytes(b"new sprite source")
+            remap = f"assets/assets/characters/presidiario/{pose}.png.import"
+            compiled = f"assets/.godot/imported/presidiario_{pose}.ctex"
+            for bundle in [False, True]:
+                with self.subTest(pose=pose, bundle=bundle):
+                    with self.assertRaisesRegex(RuntimeError, "Textura crítica ausente"):
+                        self.check(bundle=bundle)
+            self.entries[remap] = f'[remap]\npath="res://.godot/imported/presidiario_{pose}.ctex"'.encode()
+            for bundle in [False, True]:
+                with self.subTest(pose=pose, bundle=bundle, compiled=False):
+                    with self.assertRaisesRegex(RuntimeError, "compilada ausente"):
+                        self.check(bundle=bundle)
+            self.entries[compiled] = b"compiled prisoner pose"
+        for bundle in [False, True]:
+            self.assertEqual(self.check(bundle=bundle), len(checker.CRITICAL_TEXTURES) + 3)
 
     def test_narrative_bytes_are_required_in_apk_and_bundle(self):
         folder = self.root / "assets/narrative"

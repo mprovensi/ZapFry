@@ -8,7 +8,7 @@ func run(check: Callable) -> void:
 	var previous := ""
 	var roster := Roster.new(7281)
 	var count := Roster.TEMPLATES.size()
-	check.call(count == 7, "Catálogo inclui as cinco bases, o zumbi e a elfa")
+	check.call(count == 8, "Catálogo inclui as sete bases anteriores e o presidiário")
 	for cycle in range(20):
 		var seen: Dictionary = {}
 		for index in range(count):
@@ -52,12 +52,24 @@ func run(check: Callable) -> void:
 	var invalid_name := reload_roster.select(0, {"level": 0, "id": "cavaleira", "name": "not a valid alias"})
 	check.call(invalid_name["character"].display_name == Roster.TEMPLATES[0].display_name, "Nome inválido não entra na interface")
 	check.call(Roster.TEMPLATES[0].display_name == "Zefa do Trovão", "Sorteio nunca modifica o template compartilhado")
+	# Uma atualização aditiva mantém os encontros já salvos e permite persistir a base nova.
+	for template in Roster.TEMPLATES:
+		var saved := {"level": 10, "id": template.character_id, "name": template.aliases[4], "palette": 3, "story": 58, "intro_seen": true}
+		profile.appearance = saved
+		profile.record_win(1, 1600, 2, 30.0)
+		profile.vibration_enabled = false
+		profile.save_profile(path)
+		var reopened := Profile.new()
+		reopened.load_profile(path)
+		var resumed := Roster.new(99).select(10, reopened.appearance)
+		check.call(resumed["snapshot"] == saved and resumed["character"].character_id == template.character_id, "Catálogo ampliado mantém cada identidade, nome, paleta e conversa ao reabrir")
+		check.call(reopened.records == profile.records and not reopened.vibration_enabled, "Novo condenado não altera recordes ou preferências do perfil")
 	var config := ConfigFile.new()
 	config.load(path)
 	config.set_value("appearance", "current", {"level": "bad", "id": [], "name": 99})
 	config.save(path)
 	check.call(restored.load_profile(path) == OK and restored.appearance.is_empty(), "Aparência malformada é descartada sem invalidar o progresso")
-	print("Condenados: sete bases, poses próprias, sorteio sem repetição, aliases e persistência verificados.")
+	print("Condenados: oito bases, poses próprias, sorteio sem repetição, aliases e persistência verificados.")
 
 
 func run_ui(app, check: Callable) -> void:
